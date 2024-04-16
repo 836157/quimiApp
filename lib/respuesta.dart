@@ -20,6 +20,8 @@ class Respuesta {
     );
   }
 
+  bool get isCorrect => esCorrecta;
+
   @override
   String toString() {
     return 'Respuesta: {correcta: $esCorrecta, pregunta: $pregunta}';

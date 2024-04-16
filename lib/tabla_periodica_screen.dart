@@ -9,8 +9,9 @@ Future<List<Elemento>> fetchElement() async {
         .get(Uri.parse('http://10.0.2.2:8080/quimicApp/elemento/listar'));
 
     if (response.statusCode == 200) {
-      List<dynamic> body = jsonDecode(response.body);
-      return body.map((dynamic item) => Elemento.fromJson(item)).toList();
+      String body = utf8.decode(response.bodyBytes);
+      List<dynamic> datos = jsonDecode(body);
+      return datos.map((dynamic item) => Elemento.fromJson(item)).toList();
     } else {
       throw Exception('request failed');
     }

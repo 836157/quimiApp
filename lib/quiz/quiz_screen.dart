@@ -73,11 +73,6 @@ class QuizScreen extends StatelessWidget {
                                     List<Pregunta> preguntas =
                                         await cuestionarioQuizTematica(
                                             tematica);
-
-                                    for (var i = 0; i < preguntas.length; i++) {
-                                      print(preguntas[i].toString());
-                                    }
-
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(

@@ -126,16 +126,4 @@ class AuthenticationService extends ChangeNotifier {
               'Error al actualizar el usuario. Por favor, inténtalo de nuevo')));
     }
   }
-
-  Future<List<Pregunta>> cuestionarioQuizTematica(String tematica) async {
-    final response = await http.get(Uri.parse(
-        'http://10.0.2.2:8080/quimicApp/preguntas/tematica/$tematica'));
-
-    if (response.statusCode == 200) {
-      List jsonResponse = json.decode(response.body);
-      return jsonResponse.map((item) => Pregunta.fromJson(item)).toList();
-    } else {
-      throw Exception('Fallo al cargar las preguntas de la temática $tematica');
-    }
-  }
 }

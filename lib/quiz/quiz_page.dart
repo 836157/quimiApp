@@ -14,10 +14,13 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   int _selectedOption = 0;
   int _currentQuestionIndex = 0;
+  bool _hasAnswered = false;
   @override
   Widget build(BuildContext context) {
+    double progress = (_currentQuestionIndex + 1) / widget.preguntas.length;
     Pregunta currentQuestion = widget.preguntas[_currentQuestionIndex];
     bool isCorrect = currentQuestion.esCorrecta(_selectedOption);
+    // Variable para saber si se ha respondido la pregunta
     return Scaffold(
       appBar: AppBar(
         //quiero que el titulo de la pagina sea el que se elija en el menu pop anterior,
@@ -43,12 +46,19 @@ class _QuizPageState extends State<QuizPage> {
                   child: LinearProgressIndicator(
                     color: Colors.orange,
                     borderRadius: BorderRadius.circular(20),
-                    value: 0.5,
+                    value: progress,
                     minHeight: 20,
                     valueColor:
                         const AlwaysStoppedAnimation<Color>(Colors.green),
                   ),
                 ),
+              ),
+              Text(
+                'Pregunta ${_currentQuestionIndex + 1}/${widget.preguntas.length}',
+                style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
               ),
               ConstrainedBox(
                 constraints: const BoxConstraints(
@@ -95,16 +105,23 @@ class _QuizPageState extends State<QuizPage> {
                                         currentQuestion.respuestas.length,
                                         (index) {
                                       return InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            _selectedOption = index;
-                                          });
-                                        },
+                                        onTap: !_hasAnswered
+                                            ? () {
+                                                setState(() {
+                                                  _selectedOption = index;
+                                                  _hasAnswered = true;
+                                                  isCorrect = currentQuestion
+                                                      .respuestas[index]
+                                                      .isCorrect;
+                                                });
+                                              }
+                                            : null,
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 10),
                                           decoration: BoxDecoration(
-                                            color: _selectedOption == index
+                                            color: _hasAnswered &&
+                                                    _selectedOption == index
                                                 ? isCorrect
                                                     ? Colors.green
                                                     : Colors.red
@@ -122,20 +139,8 @@ class _QuizPageState extends State<QuizPage> {
                                                 style: const TextStyle(
                                                     color: Colors.white),
                                               ),
-                                              leading: IconButton(
-                                                icon: Image.asset(
-                                                  'assets/atomo.png',
-                                                  color:
-                                                      _selectedOption == index
-                                                          ? Colors.white
-                                                          : Colors.grey,
-                                                ),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    _selectedOption = index;
-                                                  });
-                                                },
-                                              ),
+                                              leading: Image.asset(
+                                                  'assets/atomo.png'), // Cambia IconButton por Image.asset
                                             ),
                                           ),
                                         ),
@@ -159,6 +164,7 @@ class _QuizPageState extends State<QuizPage> {
                   // Quiz is finished, navigate to another page or show a dialog
                 }
               }),
+              SizedBox(height: 35),
             ],
           )),
     );
