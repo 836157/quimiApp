@@ -29,8 +29,8 @@ class HomeScreen extends StatelessWidget {
                 style: const TextStyle(color: Colors.black, fontSize: 18),
               ),
               TextSpan(
-                text: ' ' + (user?.apellidos ?? ''),
-                style: TextStyle(color: Colors.black, fontSize: 18),
+                text: ' ${user?.apellidos ?? ''}',
+                style: const TextStyle(color: Colors.black, fontSize: 18),
               ),
             ],
           ),

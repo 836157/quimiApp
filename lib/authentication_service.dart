@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:quimicapp/home_screen.dart';
+import 'package:quimicapp/pregunta.dart';
 import 'package:quimicapp/user.dart';
 import 'package:http/http.dart' as http;
 
@@ -123,6 +124,18 @@ class AuthenticationService extends ChangeNotifier {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text(
               'Error al actualizar el usuario. Por favor, inténtalo de nuevo')));
+    }
+  }
+
+  Future<List<Pregunta>> cuestionarioQuizTematica(String tematica) async {
+    final response = await http.get(Uri.parse(
+        'http://10.0.2.2:8080/quimicApp/preguntas/tematica/$tematica'));
+
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse.map((item) => Pregunta.fromJson(item)).toList();
+    } else {
+      throw Exception('Fallo al cargar las preguntas de la temática $tematica');
     }
   }
 }

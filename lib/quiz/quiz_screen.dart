@@ -1,5 +1,23 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:quimicapp/personalizadorwidget.dart';
+import 'package:quimicapp/pregunta.dart';
+import 'package:http/http.dart' as http;
+import 'package:quimicapp/quiz/quiz_page.dart';
+
+Future<List<Pregunta>> cuestionarioQuizTematica(String tematica) async {
+  final response = await http.get(
+      Uri.parse('http://10.0.2.2:8080/quimicApp/preguntas/tematica/$tematica'));
+
+  if (response.statusCode == 200) {
+    String body = utf8.decode(response.bodyBytes);
+    List jsonResponse = json.decode(body);
+    return jsonResponse.map((item) => Pregunta.fromJson(item)).toList();
+  } else {
+    throw Exception('Fallo al cargar las preguntas de la temática $tematica');
+  }
+}
 
 class QuizScreen extends StatelessWidget {
   const QuizScreen({super.key});
@@ -50,8 +68,23 @@ class QuizScreen extends StatelessWidget {
                                     textAlign:
                                         TextAlign.center, // Centra el texto
                                   ),
-                                  onTap: () {
-                                    // Aquí puedes manejar la selección de esta opción
+                                  onTap: () async {
+                                    String tematica = 'Formulacion Inorganica';
+                                    List<Pregunta> preguntas =
+                                        await cuestionarioQuizTematica(
+                                            tematica);
+
+                                    for (var i = 0; i < preguntas.length; i++) {
+                                      print(preguntas[i].toString());
+                                    }
+
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            QuizPage(preguntas: preguntas),
+                                      ),
+                                    );
                                   },
                                 ),
                                 SizedBox(height: 20), // Añade espacio
