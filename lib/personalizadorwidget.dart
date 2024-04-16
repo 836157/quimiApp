@@ -1,4 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:quimicapp/authentication_service.dart';
+import 'package:quimicapp/pregunta.dart';
+import 'package:http/http.dart' as http;
+import 'quiz/quiz_page.dart';
 
 class PersonalizadorWidget {
   static TextFormField buildCustomTextFormField({

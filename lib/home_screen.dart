@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:quimicapp/authentication_service.dart';
 import 'package:quimicapp/login_screen.dart';
 import 'package:quimicapp/modification_screen.dart';
+import 'package:quimicapp/quiz/quiz_screen.dart';
 import 'package:quimicapp/tabla_periodica_screen.dart';
+
 import 'package:quimicapp/user.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -20,15 +22,15 @@ class HomeScreen extends StatelessWidget {
         title: RichText(
           text: TextSpan(
             text: 'Bienvenido, ',
-            style: TextStyle(color: Colors.black, fontSize: 18),
+            style: const TextStyle(color: Colors.black, fontSize: 18),
             children: <TextSpan>[
               TextSpan(
                 text: user?.nombre ?? 'Invitado',
-                style: TextStyle(color: Colors.black, fontSize: 18),
+                style: const TextStyle(color: Colors.black, fontSize: 18),
               ),
               TextSpan(
-                text: ' ' + (user?.apellidos ?? ''),
-                style: TextStyle(color: Colors.black, fontSize: 18),
+                text: ' ${user?.apellidos ?? ''}',
+                style: const TextStyle(color: Colors.black, fontSize: 18),
               ),
             ],
           ),
@@ -77,8 +79,8 @@ class HomeScreen extends StatelessWidget {
           child: ListView(
             children: <Widget>[
               const SizedBox(height: 120.0),
-              buildCard(
-                  'Tabla Periódica', 'tabla_periodica_screen.dart', context),
+              buildCard('Tabla Periódica', TablaPeriodicaScreen(), context),
+              buildCard('Quiz', QuizScreen(), context),
               /* buildCard('Formulación', context),
               buildCard('Disoluciones', context),
               buildCard('Estequiometría', context),
@@ -91,7 +93,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Card buildCard(String title, String route, BuildContext context) {
+  Card buildCard(String title, Widget screen, BuildContext context) {
     return Card(
       color: Colors.white70,
       elevation: 5.0,
@@ -103,12 +105,10 @@ class HomeScreen extends StatelessWidget {
         leading: Image.asset('assets/atomo.png', width: 42.0, height: 42.0),
         title: Text(title),
         onTap: () {
-          if (title == 'Tabla Periódica') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TablaPeriodicaScreen()),
-            );
-          }
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => screen),
+          );
         },
       ),
     );
