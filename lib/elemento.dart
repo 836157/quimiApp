@@ -3,7 +3,7 @@ class Elemento {
   final String nombre;
   final int numeroAtomico;
   final String simbolo;
-  final int pesoAtomico;
+  final double pesoAtomico;
   final String geometriaMasComun;
   final double? densidad;
   final double? puntoFusion;
@@ -41,14 +41,14 @@ class Elemento {
       simbolo: json['simbolo'],
       pesoAtomico: json['pesoAtomico'],
       geometriaMasComun: json['geometriaMasComun'],
-      densidad: json['densidad']?.toDouble(),
-      puntoFusion: json['puntoFusion']?.toDouble(),
-      puntoEbullicion: json['puntoEbullicion']?.toDouble(),
-      calorEspecifico: json['calorEspecifico']?.toDouble(),
-      electronegatividad: json['electronegatividad']?.toDouble(),
-      radioAtomico: json['radioAtomico']?.toDouble(),
-      radioCovalente: json['radioCovalente']?.toDouble(),
-      radioIonico: json['radioIonico']?.toDouble(),
+      densidad: json['densidad'],
+      puntoFusion: json['puntoFusion'],
+      puntoEbullicion: json['puntoEbullicion'],
+      calorEspecifico: json['calorEspecifico'],
+      electronegatividad: json['electronegatividad'],
+      radioAtomico: json['radioAtomico'],
+      radioCovalente: json['radioCovalente'],
+      radioIonico: json['radioIonico'],
       familia: json['familia'],
     );
   }

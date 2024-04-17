@@ -158,7 +158,8 @@ class _QuizPageState extends State<QuizPage> {
                 if (_currentQuestionIndex < widget.preguntas.length - 1) {
                   setState(() {
                     _currentQuestionIndex++;
-                    _selectedOption = 0; // Reset selected option
+                    _selectedOption = 0;
+                    _hasAnswered = false; // Reset selected option
                   });
                 } else {
                   // Quiz is finished, navigate to another page or show a dialog

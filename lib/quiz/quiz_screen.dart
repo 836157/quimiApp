@@ -13,6 +13,7 @@ Future<List<Pregunta>> cuestionarioQuizTematica(String tematica) async {
   if (response.statusCode == 200) {
     String body = utf8.decode(response.bodyBytes);
     List jsonResponse = json.decode(body);
+    print(jsonResponse);
     return jsonResponse.map((item) => Pregunta.fromJson(item)).toList();
   } else {
     throw Exception('Fallo al cargar las preguntas de la temática $tematica');
@@ -60,8 +61,8 @@ class QuizScreen extends StatelessWidget {
                                 ListTile(
                                   leading: Image.asset(
                                       'assets/icon_cuestionario.png'), // Añade un icono
-                                  title: Text(
-                                    'Formulacion Inorganica',
+                                  title: const Text(
+                                    'Formulacion',
                                     style: TextStyle(
                                         fontWeight: FontWeight
                                             .bold), // Hace el texto en negrita
@@ -69,7 +70,7 @@ class QuizScreen extends StatelessWidget {
                                         TextAlign.center, // Centra el texto
                                   ),
                                   onTap: () async {
-                                    String tematica = 'Formulacion Inorganica';
+                                    String tematica = 'Formulacion';
                                     List<Pregunta> preguntas =
                                         await cuestionarioQuizTematica(
                                             tematica);

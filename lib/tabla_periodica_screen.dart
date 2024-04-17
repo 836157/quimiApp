@@ -16,7 +16,6 @@ Future<List<Elemento>> fetchElement() async {
       throw Exception('request failed');
     }
   } catch (e) {
-    print(e.toString());
     throw Exception('Failed to load Element');
   }
 }
