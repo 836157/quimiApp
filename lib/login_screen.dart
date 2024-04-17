@@ -31,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
           height: MediaQuery.of(context).size.height,
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("assets/fondologin.jpg"),
+              image: AssetImage("assets/fondoAzulmetal.jpg"),
               fit: BoxFit.cover,
             ),
           ),
@@ -81,8 +81,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: <TextSpan>[
                       TextSpan(
                         text: 'Regístrate',
-                        style:
-                            const TextStyle(color: Colors.blue, fontSize: 15),
+                        style: const TextStyle(
+                            color: Colors.purpleAccent, fontSize: 18),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             Navigator.push(

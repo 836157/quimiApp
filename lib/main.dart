@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quimicapp/authentication_service.dart';
-import 'package:quimicapp/home_screen.dart';
 import 'package:quimicapp/splash_screen.dart';
-import 'package:quimicapp/tabla_periodica_screen.dart';
 
 void main() {
   runApp(
