@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:quimicapp/personalizadorwidget.dart';
 import 'package:quimicapp/pregunta.dart';
 import 'package:quimicapp/quiz/quiz_screen.dart';
@@ -235,7 +236,10 @@ class _QuizPageState extends State<QuizPage> {
                               ),
                               if (_correctAnswers / widget.preguntas.length >
                                   0.6)
-                                Container(),
+                                Container(
+                                  child: Lottie.asset('assets/aprobado.json',
+                                      animate: true),
+                                ),
                             ],
                           ),
                         );

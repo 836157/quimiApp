@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:quimicapp/authentication_service.dart';
 import 'package:quimicapp/login_screen.dart';
@@ -102,7 +103,8 @@ class HomeScreen extends StatelessWidget {
       ),
       margin: const EdgeInsets.all(10.0),
       child: ListTile(
-        leading: Image.asset('assets/atomo.png', width: 42.0, height: 42.0),
+        leading: Lottie.asset('assets/iconoAtomo.json',
+            width: 42.0, height: 42.0, fit: BoxFit.fill),
         title: Text(title),
         onTap: () {
           Navigator.push(
