@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quimicapp/personalizadorwidget.dart';
 import 'package:quimicapp/pregunta.dart';
+import 'package:quimicapp/quiz/quiz_screen.dart';
 
 class QuizPage extends StatefulWidget {
   final List<Pregunta> preguntas;
@@ -15,6 +16,14 @@ class _QuizPageState extends State<QuizPage> {
   int _selectedOption = 0;
   int _currentQuestionIndex = 0;
   bool _hasAnswered = false;
+  int _correctAnswers = 0; // Contador para las respuestas correctas
+  int _incorrectAnswers = 0; // Contador para las respuestas incorrectas
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double progress = (_currentQuestionIndex + 1) / widget.preguntas.length;
@@ -111,8 +120,7 @@ class _QuizPageState extends State<QuizPage> {
                                                   _selectedOption = index;
                                                   _hasAnswered = true;
                                                   isCorrect = currentQuestion
-                                                      .respuestas[index]
-                                                      .isCorrect;
+                                                      .esCorrecta(index);
                                                 });
                                               }
                                             : null,
@@ -125,8 +133,12 @@ class _QuizPageState extends State<QuizPage> {
                                                 ? isCorrect
                                                     ? Colors.green
                                                     : Colors.red
-                                                : Colors.orange[
-                                                    300], // Cambia el color de fondo cuando se selecciona una opción
+                                                : _hasAnswered &&
+                                                        currentQuestion
+                                                            .esCorrecta(index)
+                                                    ? Colors.green
+                                                    : Colors.orange[
+                                                        300], // Cambia el color de fondo cuando se selecciona una opción
                                             borderRadius:
                                                 BorderRadius.circular(50),
                                           ),
@@ -155,14 +167,83 @@ class _QuizPageState extends State<QuizPage> {
               ),
               PersonalizadorWidget.buildCustomElevatedButton("Siguiente",
                   () async {
-                if (_currentQuestionIndex < widget.preguntas.length - 1) {
-                  setState(() {
-                    _currentQuestionIndex++;
-                    _selectedOption = 0;
-                    _hasAnswered = false; // Reset selected option
-                  });
+                if (_hasAnswered) {
+                  // Verificar si el usuario ha seleccionado una opción
+                  if (_currentQuestionIndex < widget.preguntas.length - 1) {
+                    setState(() {
+                      _currentQuestionIndex++;
+                      _selectedOption = 0;
+                      _hasAnswered = false; // Reset selected option
+                      if (isCorrect) {
+                        _correctAnswers++; // Incrementar el contador de respuestas correctas
+                      } else {
+                        _incorrectAnswers++; // Incrementar el contador de respuestas incorrectas
+                      }
+                    });
+                  } else {
+                    // Quiz is finished, navigate to another page or show a dialog
+                    // Aquí puedes usar los contadores _correctAnswers y _incorrectAnswers
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Center(
+                            child: Text('Resultados del Quiz'),
+                          ),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Image.asset('assets/atomo.png',
+                                      height: 20, width: 20),
+                                  SizedBox(width: 10),
+                                  Text('Tematica: ${currentQuestion.tematica}'),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Image.asset('assets/atomo.png',
+                                      height: 20, width: 20),
+                                  SizedBox(width: 10),
+                                  Text(
+                                      'Aciertos: $_correctAnswers de ${widget.preguntas.length}'),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Image.asset('assets/atomo.png',
+                                      height: 20, width: 20),
+                                  SizedBox(width: 10),
+                                  Text(
+                                      'Fallos: ${widget.preguntas.length - _correctAnswers}'),
+                                ],
+                              ),
+                              TextButton(
+                                child: const Text('Salir'),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const QuizScreen(),
+                                      ));
+                                },
+                              ),
+                              if (_correctAnswers / widget.preguntas.length >
+                                  0.6)
+                                Container(),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  }
                 } else {
-                  // Quiz is finished, navigate to another page or show a dialog
+                  // Mostrar un mensaje de error o una indicación para que el usuario seleccione una opción
                 }
               }),
               SizedBox(height: 35),
