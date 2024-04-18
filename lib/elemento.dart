@@ -52,4 +52,22 @@ class Elemento {
       familia: json['familia'],
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      '': nombre,
+      'A': numeroAtomico,
+      'Sim': simbolo,
+      'Uma': pesoAtomico,
+      'Geometria': geometriaMasComun,
+      'd': densidad,
+      'p.f.°': puntoFusion,
+      'p.e.': puntoEbullicion,
+      'Q': calorEspecifico,
+      'electronegatividad': electronegatividad,
+      'Ra': radioAtomico,
+      'Rc': radioCovalente,
+      'Rio': radioIonico,
+    };
+  }
 }

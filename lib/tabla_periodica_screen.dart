@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:quimicapp/elemento.dart';
+import 'package:quimicapp/personalizadorwidget.dart';
 
 Future<List<Elemento>> fetchElement() async {
   try {
@@ -51,7 +52,7 @@ class _TablaPeriodicaScreenState extends State<TablaPeriodicaScreen> {
 
   Widget _buildBody(Elemento elemento) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: familias[elemento.familia] ?? Colors.white, // color de fondo
         borderRadius: BorderRadius.circular(20), // bordes redondeados
@@ -68,54 +69,34 @@ class _TablaPeriodicaScreenState extends State<TablaPeriodicaScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          SizedBox(
-            width: 120, // Define el ancho de la imagen
-            height: 160, // Define la altura de la imagen
-            child: Image.asset(
-              'assets/${elemento.id}.jpg',
-              fit: BoxFit
-                  .contain, // Asegura que la imagen se ajuste al contenedor
-            ),
-          ),
-          Text('Nombre: ${elemento.nombre}',
-              style: TextStyle(fontSize: 18, color: Colors.black)),
+          Image.asset(
+            'assets/H.gif',
+            width: 500, // Ajusta el ancho como necesites
+            height: 500,
+            fit: BoxFit.scaleDown,
+          ), // Añade el gif al principio
           SizedBox(height: 10),
-          Text('N° Atómico: ${elemento.numeroAtomico}',
-              style: TextStyle(fontSize: 18, color: Colors.black)),
-          SizedBox(height: 10),
-          Text('Símbolo: ${elemento.simbolo}',
-              style: TextStyle(fontSize: 18, color: Colors.black)),
-          SizedBox(height: 10),
-          Text('Peso Atómico: ${elemento.pesoAtomico} u',
-              style: TextStyle(fontSize: 18, color: Colors.black)),
-          SizedBox(height: 10),
-          Text('Geometría: ${elemento.geometriaMasComun}',
-              style: TextStyle(fontSize: 18, color: Colors.black)),
-          SizedBox(height: 10),
-          Text('Densidad: ${elemento.densidad} g/cm³',
-              style: TextStyle(fontSize: 18, color: Colors.black)),
-          SizedBox(height: 10),
-          Text('Punto de Fusión: ${elemento.puntoFusion}K',
-              style: TextStyle(fontSize: 18, color: Colors.black)),
-          SizedBox(height: 10),
-          Text('Punto de Ebullición: ${elemento.puntoEbullicion}K',
-              style: TextStyle(fontSize: 18, color: Colors.black)),
-          SizedBox(height: 10),
-          Text('Calor Específico: ${elemento.calorEspecifico}J/(g·K)',
-              style: TextStyle(fontSize: 18, color: Colors.black)),
-          SizedBox(height: 10),
-          Text(
-              'Electronegatividad: ${elemento.electronegatividad} Pauling(0-4)',
-              style: TextStyle(fontSize: 18, color: Colors.black)),
-          SizedBox(height: 10),
-          Text('Radio Atómico: ${elemento.radioAtomico} pm',
-              style: TextStyle(fontSize: 18, color: Colors.black)),
-          SizedBox(height: 10),
-          Text('Radio Covalente: ${elemento.radioCovalente}pm',
-              style: TextStyle(fontSize: 18, color: Colors.black)),
-          SizedBox(height: 10),
-          Text('Radio Iónico: ${elemento.radioIonico}pm',
-              style: TextStyle(fontSize: 18, color: Colors.black)),
+          ...elemento.toMap().entries.map((entry) {
+            return Row(
+              children: <Widget>[
+                // Cambia el icono
+                Icon(
+                  Icons
+                      .science, // Este es un icono de ciencia proporcionado por Material Icons
+                  size: 24.0,
+                  color: Colors.green,
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  // Hace que el texto se adapte al largo del espacio
+                  child: Text(
+                    '${entry.key}: ${entry.value}',
+                    style: TextStyle(fontSize: 18, color: Colors.black),
+                  ),
+                ),
+              ],
+            );
+          }).toList(),
         ],
       ),
     );
@@ -189,25 +170,16 @@ class _TablaPeriodicaScreenState extends State<TablaPeriodicaScreen> {
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          content: _buildBody(elementosFiltrados[index]),
+                          content: GestureDetector(
+                            onTap: () => Navigator.of(context)
+                                .pop(), // Cierra el diálogo cuando se toca fuera
+                            child: _buildBody(elementosFiltrados[index]),
+                          ),
                         );
                       },
                     );
                   },
-                  child: Card(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(
-                                "assets/${elementosFiltrados[index].nombre}.jpg"),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  child: ElementCard(elemento: elementosFiltrados[index]),
                 );
               },
             );

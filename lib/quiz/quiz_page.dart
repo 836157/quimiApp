@@ -225,12 +225,12 @@ class _QuizPageState extends State<QuizPage> {
                               TextButton(
                                 child: const Text('Salir'),
                                 onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const QuizScreen(),
-                                      ));
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const QuizScreen(),
+                                    ),
+                                  );
                                 },
                               ),
                               if (_correctAnswers / widget.preguntas.length >
@@ -246,7 +246,14 @@ class _QuizPageState extends State<QuizPage> {
                     );
                   }
                 } else {
-                  // Mostrar un mensaje de error o una indicación para que el usuario seleccione una opción
+                  // indicación para que el usuario seleccione una opción
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                          'Por favor, contesta la pregunta antes de seguir.'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
                 }
               }),
               SizedBox(height: 35),

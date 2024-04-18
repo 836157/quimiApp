@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quimicapp/elemento.dart';
 import 'package:text_neon_widget/text_neon_widget.dart';
 
 class PersonalizadorWidget {
@@ -104,6 +105,79 @@ class PersonalizadorWidget {
           shineDuration: Duration(seconds: 1),
         ),
       ],
+    );
+  }
+}
+
+class ElementCard extends StatelessWidget {
+  final Elemento elemento;
+
+  const ElementCard({super.key, required this.elemento});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 10.0,
+      shadowColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.bottomRight,
+            end: Alignment.topLeft,
+            colors: [Colors.black, Colors.green],
+          ),
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: Stack(
+          children: <Widget>[
+            Center(
+              child: Text(
+                elemento.simbolo,
+                style: TextStyle(
+                  fontSize: 50.0,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            Positioned(
+              top: 10.0,
+              left: 10.0,
+              child: Text(
+                elemento.pesoAtomico.toString(),
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            Positioned(
+              top: 10.0,
+              right: 10.0,
+              child: Text(
+                elemento.numeroAtomico.toString(),
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 10.0,
+              right: 10.0,
+              child: Text(
+                elemento.electronegatividad.toString(),
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
