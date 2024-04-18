@@ -61,13 +61,15 @@ class _SplashScreenState extends State<SplashScreen>
                       });
                     },
                   ),
+                  const SizedBox(
+                      height: 20), // Espacio entre la animación y el texto
                   const Text(
                     'qUimiCapP',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'splashScreen',
                       color: Colors.white,
-                      fontSize: 64,
+                      fontSize: 82,
                     ),
                   ),
                 ],

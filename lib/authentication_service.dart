@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:quimicapp/home_screen.dart';
-import 'package:quimicapp/pregunta.dart';
 import 'package:quimicapp/user.dart';
 import 'package:http/http.dart' as http;
 

@@ -78,39 +78,41 @@ class _LoginScreenState extends State<LoginScreen> {
                     icon: Icons.lock,
                   ),
                 ),
-                const SizedBox(height: 20.0),
-                PersonalizadorWidget.buildCustomElevatedButton("Iniciar sesión",
-                    () async {
-                  if (formKey.currentState!.validate()) {
-                    // Si el formulario es válido, muestra un mensaje de éxito
-                    await authService.login(_emailController.text,
-                        _passwordController.text, context);
-                  }
-                }),
-                const SizedBox(height: 20.0),
-                SelectableText.rich(
-                  TextSpan(
-                    text: 'No tienes una cuenta, ',
-                    style: const TextStyle(color: Colors.white, fontSize: 15),
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: 'Regístrate',
-                        style: const TextStyle(
+                const SizedBox(height: 60.0),
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // código para el botón de iniciar sesión
+                      PersonalizadorWidget.buildCustomElevatedButton(
+                          "Iniciar sesión", () async {
+                        if (formKey.currentState!.validate()) {
+                          // Si el formulario es válido, muestra un mensaje de éxito
+                          await authService.login(_emailController.text,
+                              _passwordController.text, context);
+                        }
+                      }),
+                      const SizedBox(height: 150.0),
+                      const Text(
+                        'No tienes una cuenta',
+                        style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.bold),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const RegisterScreen()),
-                            );
-                          },
                       ),
+                      const SizedBox(height: 10),
+                      PersonalizadorWidget.buildCustomElevatedButton(
+                          "Registrate", () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const RegisterScreen()),
+                        );
+                      })
                     ],
                   ),
-                ),
+                )
               ],
             ),
           ),

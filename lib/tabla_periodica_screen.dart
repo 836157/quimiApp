@@ -58,15 +58,15 @@ class _TablaPeriodicaScreenState extends State<TablaPeriodicaScreen> {
         boxShadow: [
           // sombra
           BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 5,
-            blurRadius: 7,
+            color: Colors.green.withOpacity(1),
+            spreadRadius: 12,
+            blurRadius: 12,
             offset: const Offset(0, 3),
           ),
         ],
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           SizedBox(
             width: 120, // Define el ancho de la imagen
@@ -77,43 +77,45 @@ class _TablaPeriodicaScreenState extends State<TablaPeriodicaScreen> {
                   .contain, // Asegura que la imagen se ajuste al contenedor
             ),
           ),
-          Text('Nombre: ${elemento.nombre}', style: TextStyle(fontSize: 18)),
+          Text('Nombre: ${elemento.nombre}',
+              style: TextStyle(fontSize: 18, color: Colors.black)),
           SizedBox(height: 10),
-          Text('Número Atómico: ${elemento.numeroAtomico}',
-              style: TextStyle(fontSize: 18)),
+          Text('N° Atómico: ${elemento.numeroAtomico}',
+              style: TextStyle(fontSize: 18, color: Colors.black)),
           SizedBox(height: 10),
-          Text('Símbolo: ${elemento.simbolo}', style: TextStyle(fontSize: 18)),
+          Text('Símbolo: ${elemento.simbolo}',
+              style: TextStyle(fontSize: 18, color: Colors.black)),
           SizedBox(height: 10),
           Text('Peso Atómico: ${elemento.pesoAtomico} u',
-              style: TextStyle(fontSize: 18)),
+              style: TextStyle(fontSize: 18, color: Colors.black)),
           SizedBox(height: 10),
-          Text('Geometría Más Común: ${elemento.geometriaMasComun}',
-              style: TextStyle(fontSize: 18)),
+          Text('Geometría: ${elemento.geometriaMasComun}',
+              style: TextStyle(fontSize: 18, color: Colors.black)),
           SizedBox(height: 10),
           Text('Densidad: ${elemento.densidad} g/cm³',
-              style: TextStyle(fontSize: 18)),
+              style: TextStyle(fontSize: 18, color: Colors.black)),
           SizedBox(height: 10),
           Text('Punto de Fusión: ${elemento.puntoFusion}K',
-              style: TextStyle(fontSize: 18)),
+              style: TextStyle(fontSize: 18, color: Colors.black)),
           SizedBox(height: 10),
           Text('Punto de Ebullición: ${elemento.puntoEbullicion}K',
-              style: TextStyle(fontSize: 18)),
+              style: TextStyle(fontSize: 18, color: Colors.black)),
           SizedBox(height: 10),
           Text('Calor Específico: ${elemento.calorEspecifico}J/(g·K)',
-              style: TextStyle(fontSize: 18)),
+              style: TextStyle(fontSize: 18, color: Colors.black)),
           SizedBox(height: 10),
           Text(
               'Electronegatividad: ${elemento.electronegatividad} Pauling(0-4)',
-              style: TextStyle(fontSize: 18)),
+              style: TextStyle(fontSize: 18, color: Colors.black)),
           SizedBox(height: 10),
           Text('Radio Atómico: ${elemento.radioAtomico} pm',
-              style: TextStyle(fontSize: 18)),
+              style: TextStyle(fontSize: 18, color: Colors.black)),
           SizedBox(height: 10),
           Text('Radio Covalente: ${elemento.radioCovalente}pm',
-              style: TextStyle(fontSize: 18)),
+              style: TextStyle(fontSize: 18, color: Colors.black)),
           SizedBox(height: 10),
           Text('Radio Iónico: ${elemento.radioIonico}pm',
-              style: TextStyle(fontSize: 18)),
+              style: TextStyle(fontSize: 18, color: Colors.black)),
         ],
       ),
     );
@@ -124,6 +126,20 @@ class _TablaPeriodicaScreenState extends State<TablaPeriodicaScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tabla Periodica'),
+        backgroundColor: Colors.green,
+        shadowColor: Colors.grey,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF4CAF50), // Un tono de verde
+                Color(0xFF8BC34A), // Otro tono de verde
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
         actions: <Widget>[
           PopupMenuButton<String>(
             onSelected: (String result) {
@@ -199,7 +215,7 @@ class _TablaPeriodicaScreenState extends State<TablaPeriodicaScreen> {
             return Text('${snapshot.error}');
           }
 
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         },
       ),
     );
