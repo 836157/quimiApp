@@ -18,7 +18,6 @@ class _QuizPageState extends State<QuizPage> {
   int _currentQuestionIndex = 0;
   bool _hasAnswered = false;
   int _correctAnswers = 0; // Contador para las respuestas correctas
-  int _incorrectAnswers = 0; // Contador para las respuestas incorrectas
 
   @override
   void initState() {
@@ -178,7 +177,7 @@ class _QuizPageState extends State<QuizPage> {
                       if (isCorrect) {
                         _correctAnswers++; // Incrementar el contador de respuestas correctas
                       } else {
-                        _incorrectAnswers++; // Incrementar el contador de respuestas incorrectas
+// Incrementar el contador de respuestas incorrectas
                       }
                     });
                   } else {

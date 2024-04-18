@@ -18,25 +18,39 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    const primaryColor = Colors.black;
+    const secondaryColor = Colors.green;
+    final appBarColor = Colors.green[600];
+
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'QuimicApp',
-        theme: ThemeData(
-          appBarTheme: AppBarTheme(
-            color: Colors.indigoAccent[400],
-          ),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: Colors.blueGrey,
-              minimumSize: const Size(250, 50),
-              elevation: 20,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30), // borde redondeado
-              ),
-            ),
-          ),
+      debugShowCheckedModeBanner: false,
+      title: 'QuimicApp',
+      theme: ThemeData(
+        fontFamily: 'Futura',
+        //brightness: Brightness.dark, // Tema oscuro
+        primaryColor: primaryColor, // Color primario negro
+        colorScheme: const ColorScheme.dark(
+          secondary: secondaryColor, // Color secundario verde
         ),
-        home: const SplashScreen());
+        appBarTheme: AppBarTheme(
+          color: appBarColor,
+          elevation: 10.0, // Ajusta la elevación aquí
+          shadowColor: Colors.white,
+          toolbarTextStyle: const TextStyle(
+            color: Colors.white,
+            fontFamily: 'Futura',
+            fontSize: 12,
+            letterSpacing: 6.0,
+          ), // Título de AppBar blanco
+          titleTextStyle: const TextStyle(
+            color: Colors.white,
+            fontFamily: 'Futura',
+            fontSize: 22,
+            letterSpacing: 7.0,
+          ), // Título de AppBar blanco
+        ),
+      ),
+      home: const SplashScreen(),
+    );
   }
 }

@@ -22,18 +22,31 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: RichText(
           text: TextSpan(
-            text: 'Bienvenido, ',
-            style: const TextStyle(color: Colors.black, fontSize: 18),
+            style: Theme.of(context).appBarTheme.titleTextStyle ??
+                const TextStyle(),
+            text: 'Hola ',
             children: <TextSpan>[
               TextSpan(
                 text: user?.nombre ?? 'Invitado',
-                style: const TextStyle(color: Colors.black, fontSize: 18),
               ),
               TextSpan(
                 text: ' ${user?.apellidos ?? ''}',
-                style: const TextStyle(color: Colors.black, fontSize: 18),
               ),
             ],
+          ),
+        ),
+        backgroundColor: Colors.green,
+        shadowColor: Colors.grey,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF4CAF50), // Un tono de verde
+                Color(0xFF8BC34A), // Otro tono de verde
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
           ),
         ),
         actions: <Widget>[
@@ -71,24 +84,21 @@ class HomeScreen extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/fondoAzulmetal.jpg"),
-            fit: BoxFit.cover,
+            image: AssetImage("assets/fondoFinal.jpg"),
+            fit: BoxFit.fill,
           ),
         ),
-        child: Container(
-          //color: Colors.white.withOpacity(0.2), // Semi-transparent white
-          child: ListView(
-            children: <Widget>[
-              const SizedBox(height: 120.0),
-              buildCard('Tabla Periódica', TablaPeriodicaScreen(), context),
-              buildCard('Quiz', QuizScreen(), context),
-              /* buildCard('Formulación', context),
-              buildCard('Disoluciones', context),
-              buildCard('Estequiometría', context),
-              buildCard('Scripts de Física', context),
-              buildCard('Tipo Test', context),*/
-            ],
-          ),
+        child: ListView(
+          children: <Widget>[
+            const SizedBox(height: 30.0),
+            buildCard('Tabla Periódica', TablaPeriodicaScreen(), context),
+            buildCard('Quiz', QuizScreen(), context),
+            /* buildCard('Formulación', context),
+            buildCard('Disoluciones', context),
+            buildCard('Estequiometría', context),
+            buildCard('Scripts de Física', context),
+            buildCard('Tipo Test', context),*/
+          ],
         ),
       ),
     );

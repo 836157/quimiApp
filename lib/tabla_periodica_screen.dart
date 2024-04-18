@@ -51,7 +51,7 @@ class _TablaPeriodicaScreenState extends State<TablaPeriodicaScreen> {
 
   Widget _buildBody(Elemento elemento) {
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: familias[elemento.familia] ?? Colors.white, // color de fondo
         borderRadius: BorderRadius.circular(20), // bordes redondeados
@@ -61,7 +61,7 @@ class _TablaPeriodicaScreenState extends State<TablaPeriodicaScreen> {
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 5,
             blurRadius: 7,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -151,65 +151,56 @@ class _TablaPeriodicaScreenState extends State<TablaPeriodicaScreen> {
           ),
         ],
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/fondologin.jpg"),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: FutureBuilder<List<Elemento>>(
-          future: elementos,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              elementosFiltrados = snapshot.data!;
-              if (familiaSeleccionada != null) {
-                elementosFiltrados = elementosFiltrados
-                    .where(
-                        (elemento) => elemento.familia == familiaSeleccionada)
-                    .toList();
-              }
-              return GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                ),
-                itemCount: elementosFiltrados.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            content: _buildBody(elementosFiltrados[index]),
-                          );
-                        },
-                      );
-                    },
-                    child: Card(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(
-                                  "assets/${elementosFiltrados[index].nombre}.jpg"),
-                              fit: BoxFit.cover,
-                            ),
+      body: FutureBuilder<List<Elemento>>(
+        future: elementos,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            elementosFiltrados = snapshot.data!;
+            if (familiaSeleccionada != null) {
+              elementosFiltrados = elementosFiltrados
+                  .where((elemento) => elemento.familia == familiaSeleccionada)
+                  .toList();
+            }
+            return GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+              ),
+              itemCount: elementosFiltrados.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          content: _buildBody(elementosFiltrados[index]),
+                        );
+                      },
+                    );
+                  },
+                  child: Card(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(
+                                "assets/${elementosFiltrados[index].nombre}.jpg"),
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
                     ),
-                  );
-                },
-              );
-            } else if (snapshot.hasError) {
-              return Text('${snapshot.error}');
-            }
+                  ),
+                );
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          }
 
-            return CircularProgressIndicator();
-          },
-        ),
+          return CircularProgressIndicator();
+        },
       ),
     );
   }

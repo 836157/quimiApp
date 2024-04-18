@@ -26,12 +26,17 @@ class QuizScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Quiz Game'),
+        title: const Text(
+          'Quiz Game',
+          style: TextStyle(
+            fontSize: 24,
+          ),
+        ),
       ),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/quiz.jpg'), // Imagen de fondo
+            image: AssetImage('assets/fondoFinal.jpg'), // Imagen de fondo
             fit: BoxFit.fill,
           ),
         ),
@@ -39,19 +44,24 @@ class QuizScreen extends StatelessWidget {
           child: Padding(
             // Nuevo Padding widget
             padding: const EdgeInsets.only(
-                bottom: 55.0), // Añade espacio en la parte inferior
+                bottom: 95.0), // Añade espacio en la parte inferior
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                SizedBox(
+                  height: 320, // Define la altura
+                  width: 370, // Define la anchura
+                  child: PersonalizadorWidget.neonQuiz(),
+                ),
                 Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.only(top: 50),
                   child: PersonalizadorWidget.buildCustomElevatedButton(
                       "Iniciar Quiz", () async {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Elige una temática'),
+                          title: const Text('Elige una temática'),
                           content: SingleChildScrollView(
                             child: ListBody(
                               children: <Widget>[
@@ -134,7 +144,7 @@ class QuizScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: PersonalizadorWidget.buildCustomElevatedButton(
-                      "Repasar Quiz", () async {}),
+                      "Crear preguntas", () async {}),
                 ),
               ],
             ),

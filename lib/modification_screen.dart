@@ -46,14 +46,28 @@ class _ModificationScreenState extends State<ModificationScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Modificar usuario'),
+        backgroundColor: Colors.green,
+        shadowColor: Colors.grey,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF4CAF50), // Un tono de verde
+                Color(0xFF8BC34A), // Otro tono de verde
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height,
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("assets/fondologin.jpg"),
-              fit: BoxFit.cover,
+              image: AssetImage("assets/fondoFinal.jpg"),
+              fit: BoxFit.fill,
             ),
           ),
           child: Padding(
@@ -86,7 +100,7 @@ class _ModificationScreenState extends State<ModificationScreen> {
                     labelText: 'Contraseña',
                     icon: Icons.vpn_key,
                   ),
-                  const SizedBox(height: 20.0),
+                  const SizedBox(height: 35.0),
                   PersonalizadorWidget.buildCustomElevatedButton(
                     'Actualizar',
                     () async {
