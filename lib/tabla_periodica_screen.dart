@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
 import 'dart:convert';
 import 'package:quimicapp/elemento.dart';
 import 'package:quimicapp/personalizadorwidget.dart';
@@ -51,53 +52,66 @@ class _TablaPeriodicaScreenState extends State<TablaPeriodicaScreen> {
   }
 
   Widget _buildBody(Elemento elemento) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: familias[elemento.familia] ?? Colors.white, // color de fondo
-        borderRadius: BorderRadius.circular(20), // bordes redondeados
-        boxShadow: [
-          // sombra
-          BoxShadow(
-            color: Colors.green.withOpacity(1),
-            spreadRadius: 12,
-            blurRadius: 12,
-            offset: const Offset(0, 3),
+    return FractionallySizedBox(
+      widthFactor: 1.2, // Ajusta esto para cambiar el ancho del contenedor
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: familias[elemento.familia] ?? Colors.white, // color de fondo
+          borderRadius: BorderRadius.circular(20), // bordes redondeados
+        ),
+        child: SingleChildScrollView(
+          // Hace que el contenido sea desplazable
+          child: Column(
+            children: <Widget>[
+              Image.asset('assets/${elemento.simbolo}.gif',
+                  fit: BoxFit.cover), // Añade el gif al principio
+              DataTableTheme(
+                data: const DataTableThemeData(
+                  headingRowHeight:
+                      0.0, // Set this to 0.0 to remove the header space
+                ),
+                child: DataTable(
+                  columnSpacing: 10,
+                  columns: const <DataColumn>[
+                    DataColumn(
+                      label: SizedBox.shrink(),
+                    ),
+                    DataColumn(
+                      label: SizedBox.shrink(),
+                    ),
+                  ],
+                  rows: elemento.toMap().entries.map((entry) {
+                    return DataRow(
+                      cells: <DataCell>[
+                        DataCell(
+                          Row(
+                            children: <Widget>[
+                              Lottie.asset('assets/iconoAtomo.json',
+                                  width: 24, height: 24),
+                              Text(entry.key,
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ),
+                        DataCell(
+                          Text('${entry.value}',
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                      ],
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Image.asset(
-            'assets/H.gif',
-            width: 500, // Ajusta el ancho como necesites
-            height: 500,
-            fit: BoxFit.scaleDown,
-          ), // Añade el gif al principio
-          SizedBox(height: 10),
-          ...elemento.toMap().entries.map((entry) {
-            return Row(
-              children: <Widget>[
-                // Cambia el icono
-                Icon(
-                  Icons
-                      .science, // Este es un icono de ciencia proporcionado por Material Icons
-                  size: 24.0,
-                  color: Colors.green,
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  // Hace que el texto se adapte al largo del espacio
-                  child: Text(
-                    '${entry.key}: ${entry.value}',
-                    style: TextStyle(fontSize: 18, color: Colors.black),
-                  ),
-                ),
-              ],
-            );
-          }).toList(),
-        ],
+        ),
       ),
     );
   }
@@ -105,6 +119,7 @@ class _TablaPeriodicaScreenState extends State<TablaPeriodicaScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Tabla Periodica'),
         backgroundColor: Colors.green,
@@ -158,30 +173,33 @@ class _TablaPeriodicaScreenState extends State<TablaPeriodicaScreen> {
                   .where((elemento) => elemento.familia == familiaSeleccionada)
                   .toList();
             }
-            return GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
+            return Padding(
+              padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                ),
+                itemCount: elementosFiltrados.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: GestureDetector(
+                              onTap: () => Navigator.of(context)
+                                  .pop(), // Cierra el diálogo cuando se toca fuera
+                              child: _buildBody(elementosFiltrados[index]),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    child: ElementCard(elemento: elementosFiltrados[index]),
+                  );
+                },
               ),
-              itemCount: elementosFiltrados.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          content: GestureDetector(
-                            onTap: () => Navigator.of(context)
-                                .pop(), // Cierra el diálogo cuando se toca fuera
-                            child: _buildBody(elementosFiltrados[index]),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  child: ElementCard(elemento: elementosFiltrados[index]),
-                );
-              },
             );
           } else if (snapshot.hasError) {
             return Text('${snapshot.error}');

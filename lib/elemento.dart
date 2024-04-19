@@ -55,7 +55,7 @@ class Elemento {
 
   Map<String, dynamic> toMap() {
     return {
-      '': nombre,
+      'Nombre': nombre,
       'A': numeroAtomico,
       'Sim': simbolo,
       'Uma': pesoAtomico,

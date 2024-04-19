@@ -124,7 +124,7 @@ class ElementCard extends StatelessWidget {
       ),
       child: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             begin: Alignment.bottomRight,
             end: Alignment.topLeft,
             colors: [Colors.black, Colors.green],

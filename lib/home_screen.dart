@@ -29,9 +29,6 @@ class HomeScreen extends StatelessWidget {
               TextSpan(
                 text: user?.nombre ?? 'Invitado',
               ),
-              TextSpan(
-                text: ' ${user?.apellidos ?? ''}',
-              ),
             ],
           ),
         ),
