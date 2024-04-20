@@ -24,4 +24,9 @@ class RespuestaDTO {
   String toString() {
     return 'Respuesta: {correcta: $esCorrecta, respuesta: $respuesta}';
   }
+
+  Map<String, dynamic> toJson() => {
+        'respuesta': respuesta,
+        'esCorrecta': esCorrecta,
+      };
 }

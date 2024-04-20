@@ -55,6 +55,8 @@ class _TablaPeriodicaScreenState extends State<TablaPeriodicaScreen> {
     return FractionallySizedBox(
       widthFactor: 1.2, // Ajusta esto para cambiar el ancho del contenedor
       child: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: familias[elemento.familia] ?? Colors.white, // color de fondo

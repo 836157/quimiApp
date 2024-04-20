@@ -27,6 +27,13 @@ class PreguntaDTO {
     );
   }
 
+  Map<String, dynamic> toJson() => {
+        'pregunta': pregunta,
+        'respuestas':
+            respuestas.map((respuesta) => respuesta.toJson()).toList(),
+        'tematica': tematica,
+      };
+
   static PreguntaDTO clone(PreguntaDTO currentPregunta) {
     List<RespuestaDTO> clonedRespuestas = currentPregunta.respuestas
         .map((respuesta) => RespuestaDTO(

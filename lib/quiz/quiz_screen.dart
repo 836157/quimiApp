@@ -5,7 +5,7 @@ import 'package:quimicapp/personalizadorwidget.dart';
 import 'package:quimicapp/pregunta.dart';
 import 'package:http/http.dart' as http;
 import 'package:quimicapp/quiz/quiz_page.dart';
-import 'package:quimicapp/quiz_makequestion.dart';
+import 'package:quimicapp/quiz/quiz_makequestion.dart';
 
 Future<List<Pregunta>> cuestionarioQuizTematica(String tematica) async {
   final response = await http.get(

@@ -50,40 +50,49 @@ class PersonalizadorWidget {
 
   static Widget buildCustomElevatedButton(
       String buttonText, VoidCallback onPressed) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(27),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.white, // Cambia esto al color de sombra que prefieras
-            spreadRadius: 1,
-            blurRadius: 16,
-            offset: Offset(
-                0, 1), // Cambia esto para cambiar la posición de la sombra
-          ),
-        ],
-        gradient: const LinearGradient(
-          colors: [
-            Color(0xFF4CAF50), // Un tono de verde
-            Color(0xFF8BC34A), // Otro tono de verde
+    return SizedBox(
+      width: 200, // Ancho del botón
+      height: 50,
+
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(27),
+          boxShadow: const [
+            BoxShadow(
+              color:
+                  Colors.white, // Cambia esto al color de sombra que prefieras
+              spreadRadius: 1,
+              blurRadius: 16,
+              offset: Offset(
+                  0, 1), // Cambia esto para cambiar la posición de la sombra
+            ),
           ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+          gradient: const LinearGradient(
+            colors: [
+              Color(0xFF4CAF50), // Un tono de verde
+              Color(0xFF8BC34A), // Otro tono de verde
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
         ),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(30),
-          onTap: onPressed,
-          child: Container(
-            padding:
-                const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
-            child: Text(
-              buttonText,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 20,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(30),
+            onTap: onPressed,
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+              child: Center(
+                // Aquí es donde cambió el código
+                child: Text(
+                  buttonText,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
+                ),
               ),
             ),
           ),
