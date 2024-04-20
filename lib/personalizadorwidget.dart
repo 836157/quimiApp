@@ -7,32 +7,38 @@ class PersonalizadorWidget {
     required TextEditingController controller,
     required String labelText,
     required IconData icon,
+    int? maxLines,
+    bool expands = false,
     Color? iconColor,
   }) {
+    bool isObscure = labelText == 'Contraseña';
     return TextFormField(
       controller: controller,
+      maxLines: isObscure ? 1 : (expands ? null : maxLines),
+      minLines: isObscure ? 1 : (expands ? null : 1),
+      expands: !isObscure && expands,
+      obscureText: isObscure,
+      obscuringCharacter: '*',
       style: const TextStyle(
-        color: Colors.black, fontSize: 18.0, // Aumenta el tamaño de la fuente
+        color: Colors.black,
+        fontSize: 18.0,
         fontWeight: FontWeight.bold,
         letterSpacing: 2,
-      ), // Añade esto
+      ),
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: const TextStyle(
           fontSize: 20.0,
           fontWeight: FontWeight.bold,
-          color: Colors.black,
+          color: Colors.grey,
         ),
-        prefixIcon: Icon(icon,
-            color: iconColor ?? Colors.green[600]), // Y esto // Añade esto
+        prefixIcon: Icon(icon, color: iconColor ?? Colors.green[600]),
         fillColor: Colors.white,
         filled: true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
       ),
-      obscureText: labelText == 'Contraseña',
-      obscuringCharacter: '*',
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Por favor ingresa tu $labelText';
@@ -112,7 +118,19 @@ class PersonalizadorWidget {
 class ElementCard extends StatelessWidget {
   final Elemento elemento;
 
-  const ElementCard({super.key, required this.elemento});
+  ElementCard({super.key, required this.elemento});
+  final familias = {
+    'Metal Alcalino': const Color.fromARGB(255, 247, 170, 192),
+    'Tierra alcalina': const Color.fromARGB(255, 255, 220, 169),
+    'No Metal': const Color.fromARGB(255, 192, 215, 240),
+    'Metaloides': const Color.fromARGB(255, 147, 217, 245),
+    'Metales post-transicion': const Color.fromARGB(255, 212, 235, 216),
+    'Metales de transicion': const Color.fromARGB(255, 247, 246, 204),
+    'Halogenos': const Color.fromARGB(255, 224, 224, 240),
+    'Gases Nobles': const Color.fromARGB(255, 225, 207, 229),
+    'Lantanidos': const Color.fromARGB(255, 252, 224, 237),
+    'Actinidos': const Color.fromARGB(255, 250, 191, 226),
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -172,6 +190,18 @@ class ElementCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 20.0,
                   color: Colors.white,
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 10.0,
+              left: 10.0,
+              child: Container(
+                width: 20.0,
+                height: 20.0,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: familias[elemento.familia],
                 ),
               ),
             ),

@@ -176,8 +176,6 @@ class _QuizPageState extends State<QuizPage> {
                       _hasAnswered = false; // Reset selected option
                       if (isCorrect) {
                         _correctAnswers++; // Incrementar el contador de respuestas correctas
-                      } else {
-// Incrementar el contador de respuestas incorrectas
                       }
                     });
                   } else {

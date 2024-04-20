@@ -5,6 +5,7 @@ import 'package:quimicapp/personalizadorwidget.dart';
 import 'package:quimicapp/pregunta.dart';
 import 'package:http/http.dart' as http;
 import 'package:quimicapp/quiz/quiz_page.dart';
+import 'package:quimicapp/quiz_makequestion.dart';
 
 Future<List<Pregunta>> cuestionarioQuizTematica(String tematica) async {
   final response = await http.get(
@@ -30,6 +31,20 @@ class QuizScreen extends StatelessWidget {
           'Quiz Game',
           style: TextStyle(
             fontSize: 24,
+          ),
+        ),
+        backgroundColor: Colors.green,
+        shadowColor: Colors.grey,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF4CAF50), // Un tono de verde
+                Color(0xFF8BC34A), // Otro tono de verde
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
           ),
         ),
       ),
@@ -144,7 +159,13 @@ class QuizScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: PersonalizadorWidget.buildCustomElevatedButton(
-                      "Crear preguntas", () async {}),
+                      "Crear preguntas", () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => QuizMakeQuestionScreen()),
+                    );
+                  }),
                 ),
               ],
             ),

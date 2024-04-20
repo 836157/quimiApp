@@ -27,7 +27,8 @@ class AuthenticationService extends ChangeNotifier {
       if (response.statusCode == 200) {
         // Si el servidor devuelve una respuesta OK, entonces se concede el acceso
         // y se devuelve el usuario
-        currentUser = User.fromJson(jsonDecode(response.body));
+        String body = utf8.decode(response.bodyBytes);
+        currentUser = User.fromJson(jsonDecode(body));
         notifyListeners();
         if (currentUser != null) {
           Navigator.of(context).pushReplacement(

@@ -26,8 +26,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'QuimicApp',
       theme: ThemeData(
-        fontFamily: 'Futura',
-        //brightness: Brightness.dark, // Tema oscuro
+        fontFamily: 'Roboto',
         primaryColor: primaryColor, // Color primario negro
         colorScheme: const ColorScheme.dark(
           secondary: secondaryColor, // Color secundario verde
@@ -38,13 +37,13 @@ class MyApp extends StatelessWidget {
           shadowColor: Colors.white,
           toolbarTextStyle: const TextStyle(
             color: Colors.white,
-            fontFamily: 'Futura',
+            fontFamily: 'Roboto',
             fontSize: 12,
             letterSpacing: 6.0,
           ), // Título de AppBar blanco
           titleTextStyle: const TextStyle(
             color: Colors.white,
-            fontFamily: 'Futura',
+            fontFamily: 'Roboto',
             fontSize: 22,
             letterSpacing: 7.0,
           ), // Título de AppBar blanco

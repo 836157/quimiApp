@@ -67,7 +67,7 @@ class Elemento {
       'electronegatividad': electronegatividad,
       'Ra': radioAtomico,
       'Rc': radioCovalente,
-      'Rio': radioIonico,
+      'Ri': radioIonico,
     };
   }
 }

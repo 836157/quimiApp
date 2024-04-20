@@ -89,7 +89,7 @@ class HomeScreen extends StatelessWidget {
           children: <Widget>[
             const SizedBox(height: 30.0),
             buildCard('Tabla Periódica', TablaPeriodicaScreen(), context),
-            buildCard('Quiz', QuizScreen(), context),
+            buildCard('Quiz', const QuizScreen(), context),
             /* buildCard('Formulación', context),
             buildCard('Disoluciones', context),
             buildCard('Estequiometría', context),
