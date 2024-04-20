@@ -23,6 +23,7 @@ class _QuizMakeQuestionScreenState extends State<QuizMakeQuestionScreen> {
   final questionController = TextEditingController();
   late List<TextEditingController> respuestasController;
   late PreguntaDTO pregunta;
+  int? selectedAnswerIndex;
 
   @override
   void initState() {
@@ -124,25 +125,28 @@ class _QuizMakeQuestionScreenState extends State<QuizMakeQuestionScreen> {
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(
-                            4.0), // Asegúrate de que el radio del borde del Container coincida con el del Card
-                        gradient: const LinearGradient(
+                            18.0), // Asegúrate de que el radio del borde del Container coincida con el del Card
+                        /*gradient: const LinearGradient(
                           colors: [
                             Color(0xFF4CAF50), // Un tono de verde
                             Color(0xFF8BC34A), // Otro tono de verde
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
-                        ),
+                        ),*/
                       ),
                       child: Card(
-                        color:
-                            Colors.transparent, // Cambia el color de fondo aquí
-                        shadowColor: Colors
-                            .greenAccent, // Cambia el color de la sombra aquí
-                        elevation: 20,
+                        color: selectedAnswerIndex == index
+                            ? Colors.green
+                            : (selectedAnswerIndex == null
+                                ? Colors.black
+                                : Colors
+                                    .redAccent), // Cambia el color de fondo aquí
+                        // Cambia el color de la sombra aquí
+                        //elevation: 20,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
-                              15.0), // Cambia el radio del borde aquí
+                              18.0), // Cambia el radio del borde aquí
                         ),
 
                         child: Row(
@@ -162,7 +166,12 @@ class _QuizMakeQuestionScreenState extends State<QuizMakeQuestionScreen> {
                                   filled:
                                       true, // Llena el campo de texto con el color de fondo
                                   prefixIcon: const Icon(Icons.question_answer,
-                                      color: Colors.grey), // Icono verde
+                                      color: Colors.grey),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        16.0), // Radio del borde redondeado
+                                  ),
+                                  // Icono verde
                                 ),
                               ),
                             ),
@@ -170,6 +179,18 @@ class _QuizMakeQuestionScreenState extends State<QuizMakeQuestionScreen> {
                               value: respuesta.esCorrecta,
                               onChanged: (bool? value) {
                                 setState(() {
+                                  if (value == false &&
+                                      selectedAnswerIndex == index) {
+                                    // Si se deselecciona la respuesta correcta, resetea selectedAnswerIndex a null
+                                    selectedAnswerIndex = null;
+                                  } else if (value == true) {
+                                    if (selectedAnswerIndex != null) {
+                                      respuestas[selectedAnswerIndex!]
+                                          .esCorrecta = false;
+                                    }
+                                    respuesta.esCorrecta = true;
+                                    selectedAnswerIndex = index;
+                                  }
                                   respuesta.esCorrecta = value!;
                                 });
                               },
