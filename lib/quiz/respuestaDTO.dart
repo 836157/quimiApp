@@ -1,22 +1,16 @@
-class Respuesta {
-  int id;
+class RespuestaDTO {
   String respuesta;
   bool esCorrecta;
-  int pregunta;
 
-  Respuesta({
-    required this.id,
+  RespuestaDTO({
     required this.respuesta,
     required this.esCorrecta,
-    required this.pregunta,
   });
 
-  factory Respuesta.fromJson(Map<String, dynamic> json) {
-    return Respuesta(
-      id: json['id'],
+  factory RespuestaDTO.fromJson(Map<String, dynamic> json) {
+    return RespuestaDTO(
       respuesta: json['respuesta'],
       esCorrecta: json['esCorrecta'],
-      pregunta: json['pregunta'],
     );
   }
 
@@ -28,6 +22,6 @@ class Respuesta {
 
   @override
   String toString() {
-    return 'Respuesta: {correcta: $esCorrecta, pregunta: $pregunta}';
+    return 'Respuesta: {correcta: $esCorrecta, respuesta: $respuesta}';
   }
 }

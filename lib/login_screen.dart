@@ -17,6 +17,15 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
 
   @override
+  void dispose() {
+    // Llama a dispose en los controladores cuando el widget se descarte
+    _emailController.dispose();
+    _passwordController.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // Obtén la instancia de AuthenticationService
     AuthenticationService authService =

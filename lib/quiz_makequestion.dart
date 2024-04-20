@@ -1,33 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:quimicapp/personalizadorwidget.dart';
+import 'package:quimicapp/quiz/preguntaDTO.dart';
+import 'package:quimicapp/quiz/respuestaDTO.dart';
+import 'package:quimicapp/respuesta.dart';
 
 class QuizMakeQuestionScreen extends StatefulWidget {
-  QuizMakeQuestionScreen({super.key});
+  QuizMakeQuestionScreen({Key? key}) : super(key: key);
 
   @override
   State<QuizMakeQuestionScreen> createState() => _QuizMakeQuestionScreenState();
 }
 
 class _QuizMakeQuestionScreenState extends State<QuizMakeQuestionScreen> {
-  final TextEditingController questionController = TextEditingController();
+  List<RespuestaDTO> respuestas = [
+    RespuestaDTO(respuesta: '', esCorrecta: false),
+    RespuestaDTO(respuesta: '', esCorrecta: false),
+    RespuestaDTO(respuesta: '', esCorrecta: false),
+    RespuestaDTO(respuesta: '', esCorrecta: false),
+    // Agrega más respuestas aquí
+  ];
+  final questionController = TextEditingController();
+  late List<TextEditingController> respuestasController;
+  late PreguntaDTO pregunta;
 
-  final TextEditingController answer1Controller = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    respuestasController = List<TextEditingController>.generate(
+      respuestas.length,
+      (index) => TextEditingController(text: respuestas[index].respuesta),
+    );
+  }
 
-  final TextEditingController answer2Controller = TextEditingController();
-
-  final TextEditingController answer3Controller = TextEditingController();
-
-  final TextEditingController answer4Controller = TextEditingController();
-
-  String selectedValue = '';
-
-  String selectedValue1 = "Verdadero";
-
-  String selectedValue2 = "Verdadero";
-
-  String selectedValue3 = "Verdadero";
-
-  String selectedValue4 = "Verdadero";
+  @override
+  void dispose() {
+    questionController.dispose();
+    for (var controller in respuestasController) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,106 +60,151 @@ class _QuizMakeQuestionScreenState extends State<QuizMakeQuestionScreen> {
             ),
           ),
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.info_outline, color: Colors.white),
+            onPressed: () => _showInfoDialog(context),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height,
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/fondoFinal.jpg'),
+              image: AssetImage("assets/fondoFinal.jpg"),
               fit: BoxFit.fill,
             ),
           ),
-          child: Form(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 200.0,
-                    child: PersonalizadorWidget.buildCustomTextFormField(
-                      controller: questionController,
-                      labelText: 'Escribe tu pregunta aquí...',
-                      icon: Icons.question_answer,
-                      maxLines: null, // Permite un número ilimitado de líneas
-                      expands: true,
-                      // Hace que el TextFormField sea el doble de alto
+          child: Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: ListView(
+              children: <Widget>[
+                TextField(
+                  controller: questionController,
+                  maxLines: 4,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: 'Escribe tu pregunta aquí',
+                    labelStyle: const TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                    prefixIcon:
+                        const Icon(Icons.question_mark, color: Colors.green),
+                    fillColor: Colors.white,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-                  SizedBox(height: 16.0),
-                  _buildAnswerField(
-                      answer1Controller, 'Respuesta 1', selectedValue1),
-                  SizedBox(height: 16.0),
-                  _buildAnswerField(
-                      answer2Controller, 'Respuesta 2', selectedValue2),
-                  SizedBox(height: 16.0),
-                  _buildAnswerField(
-                      answer3Controller, 'Respuesta 3', selectedValue3),
-                  SizedBox(height: 16.0),
-                  _buildAnswerField(
-                      answer4Controller, 'Respuesta 4', selectedValue4),
-                  SizedBox(height: 24.0),
-                  Center(
-                    child: PersonalizadorWidget.buildCustomElevatedButton(
-                      "Guardar",
-                      () {},
-                    ),
+                ),
+                SizedBox(
+                    height: 90), // Espacio entre la pregunta y las respuestas
+                ...respuestas
+                    .asMap()
+                    .entries
+                    .map((MapEntry<int, RespuestaDTO> entry) {
+                  int index = entry.key;
+                  RespuestaDTO respuesta = entry.value;
+                  return Column(
+                    children: <Widget>[
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: TextField(
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 2,
+                                  ),
+                                  controller: respuestasController[index],
+                                  decoration: InputDecoration(
+                                    labelText: 'Opción ${index + 1}',
+                                    fillColor: Colors.white, // Fondo blanco
+                                    filled:
+                                        true, // Llena el campo de texto con el color de fondo
+                                    prefixIcon: const Icon(
+                                        Icons.question_answer,
+                                        color: Colors.green), // Icono verde
+                                  ),
+                                ),
+                              ),
+                              Checkbox(
+                                value: respuesta.esCorrecta,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    respuesta.esCorrecta = value!;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 30), // Espacio entre las tarjetas
+                    ],
+                  );
+                }).toList(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 158.0),
+                  child: PersonalizadorWidget.buildCustomElevatedButton(
+                    "Guardar",
+                    () {
+                      setState(() {
+                        pregunta = PreguntaDTO(
+                          pregunta: questionController.text,
+                          respuestas: respuestas.asMap().entries.map((entry) {
+                            int index = entry.key;
+                            RespuestaDTO respuesta = entry.value;
+                            return RespuestaDTO(
+                              respuesta: respuestasController[index].text,
+                              esCorrecta: respuesta.esCorrecta,
+                            );
+                          }).toList(),
+                          tematica: 'usuarios',
+                        );
+                        print(pregunta);
+                      });
+                    },
                   ),
-                ],
-              ),
+                )
+              ],
             ),
           ),
         ),
       ),
     );
   }
+}
 
-  Widget _buildAnswerField(TextEditingController controller, String labelText,
-      String selectedValue) {
-    return Column(
-      children: [
-        PersonalizadorWidget.buildCustomTextFormField(
-          controller: controller,
-          labelText: labelText,
-          icon: Icons.edit,
-          // minLines: 2, // Hace que el TextFormField sea el doble de alto
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: DropdownButton<String>(
-                value: selectedValue.isEmpty ? null : selectedValue,
-                //value: selectedValue,
-                hint: Text(
-                    'Selecciona una opción'), // Se mostrará cuando selectedValue sea null
-                items: ['Verdadero', 'Falso'].map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Row(
-                      children: [
-                        Text(value),
-                        Icon(value == 'Verdadero' ? Icons.check : Icons.close),
-                      ],
-                    ),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedValue = value!;
-                  });
-                },
-              ),
-            ),
-            if (selectedValue !=
-                null) // Solo muestra el icono si selectedValue no es null
-              Icon(selectedValue == 'Verdadero' ? Icons.check : Icons.close,
-                  color:
-                      selectedValue == 'Verdadero' ? Colors.green : Colors.red),
-          ],
-        ),
-      ],
-    );
-  }
+void _showInfoDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Información'),
+        content: const Text(
+            'Sé original, haz buenas preguntas y sé bueno con la gramática, gracias por colaborar.'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Cerrar'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
