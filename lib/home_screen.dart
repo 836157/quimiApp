@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:quimicapp/authentication_service.dart';
-import 'package:quimicapp/formulacionCarrusel.dart';
+import 'package:quimicapp/formulacionCarruselscreen.dart';
 import 'package:quimicapp/login_screen.dart';
 import 'package:quimicapp/modification_screen.dart';
 import 'package:quimicapp/quiz/quiz_screen.dart';
+import 'package:quimicapp/reaccionesscreen.dart';
 import 'package:quimicapp/tabla_periodica_screen.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -99,9 +100,10 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 30.0),
               buildCard('Tabla Periódica', TablaPeriodicaScreen(), context),
               buildCard('Quiz', const QuizScreen(), context),
-              buildCard('Formulación', const FormulacionCarrusel(), context),
-              /* buildCard('Disoluciones', context),
-              buildCard('Estequiometría', context),
+              buildCard('Formulación Inorgánica', const FormulacionCarrusel(),
+                  context),
+              buildCard('Ajuste Reacciones', ReaccionesScreen(), context),
+              /* buildCard('Estequiometría', context),
               buildCard('Scripts de Física', context),
               buildCard('Tipo Test', context),*/
             ],

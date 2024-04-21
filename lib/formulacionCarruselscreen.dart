@@ -42,7 +42,10 @@ class _FormulacionCarruselState extends State<FormulacionCarrusel> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: const Text('Formulación inorgánica'),
+        title: const Text(
+          'Formulación inorgánica',
+          style: TextStyle(fontSize: 16),
+        ),
         backgroundColor: Colors.green,
         shadowColor: Colors.grey,
         flexibleSpace: Container(
