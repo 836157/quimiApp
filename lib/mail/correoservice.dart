@@ -1,12 +1,12 @@
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 
-// 6,022140x1023
+// 6.022140x1023
 //quimicappconexion@gmail.com
 
 class EmailService {
-  final String senderEmail = 'tu-correo@gmail.com';
-  final String senderPassword = 'tu-contraseña';
+  final String senderEmail = 'quimicappconexion@gmail.com';
+  final String senderPassword = '6.022140x1023';
 
   Future<void> sendEmail(String recipientEmail, String recipientName) async {
     final smtpServer = gmail(senderEmail, senderPassword);

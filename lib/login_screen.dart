@@ -32,6 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Provider.of<AuthenticationService>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: true,
         title: const Text('Iniciar sesión'),
         backgroundColor: Colors.green,
         shadowColor: Colors.grey,
@@ -62,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
             key: formKey,
             child: Column(
               children: <Widget>[
-                const SizedBox(height: 180.0),
+                const SizedBox(height: 100.0),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 20.0), // Margen agregado aquí

@@ -113,7 +113,7 @@ class _QuizMakeQuestionScreenState extends State<QuizMakeQuestionScreen> {
                 ),
               ),
               SizedBox(
-                  height: 90), // Espacio entre la pregunta y las respuestas
+                  height: 40), // Espacio entre la pregunta y las respuestas
               ...respuestas
                   .asMap()
                   .entries
@@ -199,7 +199,7 @@ class _QuizMakeQuestionScreenState extends State<QuizMakeQuestionScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 45), // Espacio entre las tarjetas
+                    SizedBox(height: 15), // Espacio entre las tarjetas
                   ],
                 );
               }).toList(),
