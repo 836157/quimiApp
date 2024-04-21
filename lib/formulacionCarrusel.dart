@@ -1,48 +1,95 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 
-class FormulacionCarrusel extends StatelessWidget {
+void main() {
+  runApp(const MaterialApp(
+    home: FormulacionCarrusel(),
+  ));
+}
+
+class FormulacionCarrusel extends StatefulWidget {
+  const FormulacionCarrusel({Key? key}) : super(key: key);
+
+  @override
+  _FormulacionCarruselState createState() => _FormulacionCarruselState();
+}
+
+class _FormulacionCarruselState extends State<FormulacionCarrusel> {
+  String? pdfPath;
+
+  @override
+  void initState() {
+    super.initState();
+    loadPdf();
+  }
+
+  Future<void> loadPdf() async {
+    final documentDirectory = (await getApplicationDocumentsDirectory()).path;
+    final file = File("$documentDirectory/formulacion.pdf");
+    final rawData = await rootBundle.load('assets/formulacion.pdf');
+    final bytes = rawData.buffer.asUint8List();
+    await file.writeAsBytes(bytes, flush: true);
+    setState(() {
+      pdfPath = file.path;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mi Aplicación'),
-        // Personaliza la AppBar según tus necesidades
+        automaticallyImplyLeading: true,
+        title: const Text('Formulación inorgánica'),
+        backgroundColor: Colors.green,
+        shadowColor: Colors.grey,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF4CAF50), // Un tono de verde
+                Color(0xFF8BC34A), // Otro tono de verde
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
       ),
-      body: PageView(
-        // Configura el carrusel con las páginas deseadas
-        children: [
-          // Página 1
-          Container(
-            color: Colors.blue,
-            child: Center(
-              child:
-                  Text('Página 1 - Información sobre formulación inorgánica'),
-            ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/fondoFinal.jpg"),
+            fit: BoxFit.fill,
           ),
-          // Página 2
-          Container(
-            color: Colors.green,
-            child: Center(
-              child:
-                  Text('Página 2 - Información sobre formulación inorgánica'),
-            ),
-          ),
-          // Página 3
-          Container(
-            color: Colors.orange,
-            child: Center(
-              child:
-                  Text('Página 3 - Información sobre formulación inorgánica'),
-            ),
-          ),
-        ],
+        ),
+        child: pdfPath != null
+            ? Transform.scale(
+                scale: 1.15,
+                child: PDFView(
+                  filePath: pdfPath!,
+                  autoSpacing: true,
+                  enableSwipe: true,
+                  pageSnap: true,
+                  swipeHorizontal: true,
+                  nightMode: false,
+                  onError: (error) {
+                    print(error.toString());
+                  },
+                  onRender: (_pages) {
+                    setState(() {});
+                  },
+                  onViewCreated: (PDFViewController pdfViewController) {},
+                  onPageChanged: (int? page, int? total) {},
+                  onPageError: (page, error) {},
+                ),
+              )
+            : const Center(child: CircularProgressIndicator()),
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: FormulacionCarrusel(),
-  ));
 }

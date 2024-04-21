@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:quimicapp/authentication_service.dart';
+import 'package:quimicapp/formulacionCarrusel.dart';
 import 'package:quimicapp/login_screen.dart';
-import 'package:quimicapp/mail/correoservice.dart';
 import 'package:quimicapp/modification_screen.dart';
 import 'package:quimicapp/quiz/quiz_screen.dart';
 import 'package:quimicapp/tabla_periodica_screen.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:quimicapp/user.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key, required this.user});
 
   final User? user;
   final TextEditingController _emailTextController = TextEditingController();
-  Future<void> _sendEmail(String recipientEmail, String emailText) async {
-    EmailService emailService = EmailService();
-    await emailService.sendEmail(recipientEmail, emailText);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,8 +99,8 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 30.0),
               buildCard('Tabla Periódica', TablaPeriodicaScreen(), context),
               buildCard('Quiz', const QuizScreen(), context),
-              /* buildCard('Formulación', context),
-              buildCard('Disoluciones', context),
+              buildCard('Formulación', const FormulacionCarrusel(), context),
+              /* buildCard('Disoluciones', context),
               buildCard('Estequiometría', context),
               buildCard('Scripts de Física', context),
               buildCard('Tipo Test', context),*/
@@ -150,10 +146,10 @@ class HomeScreen extends StatelessWidget {
                   showModalBottomSheet(
                     context: context,
                     builder: (BuildContext context) {
-                      return FutureBuilder<List<String>>(
+                      return FutureBuilder<List<User>>(
                         future: obtenerUsuariosEnLinea(),
                         builder: (BuildContext context,
-                            AsyncSnapshot<List<String>> snapshot) {
+                            AsyncSnapshot<List<User>> snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return const Center(
@@ -186,13 +182,31 @@ class HomeScreen extends StatelessWidget {
                                         ),
                                       ),
                                       child: ListTile(
-                                        leading: Lottie.asset(
+                                        leading: GestureDetector(
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                title:
+                                                    const Text('Enviar correo'),
+                                                actions: [
+                                                  TextButton(
+                                                    child: Text('Enviar'),
+                                                    onPressed: () async {},
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                          child: Lottie.asset(
                                             'assets/correo.json',
                                             width: 50,
                                             height:
-                                                50), // Ajusta el tamaño a tu gusto
+                                                50, // Ajusta el tamaño a tu gusto
+                                          ),
+                                        ),
                                         title: Text(
-                                          snapshot.data![index],
+                                          snapshot.data![index].nombre,
                                           style: TextStyle(
                                             color: Colors
                                                 .white, // Esto hace que el texto sea blanco
@@ -245,20 +259,14 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Future<List<String>> obtenerUsuariosEnLinea() async {
+  Future<List<User>> obtenerUsuariosEnLinea() async {
     try {
       final response = await http.get(
           Uri.parse('http://10.0.2.2:8080/quimicApp/usuarios/listarActivos'));
-      String body = utf8.decode(response.bodyBytes);
-      List<dynamic> datos = jsonDecode(body);
-
       if (response.statusCode == 200) {
-        final String decodedBody = utf8.decode(response.bodyBytes);
-        final List<dynamic> usuariosEnJson = json.decode(decodedBody);
-        final List<String> usuariosEnLinea = usuariosEnJson
-            .map((usuario) => usuario['nombre'] as String)
-            .toList();
-        return usuariosEnLinea;
+        String body = utf8.decode(response.bodyBytes);
+        final List<dynamic> datosActivos = json.decode(body);
+        return datosActivos.map((dynamic item) => User.fromJson(item)).toList();
       } else {
         throw Exception('request failed');
       }
