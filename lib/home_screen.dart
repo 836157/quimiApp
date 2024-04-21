@@ -6,7 +6,8 @@ import 'package:quimicapp/login_screen.dart';
 import 'package:quimicapp/modification_screen.dart';
 import 'package:quimicapp/quiz/quiz_screen.dart';
 import 'package:quimicapp/tabla_periodica_screen.dart';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:quimicapp/user.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -33,7 +34,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         backgroundColor: Colors.green,
-        shadowColor: Colors.grey,
+        shadowColor: Colors.black,
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -100,6 +101,100 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF4CAF50), // Un tono de verde
+              Color(0xFF8BC34A), // Otro tono de verde
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: BottomNavigationBar(
+          backgroundColor: Colors.transparent,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white.withOpacity(0.6),
+          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.people),
+              label: 'Usuarios en línea',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'Ajustes',
+            ),
+          ],
+          onTap: (index) {
+            // Aquí puedes manejar el cambio de la selección
+            // Por ejemplo, puedes usar un switch/case para navegar a diferentes pantallas
+            switch (index) {
+              case 0:
+                // Navegar a la pantalla de "Usuarios en línea"
+                showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return FutureBuilder<List<String>>(
+                      future: obtenerUsuariosEnLinea(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<String>> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return const Center(
+                              child:
+                                  Text('Error al obtener usuarios en línea'));
+                        } else {
+                          return ListView.builder(
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (context, index) => Card(
+                              elevation: 5, // Esto da una sombra a la tarjeta
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Color(0xFF4CAF50), // Un tono de verde
+                                      Color(0xFF8BC34A), // Otro tono de verde
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                ),
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundColor: Colors
+                                        .green, // Esto hace que el círculo sea verde
+                                  ),
+                                  title: Text(
+                                    snapshot.data![index],
+                                    style: TextStyle(
+                                      color: Colors
+                                          .white, // Esto hace que el texto sea blanco
+                                      fontWeight: FontWeight
+                                          .bold, // Esto hace que el texto sea en negrita
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                    );
+                  },
+                );
+                break;
+              case 1:
+                // Navegar a la pantalla de "Ajustes"
+                break;
+            }
+          },
+        ),
+      ),
     );
   }
 
@@ -123,5 +218,27 @@ class HomeScreen extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Future<List<String>> obtenerUsuariosEnLinea() async {
+    try {
+      final response = await http.get(
+          Uri.parse('http://10.0.2.2:8080/quimicApp/usuarios/listarActivos'));
+      String body = utf8.decode(response.bodyBytes);
+      List<dynamic> datos = jsonDecode(body);
+
+      if (response.statusCode == 200) {
+        final String decodedBody = utf8.decode(response.bodyBytes);
+        final List<dynamic> usuariosEnJson = json.decode(decodedBody);
+        final List<String> usuariosEnLinea = usuariosEnJson
+            .map((usuario) => usuario['nombre'] as String)
+            .toList();
+        return usuariosEnLinea;
+      } else {
+        throw Exception('request failed');
+      }
+    } catch (e) {
+      throw Exception('Failed to load Element');
+    }
   }
 }
