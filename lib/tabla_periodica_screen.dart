@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
 import 'dart:convert';
 import 'package:quimicapp/elemento.dart';
+import 'package:quimicapp/formatotablascreen.dart';
 import 'package:quimicapp/personalizadorwidget.dart';
 
 Future<List<Elemento>> fetchElement() async {
@@ -139,6 +140,16 @@ class _TablaPeriodicaScreenState extends State<TablaPeriodicaScreen> {
           ),
         ),
         actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.table_chart), // Cambia esto al ícono que prefieras
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => TablePage(fetchElement())),
+              );
+            },
+          ),
           PopupMenuButton<String>(
             onSelected: (String result) {
               setState(() {

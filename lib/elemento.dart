@@ -15,6 +15,21 @@ class Elemento {
   final double? radioIonico;
   final String? familia;
 
+  String get getNombre => nombre;
+  int get getNumeroAtomico => numeroAtomico;
+  String get getSimbolo => simbolo;
+  double get getPesoAtomico => pesoAtomico;
+  String get getGeometriaMasComun => geometriaMasComun;
+  double? get getDensidad => densidad;
+  double? get getPuntoFusion => puntoFusion;
+  double? get getPuntoEbullicion => puntoEbullicion;
+  double? get getCalorEspecifico => calorEspecifico;
+  double? get getElectronegatividad => electronegatividad;
+  double? get getRadioAtomico => radioAtomico;
+  double? get getRadioCovalente => radioCovalente;
+  double? get getRadioIonico => radioIonico;
+  String? get getFamilia => familia;
+
   Elemento({
     required this.id,
     required this.nombre,
