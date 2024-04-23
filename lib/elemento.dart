@@ -1,10 +1,14 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+
 class Elemento {
   final int id;
-  final String nombre;
-  final int numeroAtomico;
+  final String? nombre;
+  final int? numeroAtomico;
   final String simbolo;
-  final double pesoAtomico;
-  final String geometriaMasComun;
+  final double? pesoAtomico;
+  final String? geometriaMasComun;
   final double? densidad;
   final double? puntoFusion;
   final double? puntoEbullicion;
@@ -14,12 +18,17 @@ class Elemento {
   final double? radioCovalente;
   final double? radioIonico;
   final String? familia;
+  final Color? color1;
+  final Color? color2;
+  final String? source;
+  final int? posicionX;
+  final int? posicionY;
 
-  String get getNombre => nombre;
-  int get getNumeroAtomico => numeroAtomico;
+  String? get getNombre => nombre;
+  int? get getNumeroAtomico => numeroAtomico;
   String get getSimbolo => simbolo;
-  double get getPesoAtomico => pesoAtomico;
-  String get getGeometriaMasComun => geometriaMasComun;
+  double? get getPesoAtomico => pesoAtomico;
+  String? get getGeometriaMasComun => geometriaMasComun;
   double? get getDensidad => densidad;
   double? get getPuntoFusion => puntoFusion;
   double? get getPuntoEbullicion => puntoEbullicion;
@@ -29,14 +38,19 @@ class Elemento {
   double? get getRadioCovalente => radioCovalente;
   double? get getRadioIonico => radioIonico;
   String? get getFamilia => familia;
+  Color? get getColor1 => color1;
+  Color? get getColor2 => color2;
+  String? get getSource => source;
+  int? get getPosicionX => posicionX;
+  int? get getPosicionY => posicionY;
 
   Elemento({
     required this.id,
-    required this.nombre,
-    required this.numeroAtomico,
+    this.nombre,
+    this.numeroAtomico,
     required this.simbolo,
-    required this.pesoAtomico,
-    required this.geometriaMasComun,
+    this.pesoAtomico,
+    this.geometriaMasComun,
     this.densidad,
     this.puntoFusion,
     this.puntoEbullicion,
@@ -46,6 +60,11 @@ class Elemento {
     this.radioCovalente,
     this.radioIonico,
     this.familia,
+    this.color1,
+    this.color2,
+    this.source,
+    required this.posicionX,
+    required this.posicionY,
   });
 
   factory Elemento.fromJson(Map<String, dynamic> json) {
@@ -65,7 +84,17 @@ class Elemento {
       radioCovalente: json['radioCovalente'],
       radioIonico: json['radioIonico'],
       familia: json['familia'],
+      color1: _colorFromHex(json['color1']),
+      color2: _colorFromHex(json['color2']),
+      source: json['source'],
+      posicionX: json['posicionX'],
+      posicionY: json['posicionY'],
     );
+  }
+
+  static Color _colorFromHex(String hexColor) {
+    final hexCode = hexColor.replaceAll('#', '');
+    return Color(int.parse('FF$hexCode', radix: 16));
   }
 
   Map<String, dynamic> toMap() {
