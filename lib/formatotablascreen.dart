@@ -1,8 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:lottie/lottie.dart';
 import 'package:quimicapp/elemento.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class TablaPeriodica extends StatelessWidget {
   Future<List<Elemento>>? elementos;
+  final familias = {
+    'Metal Alcalino': [
+      const Color.fromARGB(255, 247, 170, 192),
+      const Color.fromARGB(255, 217, 140, 162),
+      const Color.fromARGB(255, 255, 190, 212)
+    ],
+    'Tierra alcalina': [
+      const Color.fromARGB(255, 255, 220, 169),
+      const Color.fromARGB(255, 225, 190, 139),
+      const Color.fromARGB(255, 255, 240, 189)
+    ],
+    'No Metal': [
+      const Color.fromARGB(255, 192, 215, 240),
+      const Color.fromARGB(255, 162, 185, 210),
+      const Color.fromARGB(255, 202, 225, 250)
+    ],
+    'Metaloides': [
+      const Color.fromARGB(255, 147, 217, 245),
+      const Color.fromARGB(255, 117, 187, 215),
+      const Color.fromARGB(255, 157, 227, 255)
+    ],
+    'Metales de post-transición': [
+      const Color.fromARGB(255, 212, 235, 216),
+      const Color.fromARGB(255, 182, 205, 186),
+      const Color.fromARGB(255, 222, 245, 226)
+    ],
+    'Metales de transición': [
+      const Color.fromARGB(255, 247, 246, 204),
+      const Color.fromARGB(255, 217, 216, 174),
+      const Color.fromARGB(255, 257, 256, 214)
+    ],
+    'Halógenos': [
+      const Color.fromARGB(255, 224, 224, 240),
+      const Color.fromARGB(255, 194, 194, 210),
+      const Color.fromARGB(255, 234, 234, 250)
+    ],
+    'Gases Nobles': [
+      const Color.fromARGB(255, 225, 207, 229),
+      const Color.fromARGB(255, 195, 177, 199),
+      const Color.fromARGB(255, 235, 217, 239)
+    ],
+    'Lantánidos': [
+      const Color.fromARGB(255, 252, 224, 237),
+      const Color.fromARGB(255, 222, 194, 207),
+      const Color.fromARGB(255, 252, 224, 237)
+    ],
+    'Actínidos': [
+      const Color.fromARGB(255, 250, 191, 226),
+      const Color.fromARGB(255, 220, 161, 196),
+      const Color.fromARGB(255, 250, 191, 226)
+    ],
+  };
 
   TablaPeriodica({required this.elementos});
 
@@ -11,7 +67,6 @@ class TablaPeriodica extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text('Tabla Periódica'),
-          automaticallyImplyLeading: true,
           backgroundColor: Colors.green,
           shadowColor: Colors.grey,
           flexibleSpace: Container(
@@ -30,7 +85,7 @@ class TablaPeriodica extends StatelessWidget {
         body: Container(
           // backgroundColor: Colors.white,
           decoration: BoxDecoration(
-            color: Colors.white, // Establece el color de fondo aquí
+            color: Colors.black, // Establece el color de fondo aquí
           ),
           child: FutureBuilder<List<Elemento>>(
             future: elementos,
@@ -80,18 +135,6 @@ class TablaPeriodica extends StatelessWidget {
   }
 
   Widget _crearCard(Elemento elemento, BuildContext context) {
-    final familias = {
-      'Metal Alcalino': const Color.fromARGB(255, 247, 170, 192),
-      'Tierra alcalina': const Color.fromARGB(255, 255, 220, 169),
-      'No Metal': const Color.fromARGB(255, 192, 215, 240),
-      'Metaloides': const Color.fromARGB(255, 147, 217, 245),
-      'Metales de post-transición': const Color.fromARGB(255, 212, 235, 216),
-      'Metales de transición': const Color.fromARGB(255, 247, 246, 204),
-      'Halógenos': const Color.fromARGB(255, 224, 224, 240),
-      'Gases Nobles': const Color.fromARGB(255, 225, 207, 229),
-      'Lantánidos': const Color.fromARGB(255, 252, 224, 237),
-      'Actínidos': const Color.fromARGB(255, 250, 191, 226),
-    };
     return SizedBox(
       width: 70.0, // Ancho fijo
       height: 70.0,
@@ -100,27 +143,29 @@ class TablaPeriodica extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => DetalleElementoScreen(elemento: elemento),
+              builder: (context) => DetailPage(elemento),
             ),
           );
         },
-        child: Card(
-          elevation: 10.0,
-          shadowColor: Colors.white,
-          shape: RoundedRectangleBorder(
+        child: Container(
+          decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15.0),
+            gradient: LinearGradient(
+              colors: familias[elemento.familia] ??
+                  [
+                    Colors.black,
+                    Colors.grey,
+                  ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
           ),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomRight,
-                end: Alignment.topLeft,
-                colors: [
-                  elemento.color1 ?? Colors.black,
-                  elemento.color2 ?? Colors.black
-                ],
-              ),
-              borderRadius: BorderRadius.circular(5.0),
+          child: Card(
+            color: Colors.transparent,
+            elevation: 10.0,
+            shadowColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
             ),
             child: Stack(
               children: <Widget>[
@@ -134,14 +179,13 @@ class TablaPeriodica extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  bottom: 10.0,
-                  left: 10.0,
-                  child: Container(
-                    width: 5.0,
-                    height: 5.0,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: familias[elemento.familia],
+                  bottom: 40.0,
+                  right: 7.0,
+                  child: Text(
+                    elemento.numeroAtomico.toString(),
+                    style: TextStyle(
+                      fontSize: 12.0,
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -182,69 +226,220 @@ class TablaPeriodica extends StatelessWidget {
   }
 }
 
-class DetalleElementoScreen extends StatelessWidget {
-  final Elemento elemento;
+class DetailPage extends StatelessWidget {
+  DetailPage(this.element);
 
-  DetalleElementoScreen({required this.elemento});
+  final Elemento element;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(elemento.nombre!),
+    final listItems = <Widget>[
+      ListTile(
+        leading: Icon(Icons.category),
+        title: Text('Nombre'),
+        subtitle: Text(element.nombre!),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              _crearFila('Nombre', elemento.nombre!, Icons.account_circle),
-              _crearFila('Número Atómico', elemento.numeroAtomico.toString(),
-                  Icons.format_list_numbered),
-              _crearFila('Símbolo', elemento.simbolo, Icons.text_fields),
-              _crearFila('Peso Atómico', elemento.pesoAtomico.toString(),
-                  Icons.line_weight),
-              _crearFila('Geometría Más Común', elemento.geometriaMasComun!,
-                  Icons.grid_view),
-              _crearFila(
-                  'Densidad', '${elemento.densidad} g/cm³', Icons.view_array),
-              _crearFila('Punto de Fusión', '${elemento.puntoFusion} K',
-                  Icons.thermostat),
-              _crearFila('Punto de Ebullición', '${elemento.puntoEbullicion} K',
-                  Icons.thermostat_outlined),
-              _crearFila(
-                  'Calor Específico',
-                  '${elemento.calorEspecifico} J/(g·K)',
-                  Icons.fire_extinguisher),
-              _crearFila(
-                  'Electronegatividad',
-                  elemento.electronegatividad.toString(),
-                  Icons.electrical_services),
-              _crearFila(
-                  'Radio Atómico', '${elemento.radioAtomico} pm', Icons.radio),
-              _crearFila('Radio Covalente', '${elemento.radioCovalente} pm',
-                  Icons.radio_button_checked),
-              _crearFila('Radio Iónico', '${elemento.radioIonico} pm',
-                  Icons.radio_button_unchecked),
-              _crearFila('Familia', elemento.familia!, Icons.family_restroom),
-            ],
+      ListTile(
+          leading: Icon(Icons.category),
+          title: Text(element.familia!.toUpperCase())),
+      ListTile(
+        leading: Icon(Icons.line_weight),
+        title: Text('Peso Atómico'),
+        subtitle: Text(element.pesoAtomico.toString()),
+      ),
+      ListTile(
+        leading: Icon(Icons.category),
+        title: Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Container(
+            width: 280,
+            height: 280,
+            child: Lottie.asset('assets/${element.simbolo}.json'),
           ),
         ),
+        subtitle: Text('Orbital Electrónico'),
+      ),
+      ListTile(
+        leading: Icon(Icons.grid_view),
+        title: Text('Geometría Más Común'),
+        subtitle: Text(element.geometriaMasComun!),
+      ),
+      ListTile(
+        leading: Icon(Icons.view_array),
+        title: Text('Densidad'),
+        subtitle: Text('${element.densidad} g/cm³'),
+      ),
+      ListTile(
+        leading: Icon(Icons.thermostat),
+        title: Text('Punto de Fusión'),
+        subtitle: Text('${element.puntoFusion} K'),
+      ),
+      ListTile(
+        leading: Icon(Icons.thermostat_outlined),
+        title: Text('Punto de Ebullición'),
+        subtitle: Text('${element.puntoEbullicion} K'),
+      ),
+      ListTile(
+        leading: Icon(Icons.fire_extinguisher),
+        title: Text('Calor Específico'),
+        subtitle: Text('${element.calorEspecifico} J/(g·K)'),
+      ),
+      ListTile(
+        leading: Icon(Icons.electrical_services),
+        title: Text('Electronegatividad'),
+        subtitle: Text(element.electronegatividad.toString()),
+      ),
+      ListTile(
+        leading: Icon(Icons.radio),
+        title: Text('Radio Atómico'),
+        subtitle: Text('${element.radioAtomico} pm'),
+      ),
+      ListTile(
+        leading: Icon(Icons.radio_button_checked),
+        title: Text('Radio Covalente'),
+        subtitle: Text('${element.radioCovalente} pm'),
+      ),
+      ListTile(
+        leading: Icon(Icons.radio_button_unchecked),
+        title: Text('Radio Iónico'),
+        subtitle: Text('${element.radioIonico} pm'),
+      ),
+      ListTile(
+        leading: IconButton(
+          icon: Icon(Icons.public, size: 15), // Icono de Wikipedia más grande
+          onPressed: () async {
+            if (await canLaunchUrlString(element.source!)) {
+              await launchUrl(element.source! as Uri);
+            } else {
+              throw 'No se pudo abrir $element.source';
+            }
+          },
+        ),
+        title: Text('Más info'),
+        subtitle: Text('Pincha aquí'),
+      ),
+    ].expand((widget) => [widget, Divider()]).toList();
+
+    return Scaffold(
+        backgroundColor: Color.lerp(Colors.grey[850], element.color1, 0.07),
+        appBar: AppBar(
+          backgroundColor: Color.lerp(Colors.grey[850], element.color2, 0.2),
+          bottom: ElementTile(element, isLarge: true),
+        ),
+        body:
+            ListView(padding: EdgeInsets.only(top: 24.0), children: listItems));
+  }
+}
+
+class ElementTile extends StatelessWidget implements PreferredSizeWidget {
+  final familias = {
+    'Metal Alcalino': [
+      const Color.fromARGB(255, 247, 170, 192),
+      const Color.fromARGB(255, 217, 140, 162),
+      const Color.fromARGB(255, 255, 190, 212)
+    ],
+    'Tierra alcalina': [
+      const Color.fromARGB(255, 255, 220, 169),
+      const Color.fromARGB(255, 225, 190, 139),
+      const Color.fromARGB(255, 255, 240, 189)
+    ],
+    'No Metal': [
+      const Color.fromARGB(255, 192, 215, 240),
+      const Color.fromARGB(255, 162, 185, 210),
+      const Color.fromARGB(255, 202, 225, 250)
+    ],
+    'Metaloides': [
+      const Color.fromARGB(255, 147, 217, 245),
+      const Color.fromARGB(255, 117, 187, 215),
+      const Color.fromARGB(255, 157, 227, 255)
+    ],
+    'Metales de post-transición': [
+      const Color.fromARGB(255, 212, 235, 216),
+      const Color.fromARGB(255, 182, 205, 186),
+      const Color.fromARGB(255, 222, 245, 226)
+    ],
+    'Metales de transición': [
+      const Color.fromARGB(255, 247, 246, 204),
+      const Color.fromARGB(255, 217, 216, 174),
+      const Color.fromARGB(255, 257, 256, 214)
+    ],
+    'Halógenos': [
+      const Color.fromARGB(255, 224, 224, 240),
+      const Color.fromARGB(255, 194, 194, 210),
+      const Color.fromARGB(255, 234, 234, 250)
+    ],
+    'Gases Nobles': [
+      const Color.fromARGB(255, 225, 207, 229),
+      const Color.fromARGB(255, 195, 177, 199),
+      const Color.fromARGB(255, 235, 217, 239)
+    ],
+    'Lantánidos': [
+      const Color.fromARGB(255, 252, 224, 237),
+      const Color.fromARGB(255, 222, 194, 207),
+      const Color.fromARGB(255, 252, 224, 237)
+    ],
+    'Actínidos': [
+      const Color.fromARGB(255, 250, 191, 226),
+      const Color.fromARGB(255, 220, 161, 196),
+      const Color.fromARGB(255, 250, 191, 226)
+    ],
+  };
+  final kRowCount = 10;
+
+  final kContentSize = 64.0;
+  final kGutterWidth = 2.0;
+
+  final kGutterInset = const EdgeInsets.all(2.0);
+  ElementTile(this.element, {this.isLarge = false});
+
+  final Elemento element;
+  final bool isLarge;
+
+  Size get preferredSize => Size.fromHeight(kContentSize * 1.5);
+
+  @override
+  Widget build(BuildContext context) {
+    final tileText = <Widget>[
+      Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: Text('${element.id}', style: TextStyle(fontSize: 10.0)),
+      ),
+      Flexible(
+        child: Text(element.simbolo,
+            style: Theme.of(context).primaryTextTheme.headline1),
+      ),
+    ];
+
+    final tile = Container(
+      width: 80,
+      height: 80,
+      margin: kGutterInset,
+      foregroundDecoration: BoxDecoration(
+        gradient: LinearGradient(colors: [
+          familias[element.familia]?[0] ?? Colors.white,
+          familias[element.familia]?[1] ?? Colors.black
+        ]),
+        backgroundBlendMode: BlendMode.multiply,
+      ),
+      child: RawMaterialButton(
+        onPressed: !isLarge
+            ? () => Navigator.push(
+                context, MaterialPageRoute(builder: (_) => DetailPage(element)))
+            : null,
+        fillColor: Colors.grey[800],
+        disabledElevation: 10.0,
+        padding: kGutterInset * 2.0,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: tileText),
       ),
     );
-  }
 
-  Widget _crearFila(String titulo, String valor, IconData icono) {
-    return ListTile(
-      leading: Icon(icono, color: Colors.white),
-      title: Text(
-        titulo,
-        style: TextStyle(color: Colors.white),
-      ),
-      subtitle: Text(
-        valor,
-        style: TextStyle(color: Colors.white),
-      ),
+    return Hero(
+      tag: 'hero-${element.simbolo}',
+      flightShuttleBuilder: (_, anim, __, ___, ____) => ScaleTransition(
+          scale: anim.drive(Tween(begin: 1, end: 1.75)), child: tile),
+      child: Transform.scale(scale: isLarge ? 1.75 : 1, child: tile),
     );
   }
 }
