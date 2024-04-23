@@ -57,7 +57,7 @@ class TablaPeriodica extends StatelessWidget {
                     );
 
                     if (elemento.id != 0) {
-                      tiles[i][j] = _crearCard(elemento);
+                      tiles[i][j] = _crearCard(elemento, context);
                     } else {
                       tiles[i][j] = _vaciaCard(elemento);
                     }
@@ -79,7 +79,7 @@ class TablaPeriodica extends StatelessWidget {
         ));
   }
 
-  Widget _crearCard(Elemento elemento) {
+  Widget _crearCard(Elemento elemento, BuildContext context) {
     final familias = {
       'Metal Alcalino': const Color.fromARGB(255, 247, 170, 192),
       'Tierra alcalina': const Color.fromARGB(255, 255, 220, 169),
@@ -93,50 +93,60 @@ class TablaPeriodica extends StatelessWidget {
       'Actínidos': const Color.fromARGB(255, 250, 191, 226),
     };
     return SizedBox(
-      width: 50.0, // Ancho fijo
-      height: 50.0,
-      child: Card(
-        elevation: 10.0,
-        shadowColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.bottomRight,
-              end: Alignment.topLeft,
-              colors: [
-                elemento.color1 ?? Colors.black,
-                elemento.color2 ?? Colors.black
+      width: 70.0, // Ancho fijo
+      height: 70.0,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DetalleElementoScreen(elemento: elemento),
+            ),
+          );
+        },
+        child: Card(
+          elevation: 10.0,
+          shadowColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomRight,
+                end: Alignment.topLeft,
+                colors: [
+                  elemento.color1 ?? Colors.black,
+                  elemento.color2 ?? Colors.black
+                ],
+              ),
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            child: Stack(
+              children: <Widget>[
+                Center(
+                  child: Text(
+                    elemento.simbolo,
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 10.0,
+                  left: 10.0,
+                  child: Container(
+                    width: 5.0,
+                    height: 5.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: familias[elemento.familia],
+                    ),
+                  ),
+                ),
               ],
             ),
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-          child: Stack(
-            children: <Widget>[
-              Center(
-                child: Text(
-                  elemento.simbolo,
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 10.0,
-                left: 10.0,
-                child: Container(
-                  width: 5.0,
-                  height: 5.0,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: familias[elemento.familia],
-                  ),
-                ),
-              ),
-            ],
           ),
         ),
       ),
@@ -145,8 +155,8 @@ class TablaPeriodica extends StatelessWidget {
 
   Widget _vaciaCard(Elemento elemento) {
     return SizedBox(
-      width: 50.0, // Ancho fijo
-      height: 50.0,
+      width: 70.0, // Ancho fijo
+      height: 70.0,
       child: Card(
         color: Colors.transparent,
         elevation: 10.0,
@@ -167,6 +177,73 @@ class TablaPeriodica extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class DetalleElementoScreen extends StatelessWidget {
+  final Elemento elemento;
+
+  DetalleElementoScreen({required this.elemento});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(elemento.nombre!),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              _crearFila('Nombre', elemento.nombre!, Icons.account_circle),
+              _crearFila('Número Atómico', elemento.numeroAtomico.toString(),
+                  Icons.format_list_numbered),
+              _crearFila('Símbolo', elemento.simbolo, Icons.text_fields),
+              _crearFila('Peso Atómico', elemento.pesoAtomico.toString(),
+                  Icons.line_weight),
+              _crearFila('Geometría Más Común', elemento.geometriaMasComun!,
+                  Icons.grid_view),
+              _crearFila(
+                  'Densidad', '${elemento.densidad} g/cm³', Icons.view_array),
+              _crearFila('Punto de Fusión', '${elemento.puntoFusion} K',
+                  Icons.thermostat),
+              _crearFila('Punto de Ebullición', '${elemento.puntoEbullicion} K',
+                  Icons.thermostat_outlined),
+              _crearFila(
+                  'Calor Específico',
+                  '${elemento.calorEspecifico} J/(g·K)',
+                  Icons.fire_extinguisher),
+              _crearFila(
+                  'Electronegatividad',
+                  elemento.electronegatividad.toString(),
+                  Icons.electrical_services),
+              _crearFila(
+                  'Radio Atómico', '${elemento.radioAtomico} pm', Icons.radio),
+              _crearFila('Radio Covalente', '${elemento.radioCovalente} pm',
+                  Icons.radio_button_checked),
+              _crearFila('Radio Iónico', '${elemento.radioIonico} pm',
+                  Icons.radio_button_unchecked),
+              _crearFila('Familia', elemento.familia!, Icons.family_restroom),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _crearFila(String titulo, String valor, IconData icono) {
+    return ListTile(
+      leading: Icon(icono, color: Colors.white),
+      title: Text(
+        titulo,
+        style: TextStyle(color: Colors.white),
+      ),
+      subtitle: Text(
+        valor,
+        style: TextStyle(color: Colors.white),
       ),
     );
   }

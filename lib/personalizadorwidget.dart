@@ -133,12 +133,12 @@ class ElementCard extends StatelessWidget {
     'Tierra alcalina': const Color.fromARGB(255, 255, 220, 169),
     'No Metal': const Color.fromARGB(255, 192, 215, 240),
     'Metaloides': const Color.fromARGB(255, 147, 217, 245),
-    'Metales post-transicion': const Color.fromARGB(255, 212, 235, 216),
-    'Metales de transicion': const Color.fromARGB(255, 247, 246, 204),
-    'Halogenos': const Color.fromARGB(255, 224, 224, 240),
+    'Metales de post-transición': const Color.fromARGB(255, 212, 235, 216),
+    'Metales de transición': const Color.fromARGB(255, 247, 246, 204),
+    'Halógenos': const Color.fromARGB(255, 224, 224, 240),
     'Gases Nobles': const Color.fromARGB(255, 225, 207, 229),
-    'Lantanidos': const Color.fromARGB(255, 252, 224, 237),
-    'Actinidos': const Color.fromARGB(255, 250, 191, 226),
+    'Lantánidos': const Color.fromARGB(255, 252, 224, 237),
+    'Actínidos': const Color.fromARGB(255, 250, 191, 226),
   };
 
   @override
