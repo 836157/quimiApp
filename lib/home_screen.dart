@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:quimicapp/authentication_service.dart';
+import 'package:quimicapp/formatotablascreen.dart';
 import 'package:quimicapp/formulacionCarruselscreen.dart';
 import 'package:quimicapp/login_screen.dart';
 import 'package:quimicapp/modification_screen.dart';
 import 'package:quimicapp/quiz/quiz_screen.dart';
 import 'package:quimicapp/reaccionesscreen.dart';
-import 'package:quimicapp/tabla_periodica_screen.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:quimicapp/user.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key, required this.user});
@@ -98,13 +97,12 @@ class HomeScreen extends StatelessWidget {
           child: ListView(
             children: <Widget>[
               const SizedBox(height: 30.0),
-              buildCard('Tabla Periódica', TablaPeriodicaScreen(), context),
-              buildCard('Quiz', const QuizScreen(), context),
               buildCard('Formulación Inorgánica', const FormulacionCarrusel(),
                   context),
               buildCard('Ajuste Reacciones', ReaccionesScreen(), context),
-              /* buildCard('Estequiometría', context),
-              buildCard('Scripts de Física', context),
+              buildCard('Tabla Periódica', TablaPeriodica(), context),
+              buildCard('Quiz', const QuizScreen(), context),
+              /*buildCard('Scripts de Física', context),
               buildCard('Tipo Test', context),*/
             ],
           ),
