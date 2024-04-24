@@ -150,8 +150,11 @@ class _TablaPeriodicaState extends State<TablaPeriodica> {
         ),
         body: Container(
           // backgroundColor: Colors.white,
-          decoration: BoxDecoration(
-            color: Colors.grey[800], // Establece el color de fondo aquí
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/fondoFinal.jpg"),
+              fit: BoxFit.fill,
+            ),
           ),
           child: FutureBuilder<List<Elemento>>(
             future: fetchElement(),
