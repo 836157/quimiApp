@@ -150,7 +150,7 @@ class _TablaPeriodicaState extends State<TablaPeriodica> {
         body: Container(
           // backgroundColor: Colors.white,
           decoration: BoxDecoration(
-            color: Colors.black, // Establece el color de fondo aquí
+            color: Colors.grey[800], // Establece el color de fondo aquí
           ),
           child: FutureBuilder<List<Elemento>>(
             future: fetchElement(),
@@ -227,8 +227,8 @@ class _TablaPeriodicaState extends State<TablaPeriodica> {
           ),
           child: Card(
             color: Colors.transparent,
-            elevation: 10.0,
-            shadowColor: Colors.white,
+            elevation: 20.0,
+            //shadowColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
             ),
@@ -304,7 +304,7 @@ class _TablaPeriodicaState extends State<TablaPeriodica> {
 
 class DetailPage extends StatelessWidget {
   DetailPage(this.element);
-
+  final List<String> jpgfileIds = ['97'];
   final Elemento element;
 
   @override
@@ -327,7 +327,7 @@ class DetailPage extends StatelessWidget {
         leading: Lottie.asset('assets/iconoAtomo.json'),
         title: Padding(
           padding: const EdgeInsets.all(2.0),
-          child: Container(
+          child: SizedBox(
             width: 280,
             height: 280,
             child: Image.asset('assets/${element.simbolo}.gif'),
@@ -399,7 +399,16 @@ class DetailPage extends StatelessWidget {
     return Scaffold(
         backgroundColor: Color.lerp(Colors.grey[850], element.color1, 0.07),
         appBar: AppBar(
-          backgroundColor: Color.lerp(Colors.grey[850], element.color2, 0.2),
+          flexibleSpace: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.asset(
+                'assets/${element.id}.${jpgfileIds.contains(element.id) ? 'jpgfile' : 'jpg'}', // Usa .jpgfile si el id está en jpgfileIds, de lo contrario usa .jpg
+                fit: BoxFit
+                    .cover, // Ajusta la imagen para que cubra todo el espacio
+              )
+            ],
+          ),
           bottom: ElementTile(element, isLarge: true),
         ),
         body:
@@ -421,11 +430,15 @@ class ElementTile extends StatelessWidget implements PreferredSizeWidget {
     final tileText = <Widget>[
       Align(
         alignment: AlignmentDirectional.centerStart,
-        child: Text('${element.id}', style: TextStyle(fontSize: 10.0)),
+        child: Text('${element.id}',
+            style: TextStyle(fontSize: 10.0, color: Colors.black)),
       ),
       Flexible(
         child: Text(element.simbolo,
-            style: Theme.of(context).primaryTextTheme.headline1),
+            style: Theme.of(context)
+                .primaryTextTheme
+                .headline1
+                ?.copyWith(color: Colors.black)),
       ),
     ];
 
@@ -436,7 +449,8 @@ class ElementTile extends StatelessWidget implements PreferredSizeWidget {
       foregroundDecoration: BoxDecoration(
         gradient: LinearGradient(colors: [
           familias[element.familia]?[0] ?? Colors.white,
-          familias[element.familia]?[1] ?? Colors.black
+          familias[element.familia]?[1] ?? Colors.black,
+          familias[element.familia]?[2] ?? Colors.white
         ]),
         backgroundBlendMode: BlendMode.multiply,
       ),
@@ -445,7 +459,7 @@ class ElementTile extends StatelessWidget implements PreferredSizeWidget {
             ? () => Navigator.push(
                 context, MaterialPageRoute(builder: (_) => DetailPage(element)))
             : null,
-        fillColor: Colors.grey[800],
+        fillColor: Colors.transparent,
         disabledElevation: 10.0,
         padding: kGutterInset * 2.0,
         child: Column(
