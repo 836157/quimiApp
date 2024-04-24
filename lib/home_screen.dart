@@ -16,7 +16,6 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({super.key, required this.user});
 
   final User? user;
-  final TextEditingController _emailTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -207,7 +206,7 @@ class HomeScreen extends StatelessWidget {
                                         ),
                                         title: Text(
                                           snapshot.data![index].nombre,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             color: Colors
                                                 .white, // Esto hace que el texto sea blanco
                                             fontWeight: FontWeight

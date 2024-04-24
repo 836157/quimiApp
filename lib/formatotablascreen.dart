@@ -443,8 +443,8 @@ class ElementTile extends StatelessWidget implements PreferredSizeWidget {
     ];
 
     final tile = Container(
-      width: 80,
-      height: 80,
+      width: 90,
+      height: 90,
       margin: kGutterInset,
       foregroundDecoration: BoxDecoration(
         gradient: LinearGradient(colors: [
@@ -455,7 +455,7 @@ class ElementTile extends StatelessWidget implements PreferredSizeWidget {
         backgroundBlendMode: BlendMode.multiply,
       ),
       child: RawMaterialButton(
-        onPressed: !isLarge
+        onPressed: element.id != 0
             ? () => Navigator.push(
                 context, MaterialPageRoute(builder: (_) => DetailPage(element)))
             : null,
