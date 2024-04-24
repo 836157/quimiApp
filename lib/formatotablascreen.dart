@@ -124,26 +124,26 @@ class _TablaPeriodicaState extends State<TablaPeriodica> {
             PopupMenuButton<String>(
               onSelected: (String result) {
                 setState(() {
-                  familiaSeleccionada = result;
+                  familiaSeleccionada = result == 'TODOS' ? null : result;
                 });
               },
               itemBuilder: (BuildContext context) {
                 return familias.keys.map((String familia) {
                   return PopupMenuItem<String>(
                     value: familia,
-                    child: Row(
-                      children: [
-                        Icon(
-                          iconosFamilias[
-                              familia], // Usa el ícono asociado con la familia
-                          // Puedes agregar más propiedades aquí, como color, tamaño, etc.
-                        ),
-                        const SizedBox(width: 8),
-                        Text(familia),
-                      ],
+                    child: ListTile(
+                      leading: Icon(iconosFamilias[familia]),
+                      title: Text(familia),
                     ),
                   );
-                }).toList();
+                }).toList()
+                  ..add(const PopupMenuItem<String>(
+                    value: 'TODOS',
+                    child: ListTile(
+                      leading: Icon(Icons.select_all),
+                      title: Text('TODOS'),
+                    ),
+                  ));
               },
             ),
           ],
@@ -201,72 +201,78 @@ class _TablaPeriodicaState extends State<TablaPeriodica> {
   }
 
   Widget _crearCard(Elemento elemento, BuildContext context) {
+    bool estaHabilitado =
+        familiaSeleccionada == null || elemento.familia == familiaSeleccionada;
     return SizedBox(
       width: 70.0, // Ancho fijo
       height: 70.0,
       child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DetailPage(elemento),
-            ),
-          );
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15.0),
-            gradient: LinearGradient(
-              colors: familias[elemento.familia] ??
-                  [
-                    Colors.black,
-                    Colors.grey,
-                  ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: Card(
-            color: Colors.transparent,
-            elevation: 20.0,
-            //shadowColor: Colors.white,
-            shape: RoundedRectangleBorder(
+        onTap: estaHabilitado
+            ? () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailPage(elemento),
+                  ),
+                );
+              }
+            : null,
+        child: Opacity(
+          opacity: estaHabilitado ? 1 : 0.5,
+          child: Container(
+            decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15.0),
+              gradient: LinearGradient(
+                colors: familias[elemento.familia] ??
+                    [
+                      Colors.black,
+                      Colors.grey,
+                    ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
             ),
-            child: Stack(
-              children: <Widget>[
-                Center(
-                  child: Text(
-                    elemento.simbolo,
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      color: Colors.black,
+            child: Card(
+              color: Colors.transparent,
+              elevation: 20.0,
+              //shadowColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              child: Stack(
+                children: <Widget>[
+                  Center(
+                    child: Text(
+                      elemento.simbolo,
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
-                ),
-                Positioned(
-                  bottom: 40.0,
-                  right: 7.0,
-                  child: Text(
-                    elemento.numeroAtomico.toString(),
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      color: Colors.black,
+                  Positioned(
+                    bottom: 40.0,
+                    right: 7.0,
+                    child: Text(
+                      elemento.numeroAtomico.toString(),
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
-                ),
-                Positioned(
-                  bottom: 3.0,
-                  left: 1.0,
-                  child: Icon(
-                    iconosFamilias[elemento
-                        .familia], // Usa el ícono asociado con la familia del elemento
-
-                    color: Colors.black,
-                    size: 18.0,
+                  Positioned(
+                    bottom: 3.0,
+                    left: 1.0,
+                    child: Icon(
+                      iconosFamilias[elemento
+                          .familia], // Usa el ícono asociado con la familia del elemento
+                      color: Colors.black,
+                      size: 18.0,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
