@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
@@ -68,7 +69,7 @@ Map<String, IconData> iconosFamilias = {
   'Metales de transición': Icons.hexagon,
   'Halógenos': Icons.tornado,
   'Lantánidos': Icons.question_mark,
-  'Actínidos': Icons.queue,
+  'Actínidos': Icons.radar,
   // Agrega más familias e íconos aquí
 };
 Future<List<Elemento>> fetchElement() async {
@@ -239,7 +240,7 @@ class _TablaPeriodicaState extends State<TablaPeriodica> {
                     elemento.simbolo,
                     style: TextStyle(
                       fontSize: 24.0,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                   ),
                 ),
@@ -250,7 +251,7 @@ class _TablaPeriodicaState extends State<TablaPeriodica> {
                     elemento.numeroAtomico.toString(),
                     style: TextStyle(
                       fontSize: 12.0,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                   ),
                 ),
@@ -261,7 +262,7 @@ class _TablaPeriodicaState extends State<TablaPeriodica> {
                     iconosFamilias[elemento
                         .familia], // Usa el ícono asociado con la familia del elemento
 
-                    color: Colors.white,
+                    color: Colors.black,
                     size: 18.0,
                   ),
                 ),
@@ -311,13 +312,16 @@ class DetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final listItems = <Widget>[
       ListTile(
-        leading: Icon(Icons.category),
+        leading: Icon(Icons.text_increase),
         title: Text('Nombre'),
         subtitle: Text(element.nombre!),
       ),
       ListTile(
-          leading: Icon(Icons.category),
-          title: Text(element.familia!.toUpperCase())),
+        leading: Icon(iconosFamilias[element.familia!] ??
+            Icons
+                .error), // Usa el icono correspondiente a la familia del elemento, si no existe, usa el icono de error
+        title: Text(element.familia!),
+      ),
       ListTile(
         leading: Icon(Icons.line_weight),
         title: Text('Peso Atómico'),
@@ -336,9 +340,22 @@ class DetailPage extends StatelessWidget {
         subtitle: Text('Orbital Electrónico'),
       ),
       ListTile(
-        leading: Icon(Icons.grid_view),
-        title: Text('Geometría Más Común'),
-        subtitle: Text(element.geometriaMasComun!),
+        leading: Lottie.asset('assets/iconoAtomo.json'),
+        title: Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: SizedBox(
+            width: 200,
+            height: 200,
+            child: Image.asset('assets/${element.geometriaMasComun}.gif'),
+          ),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Geometría más común:'),
+            Text(element.geometriaMasComun.toString()),
+          ],
+        ),
       ),
       ListTile(
         leading: Icon(Icons.view_array),
@@ -381,38 +398,50 @@ class DetailPage extends StatelessWidget {
         subtitle: Text('${element.radioIonico} pm'),
       ),
       ListTile(
-        leading: IconButton(
-          icon: Icon(Icons.public, size: 15), // Icono de Wikipedia más grande
-          onPressed: () async {
-            if (await canLaunchUrlString(element.source!)) {
-              await launchUrl(element.source! as Uri);
-            } else {
-              throw 'No se pudo abrir $element.source';
-            }
-          },
-        ),
-        title: Text('Más info'),
-        subtitle: Text('Pincha aquí'),
+        leading: Icon(Icons.color_lens),
+        title: Text('Espectro de Emisión'),
+        subtitle: (element.id == 85 ||
+                element.id == 100 ||
+                element.id == 101 ||
+                element.id == 102 ||
+                element.id == 103 ||
+                element.id == 104)
+            ? Image.asset('assets//no_disponible.jpg')
+            : Image.asset('assets/espectros/${element.id}.jpg'),
       ),
     ].expand((widget) => [widget, Divider()]).toList();
 
     return Scaffold(
-        backgroundColor: Color.lerp(Colors.grey[850], element.color1, 0.07),
-        appBar: AppBar(
+      backgroundColor: Color.lerp(Colors.grey[850], element.color1, 0.07),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(175.0),
+        child: AppBar(
           flexibleSpace: Stack(
             fit: StackFit.expand,
             children: [
               Image.asset(
-                'assets/${element.id}.${jpgfileIds.contains(element.id) ? 'jpgfile' : 'jpg'}', // Usa .jpgfile si el id está en jpgfileIds, de lo contrario usa .jpg
-                fit: BoxFit
-                    .cover, // Ajusta la imagen para que cubra todo el espacio
-              )
+                'assets/${element.id}.jpg',
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  // Si la carga de la imagen .jpg falla, intenta cargar la imagen .jpeg
+                  return Image.asset('assets/${element.id}.jpeg',
+                      fit: BoxFit.cover);
+                },
+              ),
+              Positioned(
+                top:
+                    160, // Ajusta este valor para mover el ElementTile hacia arriba o hacia abajo
+                right:
+                    20, // Ajusta este valor para mover el ElementTile hacia la izquierda o la derecha
+                child: ElementTile(element, isLarge: true),
+              ),
             ],
           ),
-          bottom: ElementTile(element, isLarge: true),
         ),
-        body:
-            ListView(padding: EdgeInsets.only(top: 24.0), children: listItems));
+      ),
+      body: ListView(
+          padding: const EdgeInsets.only(top: 24.0), children: listItems),
+    );
   }
 }
 
@@ -431,21 +460,20 @@ class ElementTile extends StatelessWidget implements PreferredSizeWidget {
       Align(
         alignment: AlignmentDirectional.centerStart,
         child: Text('${element.id}',
-            style: TextStyle(fontSize: 10.0, color: Colors.black)),
+            style: TextStyle(fontSize: 5.0, color: Colors.white)),
       ),
-      Flexible(
-        child: Text(element.simbolo,
-            style: Theme.of(context)
-                .primaryTextTheme
-                .headline1
-                ?.copyWith(color: Colors.black)),
-      ),
+      Text(element.simbolo,
+          style: Theme.of(context)
+              .primaryTextTheme
+              .headline1
+              ?.copyWith(color: Colors.white, fontSize: 10.0)),
     ];
 
     final tile = Container(
-      width: 90,
-      height: 90,
+      width: 40,
+      height: 40,
       margin: kGutterInset,
+      color: Colors.white.withOpacity(0.8),
       foregroundDecoration: BoxDecoration(
         gradient: LinearGradient(colors: [
           familias[element.familia]?[0] ?? Colors.white,
