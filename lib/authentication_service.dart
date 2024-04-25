@@ -64,10 +64,7 @@ class AuthenticationService extends ChangeNotifier {
           'password': password,
         }),
       );
-
       bool responseBody = utf8.decode(response.bodyBytes) as bool;
-      print(responseBody);
-
       if (responseBody == true) {
         // Muestra un SnackBar con el mensaje de éxito
         ScaffoldMessenger.of(context).showSnackBar(
@@ -78,6 +75,12 @@ class AuthenticationService extends ChangeNotifier {
             MaterialPageRoute(
               builder: (context) => const LoginScreen(),
             ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text(
+                  'El correo insertado ya existe en nuestra Base de datos, por favor intente con otro correo.')),
+        );
       }
     } catch (e) {
       // Muestra un SnackBar con el mensaje de error

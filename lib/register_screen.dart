@@ -85,13 +85,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   PersonalizadorWidget.buildCustomElevatedButton(
                     'Registrarse',
                     () async {
-                      if (_formKey.currentState!.validate()) {
-                        authService.registerUser(
-                            nameController.text,
-                            surnameController.text,
-                            emailController.text,
-                            passwordController.text,
-                            context);
+                      String pattern =
+                          r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                      RegExp regex = RegExp(pattern);
+                      if (!regex.hasMatch(emailController.text)) {
+                        if (_formKey.currentState!.validate()) {
+                          authService.registerUser(
+                              nameController.text,
+                              surnameController.text,
+                              emailController.text,
+                              passwordController.text,
+                              context);
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Por favor ingrese un correo válido'),
+                          ),
+                        );
                       }
                     },
                   ),

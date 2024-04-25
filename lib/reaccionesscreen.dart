@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quimicapp/imagenZoom.dart';
 import 'package:quimicapp/personalizadorwidget.dart';
@@ -35,6 +37,7 @@ class _ReaccionesScreenState extends State<ReaccionesScreen>
   Map<String, int?> _selectedValues = {};
   List<Reaccion> reacciones = [];
   int currentReaccionIndex = 0;
+  String reaccionConValores = '';
   late AnimationController _controller;
   late Animation _animation;
 
@@ -42,11 +45,11 @@ class _ReaccionesScreenState extends State<ReaccionesScreen>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 3), // Duración de la animación
+      duration: const Duration(seconds: 1), // Duración de la animación
       vsync: this,
     );
     _animation = ColorTween(
-      begin: Colors.green, // Color inicial
+      begin: Colors.white, // Color inicial
       end: Colors.red, // Color final
     ).animate(_controller);
 
@@ -54,7 +57,6 @@ class _ReaccionesScreenState extends State<ReaccionesScreen>
       setState(() {
         //aqui se supone que cargo mi lista de reacciones para ir generando, un screen para cada reaccion.
         reacciones = reaccionesFromFuture;
-        print(reacciones.toString());
       });
     });
   }
@@ -69,9 +71,7 @@ class _ReaccionesScreenState extends State<ReaccionesScreen>
   bool _checkAnswer(Reaccion reaccion) {
     String? inputFieldAValue = _selectedValues['A'].toString();
     String? inputFieldBValue = _selectedValues['B'].toString();
-    print(inputFieldBValue);
     String? inputFieldCValue = _selectedValues['C'].toString();
-    print(inputFieldCValue);
     String? inputFieldDValue = _selectedValues['D'].toString();
     String? inputFieldEValue = _selectedValues['E'].toString();
 
@@ -79,30 +79,23 @@ class _ReaccionesScreenState extends State<ReaccionesScreen>
     bool isCorrect = true;
 
     if (reaccion.A != null && reaccion.A.toString() != inputFieldAValue) {
-      print(inputFieldAValue);
       isCorrect = false;
-      print("entro a");
     }
     if (reaccion.B != null && reaccion.B.toString() != inputFieldBValue) {
       isCorrect = false;
-      print("entro b");
     }
     if (reaccion.C != null && reaccion.C.toString() != inputFieldCValue) {
       isCorrect = false;
-      print("entro c");
     }
     if (reaccion.D != null && reaccion.D.toString() != inputFieldDValue) {
       isCorrect = false;
-      print("entro d");
     }
     if (reaccion.E != null && reaccion.E.toString() != inputFieldEValue) {
       isCorrect = false;
-      print("entro e");
     }
 
-    if (!isCorrect) {
+    if (isCorrect == false) {
       _controller.forward().then((_) {
-        // Esto se ejecutará después de que la animación haya terminado
         _controller.reverse();
       });
     }
@@ -242,10 +235,10 @@ class _ReaccionesScreenState extends State<ReaccionesScreen>
           ),
           child: Column(
             children: <Widget>[
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
-              Text(
+              const Text(
                 'Balancea la siguiente reacción química:',
                 style: TextStyle(
                   fontSize: 18,
@@ -257,25 +250,36 @@ class _ReaccionesScreenState extends State<ReaccionesScreen>
               ),
               Stack(
                 children: <Widget>[
-                  Card(
-                    child: SizedBox(
-                      height: 275,
-                      width: 400,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                        ),
-                        child: Center(
-                          child: Text(
-                            reacciones[currentReaccionIndex].reaccion,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                                fontSize: 25),
+                  AnimatedBuilder(
+                    animation: _animation,
+                    builder: (context, child) {
+                      return Card(
+                        color: _animation
+                            .value, // Aquí utilizamos el valor de la animación
+                        child: SizedBox(
+                          height: 275,
+                          width: 400,
+                          child: Center(
+                            child: Text(
+                              reacciones[currentReaccionIndex].reaccion,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 25),
+                            ),
                           ),
                         ),
-                      ),
+                      );
+                    },
+                  ),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      reaccionConValores,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                          fontSize: 20),
                     ),
                   ),
                   Positioned(
@@ -350,11 +354,48 @@ class _ReaccionesScreenState extends State<ReaccionesScreen>
               PersonalizadorWidget.buildCustomElevatedButton("Validar", () {
                 //aqui quiero validar si las opciones introducidas para esa reaccion actual son correctas
                 bool isCorrect = _checkAnswer(reacciones[currentReaccionIndex]);
+                String reaccionABCDE =
+                    reacciones[currentReaccionIndex].reaccion;
+                reaccionConValores = reaccionABCDE
+                    .replaceAll(
+                        'A',
+                        _selectedValues['A'] != null
+                            ? _selectedValues['A'].toString()
+                            : 'A')
+                    .replaceAll(
+                        'B',
+                        _selectedValues['B'] != null
+                            ? _selectedValues['B'].toString()
+                            : 'B')
+                    .replaceAll(
+                        'C',
+                        _selectedValues['C'] != null
+                            ? _selectedValues['C'].toString()
+                            : 'C')
+                    .replaceAll(
+                        'D',
+                        _selectedValues['D'] != null
+                            ? _selectedValues['D'].toString()
+                            : 'D')
+                    .replaceAll(
+                        'E',
+                        _selectedValues['E'] != null
+                            ? _selectedValues['E'].toString()
+                            : 'E');
                 if (isCorrect) {
                   //si son correctas quiero pasar a la siguiente reaccion
                   setState(() {
-                    currentReaccionIndex++;
-                    _selectedValues = {};
+                    reaccionConValores;
+
+                    Future.delayed(const Duration(seconds: 3), () {
+                      // Espera 3 segundos y luego pasa a la siguiente reacción
+                      setState(() {
+                        reaccionConValores =
+                            ''; // Oculta la reacción transformada
+                        currentReaccionIndex++;
+                        _selectedValues = {};
+                      });
+                    });
                   });
                 }
                 //si lo fueran quiero pasar a la siguiente reaccion y volver a empezar el proceso.
