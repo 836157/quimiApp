@@ -1,7 +1,10 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 class ImageViewerScreen extends StatelessWidget {
+  const ImageViewerScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,13 +61,30 @@ class ImageViewerScreen extends StatelessWidget {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Center(
-              child: Image.asset(
-                'assets/ajusteReacciones.jpg',
-                fit: BoxFit.contain,
-                // Ajusta el tamaño de la imagen
-                width: MediaQuery.of(context).size.width *
-                    1.5, // 400% del ancho de la pantalla
-                // 400% de la altura de la pantalla
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius:
+                      BorderRadius.circular(20), // Para redondear la imagen
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.white,
+                      spreadRadius: 5, // Para darle sombra blanca
+                      blurRadius: 7,
+                      offset: Offset(0, 3), // Posición de la sombra
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius:
+                      BorderRadius.circular(20), // Para redondear la imagen
+                  child: Image.asset(
+                    'assets/ajusteReacciones.jpg',
+                    fit: BoxFit.contain,
+                    // Ajusta el tamaño de la imagen
+                    width: MediaQuery.of(context).size.width *
+                        1.5, // 150% del ancho de la pantalla
+                  ),
+                ),
               ),
             ),
           ),

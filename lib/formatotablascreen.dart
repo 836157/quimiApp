@@ -314,7 +314,7 @@ class _TablaPeriodicaState extends State<TablaPeriodica> {
 
 class DetailPage extends StatelessWidget {
   DetailPage(this.element);
-  final List<String> jpgfileIds = ['97'];
+  final List<String> jpgfileIds = ['85,100,101,102,103,104'];
   final Elemento element;
 
   @override
@@ -415,7 +415,7 @@ class DetailPage extends StatelessWidget {
                 element.id == 102 ||
                 element.id == 103 ||
                 element.id == 104)
-            ? Image.asset('assets//no_disponible.jpg')
+            ? Image.asset('assets/espectros/nodisponible.jpg')
             : Image.asset('assets/espectros/${element.id}.jpg'),
       ),
     ].expand((widget) => [widget, Divider()]).toList();

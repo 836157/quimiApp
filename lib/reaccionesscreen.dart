@@ -30,14 +30,26 @@ class ReaccionesScreen extends StatefulWidget {
   _ReaccionesScreenState createState() => _ReaccionesScreenState();
 }
 
-class _ReaccionesScreenState extends State<ReaccionesScreen> {
+class _ReaccionesScreenState extends State<ReaccionesScreen>
+    with SingleTickerProviderStateMixin {
   Map<String, int?> _selectedValues = {};
   List<Reaccion> reacciones = [];
   int currentReaccionIndex = 0;
+  late AnimationController _controller;
+  late Animation _animation;
 
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 3), // Duración de la animación
+      vsync: this,
+    );
+    _animation = ColorTween(
+      begin: Colors.green, // Color inicial
+      end: Colors.red, // Color final
+    ).animate(_controller);
+
     listaReacciones().then((reaccionesFromFuture) {
       setState(() {
         //aqui se supone que cargo mi lista de reacciones para ir generando, un screen para cada reaccion.
@@ -45,6 +57,13 @@ class _ReaccionesScreenState extends State<ReaccionesScreen> {
         print(reacciones.toString());
       });
     });
+  }
+
+  @override
+  void dispose() {
+    _controller
+        .dispose(); // No olvides deshacerte del controlador cuando ya no lo necesites
+    super.dispose();
   }
 
   bool _checkAnswer(Reaccion reaccion) {
@@ -79,6 +98,13 @@ class _ReaccionesScreenState extends State<ReaccionesScreen> {
     if (reaccion.E != null && reaccion.E.toString() != inputFieldEValue) {
       isCorrect = false;
       print("entro e");
+    }
+
+    if (!isCorrect) {
+      _controller.forward().then((_) {
+        // Esto se ejecutará después de que la animación haya terminado
+        _controller.reverse();
+      });
     }
 
     final snackBar = SnackBar(
@@ -117,52 +143,57 @@ class _ReaccionesScreenState extends State<ReaccionesScreen> {
 
     return Padding(
       padding: const EdgeInsets.all(15.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-        ),
-        //padding: const EdgeInsets.all(1.0),
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25),
-          ),
-          child: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFF4CAF50), // Un tono de verde
-                  Color(0xFF8BC34A), // Otro tono de verde
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.all(Radius.circular(25.0)),
+      child: AnimatedBuilder(
+        animation: _animation,
+        builder: (context, child) {
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(30),
             ),
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 25.0, vertical: 5),
-              child: DropdownButton<int>(
-                hint: Text(etiqueta), // Texto por defecto
-                value: _selectedValues[
-                    etiqueta], // Valor seleccionado para este campo
-                items: List.generate(
-                        15, (index) => index + 1) // Genera números del 1 al 15
-                    .map((int value) => DropdownMenuItem<int>(
-                          value: value,
-                          child: Text(value.toString()),
-                        ))
-                    .toList(),
-                onChanged: (int? newValue) {
-                  setState(() {
-                    _selectedValues[etiqueta] =
-                        newValue; // Actualiza el valor seleccionado para este campo
-                  });
-                },
+            //padding: const EdgeInsets.all(1.0),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF4CAF50), // Un tono de verde
+                      Color(0xFF8BC34A), // Otro tono de verde
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 25.0, vertical: 5),
+                  child: DropdownButton<int>(
+                    hint: Text(etiqueta), // Texto por defecto
+                    value: _selectedValues[
+                        etiqueta], // Valor seleccionado para este campo
+                    items: List.generate(15,
+                            (index) => index + 1) // Genera números del 1 al 15
+                        .map((int value) => DropdownMenuItem<int>(
+                              value: value,
+                              child: Text(value.toString()),
+                            ))
+                        .toList(),
+                    onChanged: (int? newValue) {
+                      setState(() {
+                        _selectedValues[etiqueta] =
+                            newValue; // Actualiza el valor seleccionado para este campo
+                      });
+                    },
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
@@ -261,7 +292,7 @@ class _ReaccionesScreenState extends State<ReaccionesScreen> {
                               content: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  Text(
+                                  const Text(
                                       'El método de tanteo para  balancear una ecuación química consiste en igualar el número y clase de átomos, iones o moléculas reactantes con los productos a fin  de cumplir la Ley de la conservación de la materia.'),
                                   GestureDetector(
                                     onTap: () {
@@ -269,7 +300,7 @@ class _ReaccionesScreenState extends State<ReaccionesScreen> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                ImageViewerScreen()),
+                                                const ImageViewerScreen()),
                                       );
                                     },
                                     child: Container(

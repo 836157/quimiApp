@@ -65,7 +65,10 @@ class AuthenticationService extends ChangeNotifier {
         }),
       );
 
-      if (response.statusCode == 200) {
+      bool responseBody = utf8.decode(response.bodyBytes) as bool;
+      print(responseBody);
+
+      if (responseBody == true) {
         // Muestra un SnackBar con el mensaje de éxito
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Usuario registrado con éxito')),
