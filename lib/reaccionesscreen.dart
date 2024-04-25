@@ -273,7 +273,7 @@ class _ReaccionesScreenState extends State<ReaccionesScreen>
                     },
                   ),
                   Align(
-                    alignment: Alignment.topCenter,
+                    alignment: Alignment.bottomCenter,
                     child: Text(
                       reaccionConValores,
                       style: const TextStyle(
@@ -354,47 +354,47 @@ class _ReaccionesScreenState extends State<ReaccionesScreen>
               PersonalizadorWidget.buildCustomElevatedButton("Validar", () {
                 //aqui quiero validar si las opciones introducidas para esa reaccion actual son correctas
                 bool isCorrect = _checkAnswer(reacciones[currentReaccionIndex]);
-                String reaccionABCDE =
-                    reacciones[currentReaccionIndex].reaccion;
-                reaccionConValores = reaccionABCDE
-                    .replaceAll(
-                        'A',
-                        _selectedValues['A'] != null
-                            ? _selectedValues['A'].toString()
-                            : 'A')
-                    .replaceAll(
-                        'B',
-                        _selectedValues['B'] != null
-                            ? _selectedValues['B'].toString()
-                            : 'B')
-                    .replaceAll(
-                        'C',
-                        _selectedValues['C'] != null
-                            ? _selectedValues['C'].toString()
-                            : 'C')
-                    .replaceAll(
-                        'D',
-                        _selectedValues['D'] != null
-                            ? _selectedValues['D'].toString()
-                            : 'D')
-                    .replaceAll(
-                        'E',
-                        _selectedValues['E'] != null
-                            ? _selectedValues['E'].toString()
-                            : 'E');
                 if (isCorrect) {
+                  String reaccionABCDE =
+                      reacciones[currentReaccionIndex].reaccion;
+                  reaccionConValores = reaccionABCDE
+                      .replaceAll(
+                          'A',
+                          _selectedValues['A'] != null
+                              ? _selectedValues['A'].toString()
+                              : 'A')
+                      .replaceAll(
+                          'B',
+                          _selectedValues['B'] != null
+                              ? _selectedValues['B'].toString()
+                              : 'B')
+                      .replaceAll(
+                          'C',
+                          _selectedValues['C'] != null
+                              ? _selectedValues['C'].toString()
+                              : 'C')
+                      .replaceAll(
+                          'D',
+                          _selectedValues['D'] != null
+                              ? _selectedValues['D'].toString()
+                              : 'D')
+                      .replaceAll(
+                          'E',
+                          _selectedValues['E'] != null
+                              ? _selectedValues['E'].toString()
+                              : 'E');
+
                   //si son correctas quiero pasar a la siguiente reaccion
                   setState(() {
-                    reaccionConValores;
-
                     Future.delayed(const Duration(seconds: 3), () {
                       // Espera 3 segundos y luego pasa a la siguiente reacción
                       setState(() {
-                        reaccionConValores =
-                            ''; // Oculta la reacción transformada
-                        currentReaccionIndex++;
-                        _selectedValues = {};
+                        reaccionConValores;
                       });
+                      reaccionConValores =
+                          ''; // Oculta la reacción transformada
+                      currentReaccionIndex++;
+                      _selectedValues = {};
                     });
                   });
                 }
