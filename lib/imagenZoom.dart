@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class ImageViewerScreen extends StatelessWidget {
   @override
@@ -34,25 +35,36 @@ class ImageViewerScreen extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          // Imagen en primer plano
           Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Center(
-                  child: Image.asset(
-                    'assets/ajusteReacciones.jpg',
-                    fit: BoxFit.fill,
-                    // Ajusta el tamaño de la imagen
-                    width: MediaQuery.of(context).size.width *
-                        1.5, // 400% del ancho de la pantalla
-                    height: MediaQuery.of(context)
-                        .size
-                        .height, // 400% de la altura de la pantalla
+            padding: EdgeInsets.all(70.0),
+            child: Row(
+              children: [
+                Lottie.asset('assets/iconoAtomo.json', width: 50, height: 50),
+                SizedBox(width: 10), // Espacio entre el icono y el texto
+                RichText(
+                  text: const TextSpan(
+                    text: 'Método por Tanteo',
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: Colors.white,
+                      decoration: TextDecoration.underline, // Subrayado
+                    ),
                   ),
                 ),
+              ],
+            ),
+          ),
+          // Imagen en primer plano
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Center(
+              child: Image.asset(
+                'assets/ajusteReacciones.jpg',
+                fit: BoxFit.contain,
+                // Ajusta el tamaño de la imagen
+                width: MediaQuery.of(context).size.width *
+                    1.5, // 400% del ancho de la pantalla
+                // 400% de la altura de la pantalla
               ),
             ),
           ),
