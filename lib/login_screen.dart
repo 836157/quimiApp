@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quimicapp/authentication_service.dart';
 import 'package:quimicapp/personalizadorwidget.dart';
-import 'package:quimicapp/register_screen.dart';
+
+import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -97,7 +98,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       // código para el botón de iniciar sesión
                       PersonalizadorWidget.buildCustomElevatedButton(
                           "Iniciar sesión", () async {
-                        if (formKey.currentState!.validate()) {
+                        String pattern =
+                            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                        RegExp regex = RegExp(pattern);
+                        if (!regex.hasMatch(_emailController.text)) {
+                          // Mostrar un mensaje de error
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text(
+                                      'Introduce un correo electrónico válido')));
+                        } else if (formKey.currentState!.validate()) {
                           // Si el formulario es válido, muestra un mensaje de éxito
                           await authService.login(_emailController.text,
                               _passwordController.text, context);

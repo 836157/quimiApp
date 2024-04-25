@@ -1,7 +1,27 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:quimicapp/imagenZoom.dart';
 import 'package:quimicapp/personalizadorwidget.dart';
+import 'package:quimicapp/reaccion.dart';
+import 'package:http/http.dart' as http;
+import 'package:photo_view/photo_view.dart';
+
+Future<List<Reaccion>> listaReacciones() async {
+  try {
+    final response = await http
+        .get(Uri.parse('http://10.0.2.2:8080/quimicApp/reacciones/listar'));
+
+    if (response.statusCode == 200) {
+      String body = utf8.decode(response.bodyBytes);
+      List<dynamic> datos = json.decode(body);
+      return datos.map((dynamic item) => Reaccion.fromJson(item)).toList();
+    } else {
+      throw Exception('Failed to load request from API');
+    }
+  } catch (e) {
+    throw Exception('Failed to load request from API');
+  }
+}
 
 class ReaccionesScreen extends StatefulWidget {
   const ReaccionesScreen({super.key});
@@ -11,68 +31,134 @@ class ReaccionesScreen extends StatefulWidget {
 }
 
 class _ReaccionesScreenState extends State<ReaccionesScreen> {
-  final TextEditingController _aController = TextEditingController();
-  final TextEditingController _bController = TextEditingController();
-  final TextEditingController _cController = TextEditingController();
-  final TextEditingController _dController = TextEditingController();
+  Map<String, int?> _selectedValues = {};
+  List<Reaccion> reacciones = [];
+  int currentReaccionIndex = 0;
 
-  // Esta sería la reacción química que obtienes de tu base de datos
-  final String reaction = 'H2 + O2 -> H2O';
-  // Estos serían los coeficientes que obtienes de tu base de datos
-  final int A = 2, B = 1, C = 2, D = 0;
-
-  void _checkAnswer() {
-    if (int.parse(_aController.text) == A &&
-        int.parse(_bController.text) == B &&
-        int.parse(_cController.text) == C &&
-        int.parse(_dController.text) == D) {
-      // Los coeficientes introducidos por el usuario son correctos
-      print('Correcto');
-    } else {
-      // Los coeficientes introducidos por el usuario son incorrectos
-      print('Incorrecto');
-    }
+  @override
+  void initState() {
+    super.initState();
+    listaReacciones().then((reaccionesFromFuture) {
+      setState(() {
+        //aqui se supone que cargo mi lista de reacciones para ir generando, un screen para cada reaccion.
+        reacciones = reaccionesFromFuture;
+        print(reacciones.toString());
+      });
+    });
   }
 
-  Widget buildInputField(String label, TextEditingController controller) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(30),
+  bool _checkAnswer(Reaccion reaccion) {
+    String? inputFieldAValue = _selectedValues['A'].toString();
+    String? inputFieldBValue = _selectedValues['B'].toString();
+    print(inputFieldBValue);
+    String? inputFieldCValue = _selectedValues['C'].toString();
+    print(inputFieldCValue);
+    String? inputFieldDValue = _selectedValues['D'].toString();
+    String? inputFieldEValue = _selectedValues['E'].toString();
+
+    // Comprobamos si los valores de los campos de entrada coinciden con los valores correspondientes en la reacción.
+    bool isCorrect = true;
+
+    if (reaccion.A != null && reaccion.A.toString() != inputFieldAValue) {
+      print(inputFieldAValue);
+      isCorrect = false;
+      print("entro a");
+    }
+    if (reaccion.B != null && reaccion.B.toString() != inputFieldBValue) {
+      isCorrect = false;
+      print("entro b");
+    }
+    if (reaccion.C != null && reaccion.C.toString() != inputFieldCValue) {
+      isCorrect = false;
+      print("entro c");
+    }
+    if (reaccion.D != null && reaccion.D.toString() != inputFieldDValue) {
+      isCorrect = false;
+      print("entro d");
+    }
+    if (reaccion.E != null && reaccion.E.toString() != inputFieldEValue) {
+      isCorrect = false;
+      print("entro e");
+    }
+
+    final snackBar = SnackBar(
+      content: Text(isCorrect ? 'Correcto' : 'Incorrecto'),
+      backgroundColor: isCorrect ? Colors.green : Colors.red,
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    return isCorrect;
+  }
+
+  Widget buildInputField(String etiqueta, Reaccion reaccion) {
+    int? reaccionValue;
+
+    switch (etiqueta) {
+      case 'A':
+        reaccionValue = reaccion.A;
+        break;
+      case 'B':
+        reaccionValue = reaccion.B;
+        break;
+      case 'C':
+        reaccionValue = reaccion.C;
+        break;
+      case 'D':
+        reaccionValue = reaccion.D;
+        break;
+      case 'E':
+        reaccionValue = reaccion.E;
+        break;
+    }
+
+    if (reaccionValue == null) {
+      return Container(); // Devuelve un contenedor vacío si el valor es nulo
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(30),
+        ),
+        //padding: const EdgeInsets.all(1.0),
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
           ),
-          padding: const EdgeInsets.all(1.0),
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(25),
-            ),
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF4CAF50), // Un tono de verde
-                    Color(0xFF8BC34A), // Otro tono de verde
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(25.0)),
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFF4CAF50), // Un tono de verde
+                  Color(0xFF8BC34A), // Otro tono de verde
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 50.0, vertical: 10),
-                child: DropdownButton<int>(
-                  value: 1,
-                  items: List<int>.generate(20, (i) => i + 1).map((int value) {
-                    return DropdownMenuItem<int>(
-                      value: value,
-                      child: Text(value.toString()),
-                    );
-                  }).toList(),
-                  onChanged: (_) {},
-                ),
+              borderRadius: BorderRadius.all(Radius.circular(25.0)),
+            ),
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 25.0, vertical: 5),
+              child: DropdownButton<int>(
+                hint: Text(etiqueta), // Texto por defecto
+                value: _selectedValues[
+                    etiqueta], // Valor seleccionado para este campo
+                items: List.generate(
+                        15, (index) => index + 1) // Genera números del 1 al 15
+                    .map((int value) => DropdownMenuItem<int>(
+                          value: value,
+                          child: Text(value.toString()),
+                        ))
+                    .toList(),
+                onChanged: (int? newValue) {
+                  setState(() {
+                    _selectedValues[etiqueta] =
+                        newValue; // Actualiza el valor seleccionado para este campo
+                  });
+                },
               ),
             ),
           ),
@@ -83,101 +169,171 @@ class _ReaccionesScreenState extends State<ReaccionesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        title: const Text(
-          'Reacciones químicas',
-          style: TextStyle(fontSize: 18),
-        ),
-        backgroundColor: Colors.green,
-        shadowColor: Colors.grey,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFF4CAF50), // Un tono de verde
-                Color(0xFF8BC34A), // Otro tono de verde
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+    int totalElements = 5; // Cambia esto por el número total de elementos
+    int firstRowElements = (totalElements <= 3)
+        ? totalElements
+        : (totalElements == 4)
+            ? 2
+            : 3;
+    int secondRowElements = totalElements - firstRowElements;
+
+    if (reacciones.isNotEmpty) {
+      return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: true,
+          title: const Text(
+            'Reacciones químicas',
+            style: TextStyle(fontSize: 18),
           ),
-        ),
-      ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/fondoFinal.jpg"),
-            fit: BoxFit.fill,
-          ),
-        ),
-        child: Column(
-          //mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            SizedBox(
-              height: 40,
-            ),
-            Text(
-              'Balancea la siguiente reacción química:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+          backgroundColor: Colors.green,
+          shadowColor: Colors.grey,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFF4CAF50), // Un tono de verde
+                  Color(0xFF8BC34A), // Otro tono de verde
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
             ),
-            SizedBox(
-              height: 40,
+          ),
+        ),
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/fondoFinal.jpg"),
+              fit: BoxFit.fill,
             ),
-            Card(
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white, // Cambia el color de fondo a blanco
-                  borderRadius: BorderRadius.all(Radius.circular(25.0)),
+          ),
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: 30,
+              ),
+              Text(
+                'Balancea la siguiente reacción química:',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(90.0), // Ajusta el padding
-                  child: Center(
-                    child: Text(
-                      reaction,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors
-                              .black), // Hace que el texto sea negrita y de color negro
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Stack(
+                children: <Widget>[
+                  Card(
+                    child: SizedBox(
+                      height: 275,
+                      width: 400,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                        ),
+                        child: Center(
+                          child: Text(
+                            reacciones[currentReaccionIndex].reaccion,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                fontSize: 25),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  Positioned(
+                    top: 8.0,
+                    right: 8.0,
+                    child: IconButton(
+                      icon: Icon(Icons.info_outline, color: Colors.green),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Cómo ajustar reacciones químicas'),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Text(
+                                      'El método de tanteo para  balancear una ecuación química consiste en igualar el número y clase de átomos, iones o moléculas reactantes con los productos a fin  de cumplir la Ley de la conservación de la materia.'),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ImageViewerScreen()),
+                                      );
+                                    },
+                                    child: Container(
+                                      child: Image.asset(
+                                          'assets/ajusteReacciones.jpg'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text('Cerrar'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ),
-            SizedBox(
-              height: 40,
-            ),
-            Row(
-              children: <Widget>[
-                buildInputField('A', _aController),
-                SizedBox(
-                    width: 20), // Agrega espacio entre los campos de entrada
-                buildInputField('B', _bController),
-              ],
-            ),
-            SizedBox(height: 20), // Agrega espacio entre las filas
-            Row(
-              children: <Widget>[
-                buildInputField('C', _cController),
-                SizedBox(
-                    width: 20), // Agrega espacio entre los campos de entrada
-                buildInputField('D', _dController),
-              ],
-            ),
-            SizedBox(
-              height: 50,
-            ),
-            PersonalizadorWidget.buildCustomElevatedButton(
-                "Validar", () async {})
-          ],
+              SizedBox(
+                height: 40,
+              ),
+              Wrap(
+                spacing: 4.0, // espacio entre los hijos
+                runSpacing: 15.0,
+                children: <Widget>[
+                  for (int i = 0; i < totalElements; i++)
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: (i == firstRowElements && totalElements == 5)
+                              ? 40.0
+                              : 0.0), // Ajusta el padding si es el primer elemento de la segunda fila y hay 5 elementos en total
+                      child: buildInputField(String.fromCharCode(65 + i),
+                          reacciones[currentReaccionIndex]),
+                    ),
+                ],
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              PersonalizadorWidget.buildCustomElevatedButton("Validar", () {
+                //aqui quiero validar si las opciones introducidas para esa reaccion actual son correctas
+                bool isCorrect = _checkAnswer(reacciones[currentReaccionIndex]);
+                if (isCorrect) {
+                  //si son correctas quiero pasar a la siguiente reaccion
+                  setState(() {
+                    currentReaccionIndex++;
+                    _selectedValues = {};
+                  });
+                }
+                //si lo fueran quiero pasar a la siguiente reaccion y volver a empezar el proceso.
+              })
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      return const Center(child: CircularProgressIndicator());
+    }
   }
 }
