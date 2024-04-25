@@ -259,28 +259,32 @@ class _ReaccionesScreenState extends State<ReaccionesScreen>
                         child: SizedBox(
                           height: 275,
                           width: 400,
-                          child: Center(
-                            child: Text(
-                              reacciones[currentReaccionIndex].reaccion,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                  fontSize: 25),
-                            ),
+                          child: Stack(
+                            children: [
+                              Center(
+                                child: Text(
+                                  reacciones[currentReaccionIndex].reaccion,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                      fontSize: 25),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Text(
+                                  reaccionConValores,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.green,
+                                      fontSize: 20),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       );
                     },
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Text(
-                      reaccionConValores,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                          fontSize: 20),
-                    ),
                   ),
                   Positioned(
                     top: 8.0,
