@@ -6,7 +6,6 @@ import 'package:quimicapp/imagenZoom.dart';
 import 'package:quimicapp/personalizadorwidget.dart';
 import 'package:quimicapp/reaccion.dart';
 import 'package:http/http.dart' as http;
-import 'package:photo_view/photo_view.dart';
 
 Future<List<Reaccion>> listaReacciones() async {
   try {

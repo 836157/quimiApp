@@ -96,9 +96,8 @@ class HomeScreen extends StatelessWidget {
           child: ListView(
             children: <Widget>[
               const SizedBox(height: 30.0),
-              buildCard('Formulación Inorgánica', const FormulacionCarrusel(),
-                  context),
-              buildCard('Ajuste Reacciones', ReaccionesScreen(), context),
+              buildCard('Apuntes PDF', const FormulacionCarrusel(), context),
+              buildCard('Ajuste Reacciones', const ReaccionesScreen(), context),
               buildCard('Tabla Periódica', TablaPeriodica(), context),
               buildCard('Quiz', const QuizScreen(), context),
               /*buildCard('Scripts de Física', context),

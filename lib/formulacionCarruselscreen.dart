@@ -1,14 +1,9 @@
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
-
-void main() {
-  runApp(const MaterialApp(
-    home: FormulacionCarrusel(),
-  ));
-}
 
 class FormulacionCarrusel extends StatefulWidget {
   const FormulacionCarrusel({Key? key}) : super(key: key);
@@ -23,18 +18,28 @@ class _FormulacionCarruselState extends State<FormulacionCarrusel> {
   @override
   void initState() {
     super.initState();
-    loadPdf();
+    selectPdf();
   }
 
-  Future<void> loadPdf() async {
-    final documentDirectory = (await getApplicationDocumentsDirectory()).path;
-    final file = File("$documentDirectory/formulacion.pdf");
-    final rawData = await rootBundle.load('assets/formulacion.pdf');
-    final bytes = rawData.buffer.asUint8List();
-    await file.writeAsBytes(bytes, flush: true);
-    setState(() {
-      pdfPath = file.path;
-    });
+  Future<void> selectPdf() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
+
+    if (result != null) {
+      setState(() {
+        pdfPath = result.files.single.path;
+      });
+    } else {
+      // El usuario canceló la selección
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Error al cargar el PDF'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
