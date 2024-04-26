@@ -47,6 +47,7 @@ dependencies:
   permission_handler: ^8.1.6
   file_picker: ^4.2.0
   assets_audio_player: ^3.0.8
+  marquee: ^2.2.3
 
 
 dev_dependencies:

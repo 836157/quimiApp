@@ -1,5 +1,6 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:marquee/marquee.dart';
 
 class AudioPlayerScreen extends StatefulWidget {
   const AudioPlayerScreen({super.key});
@@ -77,42 +78,113 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
                   ),
                   borderRadius: BorderRadius.circular(15), // Borde redondeado
                 ),
-                child: Card(
-                  color: Colors.white, // Fondo blanco
-                  child: ListTile(
-                    leading: Icon(Icons.music_note, color: Colors.black),
-                    title: Text(
-                      audioFiles[index],
-                      style: TextStyle(
-                        color: Colors.grey, // Texto gris
-                        fontSize: 16, // Tamaño de letra 18
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        IconButton(
-                          icon: Icon(Icons.skip_previous),
-                          color: Colors.black,
-                          // Botón para comenzar desde el principio
-                          onPressed: () {
-                            _assetsAudioPlayer.seek(Duration.zero);
-                          },
+                child: SizedBox(
+                  height: 99,
+                  child: Card(
+                    color: Colors.white, // Fondo blanco
+                    child: Column(
+                      children: [
+                        ListTile(
+                          // Color de fondo al pasar el cursor
+                          leading: Icon(Icons.music_note, color: Colors.black),
+                          title: Container(
+                            height: 20,
+                            width: 150,
+                            child: Marquee(
+                              text: audioFiles[index],
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              velocity: 50.0,
+                              blankSpace: 20.0,
+                              startPadding: 10.0,
+                            ),
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              IconButton(
+                                icon: Icon(Icons.skip_previous),
+                                color: Colors.black,
+                                // Botón para comenzar desde el principio
+                                onPressed: () {
+                                  _assetsAudioPlayer.seek(Duration.zero);
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.play_arrow),
+                                color: Colors.black,
+                                onPressed: () {
+                                  _assetsAudioPlayer.playOrPause();
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.stop),
+                                color: Colors.black,
+                                onPressed: () {
+                                  _assetsAudioPlayer.stop();
+                                },
+                              ),
+                            ],
+                          ),
                         ),
-                        IconButton(
-                          icon: Icon(Icons.play_arrow),
-                          color: Colors.black,
-                          onPressed: () {
-                            _assetsAudioPlayer.playOrPause();
-                          },
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.stop),
-                          color: Colors.black,
-                          onPressed: () {
-                            _assetsAudioPlayer.stop();
+                        // Barra de progreso
+                        StreamBuilder<Duration>(
+                          stream: _assetsAudioPlayer.currentPosition,
+                          builder: (context, snapshot) {
+                            final Duration? currentPosition = snapshot.data;
+                            final PlayingAudio? currentAudio =
+                                _assetsAudioPlayer.current.valueOrNull?.audio;
+                            final Duration totalDuration =
+                                currentAudio?.duration ?? Duration.zero;
+                            return Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        currentPosition != null
+                                            ? currentPosition
+                                                .toString()
+                                                .split('.')
+                                                .first
+                                            : '00:00:00',
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
+                                      Text(
+                                        totalDuration != Duration.zero
+                                            ? totalDuration
+                                                .toString()
+                                                .split('.')
+                                                .first
+                                            : '00:00:00',
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  child: LinearProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.orange),
+                                    backgroundColor: Colors.grey,
+                                    minHeight: 15,
+                                    value: currentPosition != null &&
+                                            totalDuration != Duration.zero
+                                        ? currentPosition.inMilliseconds /
+                                            totalDuration.inMilliseconds
+                                        : 0.0,
+                                  ),
+                                ),
+                              ],
+                            );
                           },
                         ),
                       ],
