@@ -33,7 +33,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: const Text(
-          'Reacciones químicas',
+          'Audios Química',
           style: TextStyle(fontSize: 18),
         ),
         backgroundColor: Colors.green,
@@ -63,25 +63,61 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
         child: ListView.builder(
           itemCount: audioFiles.length,
           itemBuilder: (context, index) {
-            return Card(
-              child: ListTile(
-                title: Text(audioFiles[index]),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    IconButton(
-                      icon: Icon(Icons.play_arrow),
-                      onPressed: () {
-                        _assetsAudioPlayer.playOrPause();
-                      },
+            return Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF4CAF50), // Un tono de verde
+                      Color(0xFF8BC34A), // Otro tono de verde
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                  borderRadius: BorderRadius.circular(15), // Borde redondeado
+                ),
+                child: Card(
+                  color: Colors.white, // Fondo blanco
+                  child: ListTile(
+                    leading: Icon(Icons.music_note, color: Colors.black),
+                    title: Text(
+                      audioFiles[index],
+                      style: TextStyle(
+                        color: Colors.grey, // Texto gris
+                        fontSize: 16, // Tamaño de letra 18
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
-                    IconButton(
-                      icon: Icon(Icons.stop),
-                      onPressed: () {
-                        _assetsAudioPlayer.stop();
-                      },
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.skip_previous),
+                          color: Colors.black,
+                          // Botón para comenzar desde el principio
+                          onPressed: () {
+                            _assetsAudioPlayer.seek(Duration.zero);
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.play_arrow),
+                          color: Colors.black,
+                          onPressed: () {
+                            _assetsAudioPlayer.playOrPause();
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.stop),
+                          color: Colors.black,
+                          onPressed: () {
+                            _assetsAudioPlayer.stop();
+                          },
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             );
