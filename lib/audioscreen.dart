@@ -10,22 +10,22 @@ class AudioPlayerScreen extends StatefulWidget {
 }
 
 class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
-  final AssetsAudioPlayer _assetsAudioPlayer = AssetsAudioPlayer();
+  List<AssetsAudioPlayer> _audioPlayers = [];
   final List<String> audioFiles = [
+    'Ciencia rapida.mp3',
+    'Propiedades de la materia.mp3',
     'ElementosQuimicos.mp3',
+    'El atomo nucleado.mp3',
+
     // Agrega más nombres de archivos de audio aquí
   ];
 
   @override
   void initState() {
     super.initState();
-    _assetsAudioPlayer.open(
-      Playlist(
-          audios:
-              audioFiles.map((file) => Audio('assets/audios/$file')).toList()),
-      autoStart: false,
-      showNotification: true,
-    );
+    _audioPlayers = List.generate(audioFiles.length, (index) {
+      return AssetsAudioPlayer();
+    });
   }
 
   @override
@@ -65,7 +65,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
           itemCount: audioFiles.length,
           itemBuilder: (context, index) {
             return Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(15.0),
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -110,21 +110,30 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
                                 color: Colors.black,
                                 // Botón para comenzar desde el principio
                                 onPressed: () {
-                                  _assetsAudioPlayer.seek(Duration.zero);
+                                  _audioPlayers[index].seek(Duration.zero);
                                 },
                               ),
                               IconButton(
                                 icon: Icon(Icons.play_arrow),
                                 color: Colors.black,
                                 onPressed: () {
-                                  _assetsAudioPlayer.playOrPause();
+                                  for (var player in _audioPlayers) {
+                                    if (player.isPlaying.value) {
+                                      player.stop();
+                                    }
+                                  }
+                                  _audioPlayers[index].open(
+                                    Audio('assets/audios/${audioFiles[index]}'),
+                                    autoStart: true,
+                                    showNotification: true,
+                                  );
                                 },
                               ),
                               IconButton(
                                 icon: Icon(Icons.stop),
                                 color: Colors.black,
                                 onPressed: () {
-                                  _assetsAudioPlayer.stop();
+                                  _audioPlayers[index].stop();
                                 },
                               ),
                             ],
@@ -132,11 +141,11 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
                         ),
                         // Barra de progreso
                         StreamBuilder<Duration>(
-                          stream: _assetsAudioPlayer.currentPosition,
+                          stream: _audioPlayers[index].currentPosition,
                           builder: (context, snapshot) {
                             final Duration? currentPosition = snapshot.data;
                             final PlayingAudio? currentAudio =
-                                _assetsAudioPlayer.current.valueOrNull?.audio;
+                                _audioPlayers[index].current.valueOrNull?.audio;
                             final Duration totalDuration =
                                 currentAudio?.duration ?? Duration.zero;
                             return Column(
@@ -197,11 +206,5 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _assetsAudioPlayer.dispose();
-    super.dispose();
   }
 }
