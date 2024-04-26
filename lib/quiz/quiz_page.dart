@@ -223,11 +223,12 @@ class _QuizPageState extends State<QuizPage> {
                               TextButton(
                                 child: const Text('Salir'),
                                 onPressed: () {
-                                  Navigator.pushReplacement(
-                                    context,
+                                  Navigator.of(context).pushAndRemoveUntil(
                                     MaterialPageRoute(
-                                      builder: (context) => const QuizScreen(),
-                                    ),
+                                        builder: (context) =>
+                                            const QuizScreen()),
+                                    (Route<dynamic> route) => route
+                                        .isFirst, // Esto elimina todas las rutas anteriores hasta la primera ruta
                                   );
                                 },
                               ),

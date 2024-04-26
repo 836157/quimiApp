@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
@@ -177,7 +176,8 @@ class _TablaPeriodicaState extends State<TablaPeriodica> {
                           id: 0,
                           simbolo: '',
                           posicionX: i,
-                          posicionY: j), // Devuelve un nuevo Elemento con id 0
+                          posicionY: j,
+                          valencias: []), // Devuelve un nuevo Elemento con id 0
                     );
 
                     if (elemento.id != 0) {
@@ -330,6 +330,51 @@ class DetailPage extends StatelessWidget {
             Icons
                 .error), // Usa el icono correspondiente a la familia del elemento, si no existe, usa el icono de error
         title: Text(element.familia!),
+      ),
+      ListTile(
+        leading: Icon(Icons.circle),
+        title: Text('Valencias'),
+        subtitle: Column(
+          children: [
+            Wrap(
+              alignment: WrapAlignment.start,
+              children: element.valencias.map((valencia) {
+                var valor = valencia['valor'];
+                if (valor >= 0) {
+                  return CircleAvatar(
+                    backgroundColor: Colors.blue,
+                    child: Text(
+                      '+${valor.toString()}', // agrega un '+' delante del número
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  );
+                } else {
+                  return SizedBox
+                      .shrink(); // no muestra nada para valores negativos
+                }
+              }).toList(),
+            ),
+            SizedBox(height: 10),
+            Wrap(
+              alignment: WrapAlignment.start,
+              children: element.valencias.map((valencia) {
+                var valor = valencia['valor'];
+                if (valor < 0) {
+                  return CircleAvatar(
+                    backgroundColor: Colors.red,
+                    child: Text(
+                      valor.toString(),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  );
+                } else {
+                  return SizedBox
+                      .shrink(); // no muestra nada para valores positivos
+                }
+              }).toList(),
+            ),
+          ],
+        ),
       ),
       ListTile(
         leading: Icon(Icons.line_weight),

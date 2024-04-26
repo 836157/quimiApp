@@ -128,15 +128,25 @@ class QuizScreen extends StatelessWidget {
                                   leading: Image.asset(
                                       'assets/icon_cuestionario.png'), // Añade un icono
                                   title: Text(
-                                    'Ajuste de Reacciones Químicas',
+                                    'Preguntas Usuarios',
                                     style: TextStyle(
                                         fontWeight: FontWeight
                                             .bold), // Hace el texto en negrita
                                     textAlign:
                                         TextAlign.center, // Centra el texto
                                   ),
-                                  onTap: () {
-                                    // Aquí puedes manejar la selección de esta opción
+                                  onTap: () async {
+                                    String tematica = 'usuarios';
+                                    List<Pregunta> preguntas =
+                                        await cuestionarioQuizTematica(
+                                            tematica);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            QuizPage(preguntas: preguntas),
+                                      ),
+                                    );
                                   },
                                 ),
                                 // Añade más opciones aquí

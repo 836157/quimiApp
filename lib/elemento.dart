@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class Elemento {
   final String? source;
   final int? posicionX;
   final int? posicionY;
+  List<Map<String?, dynamic>> valencias;
 
   String? get getNombre => nombre;
   int? get getNumeroAtomico => numeroAtomico;
@@ -65,6 +67,7 @@ class Elemento {
     this.source,
     required this.posicionX,
     required this.posicionY,
+    required this.valencias,
   });
 
   factory Elemento.fromJson(Map<String, dynamic> json) {
@@ -89,6 +92,10 @@ class Elemento {
       source: json['source'],
       posicionX: json['posicionX'],
       posicionY: json['posicionY'],
+      valencias: (json['valencias'] as List<dynamic>?)
+              ?.map((item) => item as Map<String, dynamic>)
+              .toList() ??
+          [],
     );
   }
 
