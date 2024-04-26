@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:quimicapp/audioscreen.dart';
 import 'package:quimicapp/authentication_service.dart';
 import 'package:quimicapp/formatotablascreen.dart';
-import 'package:quimicapp/formulacionCarruselscreen.dart';
+import 'package:quimicapp/pdfscreen.dart';
 import 'package:quimicapp/login_screen.dart';
 import 'package:quimicapp/modification_screen.dart';
 import 'package:quimicapp/quiz/quiz_screen.dart';
@@ -96,12 +97,11 @@ class HomeScreen extends StatelessWidget {
           child: ListView(
             children: <Widget>[
               const SizedBox(height: 30.0),
-              buildCard('Apuntes PDF', const FormulacionCarrusel(), context),
-              buildCard('Ajuste Reacciones', const ReaccionesScreen(), context),
+              buildCard('Apuntes PDF', FormulacionCarrusel(), context),
+              buildCard('Ajuste Reacciones', ReaccionesScreen(), context),
               buildCard('Tabla Periódica', TablaPeriodica(), context),
-              buildCard('Quiz', const QuizScreen(), context),
-              /*buildCard('Scripts de Física', context),
-              buildCard('Tipo Test', context),*/
+              buildCard('Quiz', QuizScreen(), context),
+              buildCard('Audios Química', AudioPlayerScreen(), context),
             ],
           ),
         ),
