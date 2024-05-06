@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quimicapp/imagenZoom.dart';
 import 'package:quimicapp/personalizadorwidget.dart';
@@ -10,7 +9,7 @@ import 'package:http/http.dart' as http;
 Future<List<Reaccion>> listaReacciones() async {
   try {
     final response = await http
-        .get(Uri.parse('http://10.0.2.2:8080/quimicApp/reacciones/listar'));
+        .get(Uri.parse('http://192.168.0.23:8080/quimicApp/reacciones/listar'));
 
     if (response.statusCode == 200) {
       String body = utf8.decode(response.bodyBytes);
@@ -162,7 +161,7 @@ class _ReaccionesScreenState extends State<ReaccionesScreen>
                 ),
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 25.0, vertical: 5),
+                      const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
                   child: DropdownButton<int>(
                     hint: Text(etiqueta), // Texto por defecto
                     value: _selectedValues[
@@ -206,7 +205,7 @@ class _ReaccionesScreenState extends State<ReaccionesScreen>
           automaticallyImplyLeading: true,
           title: const Text(
             'Reacciones químicas',
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: 14),
           ),
           backgroundColor: Colors.green,
           shadowColor: Colors.grey,
@@ -224,8 +223,6 @@ class _ReaccionesScreenState extends State<ReaccionesScreen>
           ),
         ),
         body: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage("assets/fondoFinal.jpg"),
@@ -256,8 +253,8 @@ class _ReaccionesScreenState extends State<ReaccionesScreen>
                         color: _animation
                             .value, // Aquí utilizamos el valor de la animación
                         child: SizedBox(
-                          height: 275,
-                          width: 400,
+                          height: 225,
+                          width: 350,
                           child: Stack(
                             children: [
                               Center(
@@ -266,7 +263,7 @@ class _ReaccionesScreenState extends State<ReaccionesScreen>
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
-                                      fontSize: 25),
+                                      fontSize: 18),
                                 ),
                               ),
                               Align(
@@ -334,11 +331,11 @@ class _ReaccionesScreenState extends State<ReaccionesScreen>
                 ],
               ),
               SizedBox(
-                height: 40,
+                height: 20,
               ),
               Wrap(
-                spacing: 4.0, // espacio entre los hijos
-                runSpacing: 15.0,
+                spacing: 2.0, // espacio entre los hijos
+                runSpacing: 10.0,
                 children: <Widget>[
                   for (int i = 0; i < totalElements; i++)
                     Padding(
@@ -352,7 +349,7 @@ class _ReaccionesScreenState extends State<ReaccionesScreen>
                 ],
               ),
               SizedBox(
-                height: 40,
+                height: 10,
               ),
               PersonalizadorWidget.buildCustomElevatedButton("Validar", () {
                 //aqui quiero validar si las opciones introducidas para esa reaccion actual son correctas

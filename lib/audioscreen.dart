@@ -29,6 +29,15 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
   }
 
   @override
+  void dispose() {
+    // Detener todos los audios al salir de la pantalla
+    for (var player in _audioPlayers) {
+      player.stop();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

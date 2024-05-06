@@ -15,7 +15,7 @@ class AuthenticationService extends ChangeNotifier {
     // Aquí el código para iniciar sesión
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:8080/quimicApp/auth/login'),
+        Uri.parse('http://192.168.0.23:8080/quimicApp/auth/login'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -53,19 +53,19 @@ class AuthenticationService extends ChangeNotifier {
     try {
       final response = await http.post(
         Uri.parse(
-            'http://10.0.2.2:8080/quimicApp/usuarios/save'), // URL de la API
+            'http://192.168.0.23:8080/quimicApp/usuarios/save'), // URL de la API
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, String>{
+        body: jsonEncode(<String, dynamic>{
           'nombre': name,
           'apellido': surname,
           'correo': email,
           'password': password,
+          'activo': false,
         }),
       );
-      bool responseBody = utf8.decode(response.bodyBytes) as bool;
-      if (responseBody == true) {
+      if (response.statusCode == 200) {
         // Muestra un SnackBar con el mensaje de éxito
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Usuario registrado con éxito')),
@@ -100,7 +100,7 @@ class AuthenticationService extends ChangeNotifier {
   Future<void> updateUser(User user, BuildContext context) async {
     try {
       final response = await http.put(
-        Uri.parse('http://10.0.2.2:8080/quimicApp/usuarios/mod'),
+        Uri.parse('http://192.168.0.23:8080/quimicApp/usuarios/mod'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

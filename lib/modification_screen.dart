@@ -45,7 +45,10 @@ class _ModificationScreenState extends State<ModificationScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Modificar usuario'),
+        title: const Text(
+          'Modificación usuario',
+          style: TextStyle(fontSize: 14),
+        ),
         backgroundColor: Colors.green,
         shadowColor: Colors.grey,
         flexibleSpace: Container(

@@ -34,7 +34,8 @@ class _QuizPageState extends State<QuizPage> {
       appBar: AppBar(
         //quiero que el titulo de la pagina sea el que se elija en el menu pop anterior,
         //title: const Text('Quiz '),pregunta.tematica.
-        title: Text('Quiz ${currentQuestion.tematica}'),
+        title: Text('Quiz ${currentQuestion.tematica}',
+            style: const TextStyle(fontSize: 14)),
         // backgroundColor: Colors.indigoAccent,
         backgroundColor: Colors.deepPurple,
       ),

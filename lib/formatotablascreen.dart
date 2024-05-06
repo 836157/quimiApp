@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
 import 'package:quimicapp/elemento.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 final familias = {
   'Metal Alcalino': [
@@ -74,7 +72,7 @@ Map<String, IconData> iconosFamilias = {
 Future<List<Elemento>> fetchElement() async {
   try {
     final response = await http
-        .get(Uri.parse('http://10.0.2.2:8080/quimicApp/elemento/listar'));
+        .get(Uri.parse('http://192.168.0.23:8080/quimicApp/elemento/listar'));
 
     if (response.statusCode == 200) {
       String body = utf8.decode(response.bodyBytes);
@@ -104,7 +102,12 @@ class _TablaPeriodicaState extends State<TablaPeriodica> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Tabla Periodica'),
+          title: const Text(
+            'Tabla Periódica',
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          ),
           backgroundColor: Colors.green,
           shadowColor: Colors.grey,
           flexibleSpace: Container(
@@ -189,11 +192,15 @@ class _TablaPeriodicaState extends State<TablaPeriodica> {
                 }
 
                 return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      children: tiles.map((row) => Row(children: row)).toList(),
+                  scrollDirection: Axis.vertical,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        children:
+                            tiles.map((row) => Row(children: row)).toList(),
+                      ),
                     ),
                   ),
                 );

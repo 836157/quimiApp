@@ -1,4 +1,4 @@
-import 'respuestaDTO.dart';
+import 'package:quimicapp/quiz/respuestaDTO.dart';
 
 class PreguntaDTO {
   final String pregunta;

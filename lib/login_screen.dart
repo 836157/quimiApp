@@ -99,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       PersonalizadorWidget.buildCustomElevatedButton(
                           "Iniciar sesión", () async {
                         String pattern =
-                            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                            r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
                         RegExp regex = RegExp(pattern);
                         if (!regex.hasMatch(_emailController.text)) {
                           // Mostrar un mensaje de error

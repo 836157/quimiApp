@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -13,10 +16,39 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:quimicapp/user.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   HomeScreen({super.key, required this.user});
 
   final User? user;
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  Timer? _timer;
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 3),
+      vsync: this,
+    );
+
+    _timer = Timer.periodic(const Duration(seconds: 25), (timer) {
+      _controller.reset();
+      _controller.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +60,13 @@ class HomeScreen extends StatelessWidget {
         appBar: AppBar(
           title: RichText(
             text: TextSpan(
-              style: Theme.of(context).appBarTheme.titleTextStyle ??
-                  const TextStyle(),
-              text: 'Hola ',
+              style: (Theme.of(context).appBarTheme.titleTextStyle ??
+                      const TextStyle())
+                  .copyWith(fontSize: 14),
+              text: 'Bienvenido ',
               children: <TextSpan>[
                 TextSpan(
-                  text: user?.nombre ?? 'Invitado',
+                  text: widget.user?.nombre ?? 'Invitado',
                 ),
               ],
             ),
@@ -235,32 +268,44 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Card buildCard(String title, Widget screen, BuildContext context) {
-    return Card(
-      color: Colors.white70,
-      elevation: 5.0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      margin: const EdgeInsets.all(10.0),
-      child: ListTile(
-        leading: Lottie.asset('assets/iconoAtomo.json',
-            width: 42.0, height: 42.0, fit: BoxFit.fill),
-        title: Text(title),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => screen),
-          );
-        },
+  Widget buildCard(String title, Widget screen, BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (_, child) {
+        return Transform(
+          transform: Matrix4.identity()
+            ..setEntry(3, 2, 0.001) // perspectiva
+            ..rotateX(2 * pi * _controller.value),
+          alignment: FractionalOffset.center,
+          child: child,
+        );
+      },
+      child: Card(
+        color: Colors.white70,
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        margin: const EdgeInsets.all(10.0),
+        child: ListTile(
+          leading: Lottie.asset('assets/iconoAtomo.json',
+              width: 42.0, height: 42.0, fit: BoxFit.fill),
+          title: Text(title),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => screen),
+            );
+          },
+        ),
       ),
     );
   }
 
   Future<List<User>> obtenerUsuariosEnLinea() async {
     try {
-      final response = await http.get(
-          Uri.parse('http://10.0.2.2:8080/quimicApp/usuarios/listarActivos'));
+      final response = await http.get(Uri.parse(
+          'http://192.168.0.23:8080/quimicApp/usuarios/listarActivos'));
       if (response.statusCode == 200) {
         String body = utf8.decode(response.bodyBytes);
         final List<dynamic> datosActivos = json.decode(body);

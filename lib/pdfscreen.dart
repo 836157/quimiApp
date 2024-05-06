@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class FormulacionCarrusel extends StatefulWidget {
   const FormulacionCarrusel({Key? key}) : super(key: key);
@@ -10,11 +13,26 @@ class FormulacionCarrusel extends StatefulWidget {
 }
 
 class _FormulacionCarruselState extends State<FormulacionCarrusel> {
-  String? pdfPath;
+  //String? pdfPath;
+  File? localfile;
 
   @override
   void initState() {
     super.initState();
+    requestPermissionAndSelectPdf();
+  }
+
+  Future<void> requestPermissionAndSelectPdf() async {
+    PermissionStatus status = await Permission.storage.status;
+
+    if (!status.isGranted) {
+      status = await Permission.storage.request();
+      if (!status.isGranted) {
+        openAppSettings();
+        return;
+      }
+    }
+
     selectPdf();
   }
 
@@ -26,16 +44,10 @@ class _FormulacionCarruselState extends State<FormulacionCarrusel> {
 
     if (result != null) {
       setState(() {
-        pdfPath = result.files.single.path;
+        localfile = File(result.files.single.path!);
       });
     } else {
-      // El usuario canceló la selección
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error al cargar el PDF'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      selectPdf();
     }
   }
 
@@ -72,11 +84,11 @@ class _FormulacionCarruselState extends State<FormulacionCarrusel> {
             fit: BoxFit.fill,
           ),
         ),
-        child: pdfPath != null
+        child: localfile != null
             ? Transform.scale(
                 scale: 1.15,
                 child: PDFView(
-                  filePath: pdfPath!,
+                  filePath: localfile!.path,
                   autoSpacing: true,
                   enableSwipe: true,
                   pageSnap: true,

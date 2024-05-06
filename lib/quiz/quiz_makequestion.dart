@@ -49,7 +49,7 @@ class _QuizMakeQuestionScreenState extends State<QuizMakeQuestionScreen> {
       appBar: AppBar(
         title: const Text(
           '!Crea tú pregunta!',
-          style: TextStyle(fontSize: 18),
+          style: TextStyle(fontSize: 12),
         ),
         backgroundColor: Colors.green,
         shadowColor: Colors.grey,
@@ -204,7 +204,7 @@ class _QuizMakeQuestionScreenState extends State<QuizMakeQuestionScreen> {
                 );
               }).toList(),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 110.0),
+                padding: const EdgeInsets.symmetric(horizontal: 90.0),
                 child: SizedBox(
                   width: double.infinity,
                   child: PersonalizadorWidget.buildCustomElevatedButton(
@@ -310,7 +310,7 @@ void _showInfoDialog(BuildContext context) {
 
 Future<void> enviarPregunta(PreguntaDTO pregunta, BuildContext context) async {
   final response = await http.post(
-    Uri.parse('http://10.0.2.2:8080/quimicApp/preguntas/insertar'),
+    Uri.parse('http://192.168.0.23:8080/quimicApp/preguntas/insertar'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },

@@ -12,7 +12,7 @@ class ImageViewerScreen extends StatelessWidget {
         automaticallyImplyLeading: true,
         title: const Text(
           'Apuntes reacciones',
-          style: TextStyle(fontSize: 18),
+          style: TextStyle(fontSize: 16),
         ),
         backgroundColor: Colors.green,
         shadowColor: Colors.grey,
@@ -39,7 +39,7 @@ class ImageViewerScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(70.0),
+            padding: const EdgeInsets.only(top: 55),
             child: Row(
               children: [
                 Lottie.asset('assets/iconoAtomo.json', width: 50, height: 50),

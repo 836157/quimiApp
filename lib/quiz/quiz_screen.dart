@@ -8,8 +8,8 @@ import 'package:quimicapp/quiz/quiz_page.dart';
 import 'package:quimicapp/quiz/quiz_makequestion.dart';
 
 Future<List<Pregunta>> cuestionarioQuizTematica(String tematica) async {
-  final response = await http.get(
-      Uri.parse('http://10.0.2.2:8080/quimicApp/preguntas/tematica/$tematica'));
+  final response = await http.get(Uri.parse(
+      'http://192.168.0.23:8080/quimicApp/preguntas/tematica/$tematica'));
 
   if (response.statusCode == 200) {
     String body = utf8.decode(response.bodyBytes);
