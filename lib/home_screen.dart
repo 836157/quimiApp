@@ -281,7 +281,7 @@ class _HomeScreenState extends State<HomeScreen>
         );
       },
       child: Card(
-        color: Colors.white70,
+        color: Colors.white,
         elevation: 5.0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
@@ -290,7 +290,11 @@ class _HomeScreenState extends State<HomeScreen>
         child: ListTile(
           leading: Lottie.asset('assets/iconoAtomo.json',
               width: 42.0, height: 42.0, fit: BoxFit.fill),
-          title: Text(title),
+          title: Text(
+            title,
+            style: TextStyle(
+                color: Colors.black), // Cambia el color del texto a negro
+          ),
           onTap: () {
             Navigator.push(
               context,

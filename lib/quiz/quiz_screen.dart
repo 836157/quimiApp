@@ -30,7 +30,7 @@ class QuizScreen extends StatelessWidget {
         title: const Text(
           'Quiz Game',
           style: TextStyle(
-            fontSize: 24,
+            fontSize: 20,
           ),
         ),
         backgroundColor: Colors.green,

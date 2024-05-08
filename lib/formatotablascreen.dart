@@ -162,7 +162,7 @@ class _TablaPeriodicaState extends State<TablaPeriodica> {
             future: fetchElement(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator(); // Muestra un indicador de carga mientras se espera
+                return const CircularProgressIndicator(); // Muestra un indicador de carga mientras se espera
               } else if (snapshot.hasError) {
                 return Text(
                     'Error: ${snapshot.error}'); // Muestra un mensaje de error si algo sale mal
@@ -295,7 +295,7 @@ class _TablaPeriodicaState extends State<TablaPeriodica> {
       width: 70.0, // Ancho fijo
       height: 70.0,
       child: Card(
-        color: Colors.transparent,
+        color: Colors.white.withOpacity(0.7),
         elevation: 10.0,
         shadowColor: Colors.white,
         shape: RoundedRectangleBorder(

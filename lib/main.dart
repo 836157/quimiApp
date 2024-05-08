@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         colorScheme: const ColorScheme.dark(
           secondary: secondaryColor, // Color secundario verde
         ),
-        appBarTheme: AppBarTheme(
+        /*appBarTheme: AppBarTheme(
           color: appBarColor,
           elevation: 10.0, // Ajusta la elevación aquí
           shadowColor: Colors.white,
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
             fontSize: 22,
             letterSpacing: 7.0,
           ), // Título de AppBar blanco
-        ),
+        ),*/
       ),
       home: const SplashScreen(),
     );
