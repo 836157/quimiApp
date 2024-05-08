@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quimicapp/personalizadorwidget.dart';
 import 'package:quimicapp/quiz/preguntaDTO.dart';
 import 'package:quimicapp/quiz/respuestaDTO.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:quimicapp/themeAppDark/themenotifier.dart';
 
 class QuizMakeQuestionScreen extends StatefulWidget {
   QuizMakeQuestionScreen({Key? key}) : super(key: key);
@@ -45,224 +47,221 @@ class _QuizMakeQuestionScreenState extends State<QuizMakeQuestionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeNotifier themeNotifier = Provider.of<ThemeNotifier>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          '!Crea tú pregunta!',
-          style: TextStyle(fontSize: 12),
-        ),
-        backgroundColor: Colors.green,
-        shadowColor: Colors.grey,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFF4CAF50), // Un tono de verde
-                Color(0xFF8BC34A), // Otro tono de verde
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
+      appBar: PersonalizadorWidget.buildGradientAppBar(
+        title: 'Crear pregunta',
+        context: context,
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.info_outline, color: Colors.white),
+            icon: Icon(Icons.info_outline,
+                color: Theme.of(context).iconTheme.color),
             onPressed: () => _showInfoDialog(context),
           ),
         ],
       ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/fondoFinal.jpg"),
-            fit: BoxFit.fill,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: ListView(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 25.0),
-                child: TextField(
-                  controller: questionController,
-                  maxLines: 6,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2,
-                  ),
-                  decoration: InputDecoration(
-                    labelText: 'Escribe tu pregunta aquí',
-                    labelStyle: const TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
+      body: Consumer<ThemeNotifier>(
+        builder: (context, value, child) {
+          return Container(
+            height: MediaQuery.of(context).size.height,
+            decoration: themeNotifier.isUsingFirstTheme
+                ? const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/fondoFinal.jpg"),
+                      fit: BoxFit.fill,
                     ),
-                    prefixIcon:
-                        const Icon(Icons.question_mark, color: Colors.green),
-                    fillColor: Colors.white,
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
+                  )
+                : BoxDecoration(
+                    color: Colors.grey[600],
                   ),
-                ),
-              ),
-              SizedBox(
-                  height: 40), // Espacio entre la pregunta y las respuestas
-              ...respuestas
-                  .asMap()
-                  .entries
-                  .map((MapEntry<int, RespuestaDTO> entry) {
-                int index = entry.key;
-                RespuestaDTO respuesta = entry.value;
-                return Column(
-                  children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                            18.0), // Asegúrate de que el radio del borde del Container coincida con el del Card
-                        /*gradient: const LinearGradient(
-                          colors: [
-                            Color(0xFF4CAF50), // Un tono de verde
-                            Color(0xFF8BC34A), // Otro tono de verde
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),*/
+            child: Padding(
+              padding: const EdgeInsets.all(25.0),
+              child: ListView(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 25.0),
+                    child: TextField(
+                      controller: questionController,
+                      maxLines: 6,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 2,
                       ),
-                      child: Card(
-                        color: selectedAnswerIndex == index
-                            ? Colors.green
-                            : (selectedAnswerIndex == null
-                                ? Colors.black
-                                : Colors
-                                    .redAccent), // Cambia el color de fondo aquí
-                        // Cambia el color de la sombra aquí
-                        //elevation: 20,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              18.0), // Cambia el radio del borde aquí
+                      decoration: InputDecoration(
+                        labelText: 'Escribe tu pregunta aquí',
+                        labelStyle: const TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
                         ),
+                        prefixIcon: Icon(Icons.question_mark,
+                            color: Theme.of(context).iconTheme.color),
+                        fillColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                      height: 40), // Espacio entre la pregunta y las respuestas
+                  ...respuestas
+                      .asMap()
+                      .entries
+                      .map((MapEntry<int, RespuestaDTO> entry) {
+                    int index = entry.key;
+                    RespuestaDTO respuesta = entry.value;
+                    return Column(
+                      children: <Widget>[
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                                18.0), // Asegúrate de que el radio del borde del Container coincida con el del Card
+                            /*gradient: const LinearGradient(
+                            colors: [
+                              Color(0xFF4CAF50), // Un tono de verde
+                              Color(0xFF8BC34A), // Otro tono de verde
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),*/
+                          ),
+                          child: Card(
+                            color: selectedAnswerIndex == index
+                                ? Colors.green
+                                : (selectedAnswerIndex == null
+                                    ? Colors.black
+                                    : Colors
+                                        .redAccent), // Cambia el color de fondo aquí
+                            // Cambia el color de la sombra aquí
+                            //elevation: 20,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  18.0), // Cambia el radio del borde aquí
+                            ),
 
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: TextField(
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 2,
-                                ),
-                                controller: respuestasController[index],
-                                decoration: InputDecoration(
-                                  labelText: 'Opción ${index + 1}',
-                                  fillColor: Colors.white, // Fondo blanco
-                                  filled:
-                                      true, // Llena el campo de texto con el color de fondo
-                                  prefixIcon: const Icon(Icons.question_answer,
-                                      color: Colors.grey),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        16.0), // Radio del borde redondeado
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: TextField(
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 2,
+                                    ),
+                                    controller: respuestasController[index],
+                                    decoration: InputDecoration(
+                                      labelText: 'Opción ${index + 1}',
+                                      fillColor: Colors.white, // Fondo blanco
+                                      filled:
+                                          true, // Llena el campo de texto con el color de fondo
+                                      prefixIcon: Icon(Icons.question_answer,
+                                          color: Theme.of(context)
+                                              .iconTheme
+                                              .color), // Icono de respuesta
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            16.0), // Radio del borde redondeado
+                                      ),
+                                      // Icono verde
+                                    ),
                                   ),
-                                  // Icono verde
                                 ),
-                              ),
+                                Checkbox(
+                                  value: respuesta.esCorrecta,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      if (value == false &&
+                                          selectedAnswerIndex == index) {
+                                        // Si se deselecciona la respuesta correcta, resetea selectedAnswerIndex a null
+                                        selectedAnswerIndex = null;
+                                      } else if (value == true) {
+                                        if (selectedAnswerIndex != null) {
+                                          respuestas[selectedAnswerIndex!]
+                                              .esCorrecta = false;
+                                        }
+                                        respuesta.esCorrecta = true;
+                                        selectedAnswerIndex = index;
+                                      }
+                                      respuesta.esCorrecta = value!;
+                                    });
+                                  },
+                                ),
+                              ],
                             ),
-                            Checkbox(
-                              value: respuesta.esCorrecta,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  if (value == false &&
-                                      selectedAnswerIndex == index) {
-                                    // Si se deselecciona la respuesta correcta, resetea selectedAnswerIndex a null
-                                    selectedAnswerIndex = null;
-                                  } else if (value == true) {
-                                    if (selectedAnswerIndex != null) {
-                                      respuestas[selectedAnswerIndex!]
-                                          .esCorrecta = false;
-                                    }
-                                    respuesta.esCorrecta = true;
-                                    selectedAnswerIndex = index;
-                                  }
-                                  respuesta.esCorrecta = value!;
-                                });
-                              },
-                            ),
-                          ],
+                          ),
                         ),
+                        SizedBox(height: 15), // Espacio entre las tarjetas
+                      ],
+                    );
+                  }).toList(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 90.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: PersonalizadorWidget.buildCustomElevatedButton(
+                        context,
+                        "Guardar",
+                        () {
+                          // Verifica que el campo de la pregunta no esté vacío
+                          if (questionController.text.isEmpty) {
+                            _errorInfoDialog(
+                                context, 'Por favor, introduce una pregunta.');
+                            return;
+                          }
+
+                          // Verifica que todas las respuestas no estén vacías
+                          if (respuestasController
+                              .any((controller) => controller.text.isEmpty)) {
+                            _errorInfoDialog(context,
+                                'Por favor, introduce todas las respuestas.');
+                            return;
+                          }
+
+                          // Verifica que solo una respuesta esté marcada como correcta
+                          int correctAnswersCount = respuestas
+                              .where((respuesta) => respuesta.esCorrecta)
+                              .length;
+                          if (correctAnswersCount != 1) {
+                            _errorInfoDialog(context,
+                                'Por favor, marca solo una respuesta como correcta.');
+                            return;
+                          }
+                          setState(() {
+                            pregunta = PreguntaDTO(
+                              pregunta: questionController.text,
+                              respuestas:
+                                  respuestas.asMap().entries.map((entry) {
+                                int index = entry.key;
+                                RespuestaDTO respuesta = entry.value;
+                                return RespuestaDTO(
+                                  respuesta: respuestasController[index].text,
+                                  esCorrecta: respuesta.esCorrecta,
+                                );
+                              }).toList(),
+                              tematica: 'usuarios',
+                            );
+                            //print(pregunta);
+                            enviarPregunta(pregunta, context);
+                            questionController.clear();
+                            for (TextEditingController controller
+                                in respuestasController) {
+                              controller.clear();
+                            }
+                          });
+                        },
                       ),
                     ),
-                    SizedBox(height: 15), // Espacio entre las tarjetas
-                  ],
-                );
-              }).toList(),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 90.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: PersonalizadorWidget.buildCustomElevatedButton(
-                    context,
-                    "Guardar",
-                    () {
-                      // Verifica que el campo de la pregunta no esté vacío
-                      if (questionController.text.isEmpty) {
-                        _errorInfoDialog(
-                            context, 'Por favor, introduce una pregunta.');
-                        return;
-                      }
-
-                      // Verifica que todas las respuestas no estén vacías
-                      if (respuestasController
-                          .any((controller) => controller.text.isEmpty)) {
-                        _errorInfoDialog(context,
-                            'Por favor, introduce todas las respuestas.');
-                        return;
-                      }
-
-                      // Verifica que solo una respuesta esté marcada como correcta
-                      int correctAnswersCount = respuestas
-                          .where((respuesta) => respuesta.esCorrecta)
-                          .length;
-                      if (correctAnswersCount != 1) {
-                        _errorInfoDialog(context,
-                            'Por favor, marca solo una respuesta como correcta.');
-                        return;
-                      }
-                      setState(() {
-                        pregunta = PreguntaDTO(
-                          pregunta: questionController.text,
-                          respuestas: respuestas.asMap().entries.map((entry) {
-                            int index = entry.key;
-                            RespuestaDTO respuesta = entry.value;
-                            return RespuestaDTO(
-                              respuesta: respuestasController[index].text,
-                              esCorrecta: respuesta.esCorrecta,
-                            );
-                          }).toList(),
-                          tematica: 'usuarios',
-                        );
-                        //print(pregunta);
-                        enviarPregunta(pregunta, context);
-                        questionController.clear();
-                        for (TextEditingController controller
-                            in respuestasController) {
-                          controller.clear();
-                        }
-                      });
-                    },
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
+                  )
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

@@ -44,8 +44,9 @@ class ThemeNotifier extends ChangeNotifier {
     secondTheme = ThemeData.dark().copyWith(
       primaryColor: Colors.black,
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        unselectedItemColor: Colors.red, // Color de los ítems no seleccionados
-        selectedItemColor: Colors.red, // Color de los ítems seleccionados
+        unselectedItemColor:
+            Colors.white, // Color de los ítems no seleccionados
+        selectedItemColor: Colors.white, // Color de los ítems seleccionados
       ),
       //hintColor: Colors.amber[100],
       colorScheme: const ColorScheme.dark(
@@ -55,7 +56,7 @@ class ThemeNotifier extends ChangeNotifier {
       ),
       appBarTheme: const AppBarTheme(
         titleTextStyle: TextStyle(
-          color: Colors.red,
+          color: Colors.white,
           fontWeight: FontWeight.bold,
           fontFamily: 'Roboto',
         ),
@@ -80,9 +81,14 @@ class ThemeNotifier extends ChangeNotifier {
   }
 
   getTheme() => themeData;
+  getSecondTheme() => secondTheme;
 
   bool _isUsingFirstTheme = true;
   bool get isUsingFirstTheme => _isUsingFirstTheme;
+
+  bool isSecondTheme() {
+    return currentTheme == secondTheme;
+  }
 
   setTheme() {
     if (_isUsingFirstTheme) {

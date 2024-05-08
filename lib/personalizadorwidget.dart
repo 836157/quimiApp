@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quimicapp/elemento.dart';
+import 'package:quimicapp/themeAppDark/themenotifier.dart';
 import 'package:text_neon_widget/text_neon_widget.dart';
 
 class PersonalizadorWidget {
@@ -53,6 +55,7 @@ class PersonalizadorWidget {
   static Widget buildCustomElevatedButton(
       BuildContext context, String buttonText, VoidCallback onPressed) {
     ThemeData theme = Theme.of(context);
+    final themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
     return SizedBox(
       width: 200, // Ancho del botón
       height: 50,
@@ -61,14 +64,13 @@ class PersonalizadorWidget {
           borderRadius: BorderRadius.circular(27),
           boxShadow: [
             BoxShadow(
-              color: theme.brightness == Brightness.dark
+              color: themeNotifier.currentThemeGet() ==
+                      themeNotifier.getSecondTheme()
                   ? Colors.red
-                  : Colors
-                      .white, // Cambia esto al color de sombra que prefieras
+                  : Colors.white,
               spreadRadius: 1,
               blurRadius: 16,
-              offset: Offset(
-                  0, 1), // Cambia esto para cambiar la posición de la sombra
+              offset: const Offset(0, 1),
             ),
           ],
           gradient: LinearGradient(
