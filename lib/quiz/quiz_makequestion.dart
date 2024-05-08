@@ -208,6 +208,7 @@ class _QuizMakeQuestionScreenState extends State<QuizMakeQuestionScreen> {
                 child: SizedBox(
                   width: double.infinity,
                   child: PersonalizadorWidget.buildCustomElevatedButton(
+                    context,
                     "Guardar",
                     () {
                       // Verifica que el campo de la pregunta no esté vacío

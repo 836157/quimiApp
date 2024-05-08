@@ -4,6 +4,7 @@ import 'package:text_neon_widget/text_neon_widget.dart';
 
 class PersonalizadorWidget {
   static TextFormField buildCustomTextFormField({
+    required BuildContext context,
     required TextEditingController controller,
     required String labelText,
     required IconData icon,
@@ -32,7 +33,8 @@ class PersonalizadorWidget {
           fontWeight: FontWeight.bold,
           color: Colors.grey,
         ),
-        prefixIcon: Icon(icon, color: iconColor ?? Colors.green[600]),
+        prefixIcon:
+            Icon(icon, color: iconColor ?? Theme.of(context).iconTheme.color),
         fillColor: Colors.white,
         filled: true,
         border: OutlineInputBorder(
@@ -49,28 +51,30 @@ class PersonalizadorWidget {
   }
 
   static Widget buildCustomElevatedButton(
-      String buttonText, VoidCallback onPressed) {
+      BuildContext context, String buttonText, VoidCallback onPressed) {
+    ThemeData theme = Theme.of(context);
     return SizedBox(
       width: 200, // Ancho del botón
       height: 50,
-
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(27),
-          boxShadow: const [
+          boxShadow: [
             BoxShadow(
-              color:
-                  Colors.white, // Cambia esto al color de sombra que prefieras
+              color: theme.brightness == Brightness.dark
+                  ? Colors.red
+                  : Colors
+                      .white, // Cambia esto al color de sombra que prefieras
               spreadRadius: 1,
               blurRadius: 16,
               offset: Offset(
                   0, 1), // Cambia esto para cambiar la posición de la sombra
             ),
           ],
-          gradient: const LinearGradient(
+          gradient: LinearGradient(
             colors: [
-              Color(0xFF4CAF50), // Un tono de verde
-              Color(0xFF8BC34A), // Otro tono de verde
+              theme.primaryColor, // Un tono de verde
+              theme.colorScheme.secondary, // Otro tono de verde
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -120,6 +124,69 @@ class PersonalizadorWidget {
           shineDuration: Duration(seconds: 1),
         ),
       ],
+    );
+  }
+
+  static buildGradientAppBar(
+      {required String title,
+      required BuildContext context,
+      List<Widget>? actions}) {
+    ThemeData theme = Theme.of(context);
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(kToolbarHeight),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              theme.primaryColor, // Color primario del tema
+              theme.colorScheme.secondary, // Color secundario del tema
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: AppBar(
+          backgroundColor: Colors.transparent,
+          title: Text(title),
+          actions: actions,
+        ),
+      ),
+    );
+  }
+
+  static buildGradientBottomNavigationBar(
+      {required BuildContext context, required Function(int) onTap}) {
+    ThemeData theme = Theme.of(context);
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            theme.primaryColor, // Color primario del tema
+            theme.colorScheme.secondary, // Color secundario del tema
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: BottomNavigationBar(
+          backgroundColor: Colors.transparent,
+          elevation: 5,
+          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.people),
+              label: 'Usuarios en línea',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'Ajustes',
+            ),
+          ],
+          onTap: onTap,
+        ),
+      ),
     );
   }
 }

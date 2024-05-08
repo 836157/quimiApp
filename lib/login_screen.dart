@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quimicapp/authentication_service.dart';
 import 'package:quimicapp/personalizadorwidget.dart';
+import 'package:quimicapp/themeAppDark/themenotifier.dart';
 
 import 'register_screen.dart';
 
@@ -31,113 +32,108 @@ class _LoginScreenState extends State<LoginScreen> {
     // Obtén la instancia de AuthenticationService
     AuthenticationService authService =
         Provider.of<AuthenticationService>(context, listen: false);
+    ThemeNotifier themeNotifier = Provider.of<ThemeNotifier>(context);
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        title: const Text('Iniciar sesión'),
-        backgroundColor: Colors.green,
-        shadowColor: Colors.grey,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFF4CAF50), // Un tono de verde
-                Color(0xFF8BC34A), // Otro tono de verde
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/fondoFinal.jpg"),
-              fit: BoxFit.fill,
-            ),
-          ),
-          child: Form(
-            key: formKey,
-            child: Column(
-              children: <Widget>[
-                const SizedBox(height: 100.0),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0), // Margen agregado aquí
-                  child: Theme(
-                    data: Theme.of(context).copyWith(
-                      primaryColor: Colors.blueGrey,
-                    ),
-                    child: PersonalizadorWidget.buildCustomTextFormField(
-                      controller: _emailController,
-                      labelText: 'Correo electrónico',
-                      icon: Icons.email,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20.0),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0), // Margen agregado aquí
-                  child: PersonalizadorWidget.buildCustomTextFormField(
-                    controller: _passwordController,
-                    labelText: 'Contraseña',
-                    icon: Icons.lock,
-                  ),
-                ),
-                const SizedBox(height: 60.0),
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // código para el botón de iniciar sesión
-                      PersonalizadorWidget.buildCustomElevatedButton(
-                          "Iniciar sesión", () async {
-                        String pattern =
-                            r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
-                        RegExp regex = RegExp(pattern);
-                        if (!regex.hasMatch(_emailController.text)) {
-                          // Mostrar un mensaje de error
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text(
-                                      'Introduce un correo electrónico válido')));
-                        } else if (formKey.currentState!.validate()) {
-                          // Si el formulario es válido, muestra un mensaje de éxito
-                          await authService.login(_emailController.text,
-                              _passwordController.text, context);
-                        }
-                      }),
-                      const SizedBox(height: 150.0),
-                      const Text(
-                        'No tienes una cuenta',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
+        appBar: PersonalizadorWidget.buildGradientAppBar(
+            title: 'Iniciar sesión', context: context),
+        body: SingleChildScrollView(
+          child: Consumer<ThemeNotifier>(
+            builder: (context, value, child) {
+              return Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                decoration: themeNotifier.isUsingFirstTheme
+                    ? const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/fondoFinal.jpg"),
+                          fit: BoxFit.fill,
+                        ),
+                      )
+                    : BoxDecoration(
+                        color: Colors.grey[600],
                       ),
-                      const SizedBox(height: 10),
-                      PersonalizadorWidget.buildCustomElevatedButton(
-                          "Registrate", () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const RegisterScreen()),
-                        );
-                      })
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    children: <Widget>[
+                      const SizedBox(height: 100.0),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20.0), // Margen agregado aquí
+                        child: Theme(
+                          data: Theme.of(context).copyWith(
+                            primaryColor: Colors.blueGrey,
+                          ),
+                          child: PersonalizadorWidget.buildCustomTextFormField(
+                            context: context,
+                            controller: _emailController,
+                            labelText: 'Correo electrónico',
+                            icon: Icons.email,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20.0),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20.0), // Margen agregado aquí
+                        child: PersonalizadorWidget.buildCustomTextFormField(
+                          context: context,
+                          controller: _passwordController,
+                          labelText: 'Contraseña',
+                          icon: Icons.lock,
+                        ),
+                      ),
+                      const SizedBox(height: 60.0),
+                      Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // código para el botón de iniciar sesión
+                            PersonalizadorWidget.buildCustomElevatedButton(
+                                context, "Iniciar sesión", () async {
+                              String pattern =
+                                  r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
+                              RegExp regex = RegExp(pattern);
+                              if (!regex.hasMatch(_emailController.text)) {
+                                // Mostrar un mensaje de error
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            'Introduce un correo electrónico válido')));
+                              } else if (formKey.currentState!.validate()) {
+                                // Si el formulario es válido, muestra un mensaje de éxito
+                                await authService.login(_emailController.text,
+                                    _passwordController.text, context);
+                              }
+                            }),
+                            const SizedBox(height: 150.0),
+                            const Text(
+                              'No tienes una cuenta',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 10),
+                            PersonalizadorWidget.buildCustomElevatedButton(
+                                context, "Registrate", () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const RegisterScreen()),
+                              );
+                            })
+                          ],
+                        ),
+                      )
                     ],
                   ),
-                )
-              ],
-            ),
+                ),
+              );
+            },
           ),
-        ),
-      ),
-    );
+        ));
   }
 }

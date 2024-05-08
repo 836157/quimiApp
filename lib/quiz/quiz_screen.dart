@@ -71,7 +71,7 @@ class QuizScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 50),
                   child: PersonalizadorWidget.buildCustomElevatedButton(
-                      "Iniciar Quiz", () async {
+                      context, "Iniciar Quiz", () async {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -169,7 +169,7 @@ class QuizScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: PersonalizadorWidget.buildCustomElevatedButton(
-                      "Crear preguntas", () async {
+                      context, "Crear preguntas", () async {
                     Navigator.push(
                       context,
                       MaterialPageRoute(

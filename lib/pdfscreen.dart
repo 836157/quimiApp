@@ -4,6 +4,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:quimicapp/personalizadorwidget.dart';
+import 'package:quimicapp/themeAppDark/themenotifier.dart';
 
 class FormulacionCarrusel extends StatefulWidget {
   const FormulacionCarrusel({Key? key}) : super(key: key);
@@ -53,59 +56,49 @@ class _FormulacionCarruselState extends State<FormulacionCarrusel> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeNotifier themeNotifier = Provider.of<ThemeNotifier>(context);
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        title: const Text(
-          'Lector de PDF',
-          style: TextStyle(fontSize: 16),
-        ),
-        backgroundColor: Colors.green,
-        shadowColor: Colors.grey,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFF4CAF50), // Un tono de verde
-                Color(0xFF8BC34A), // Otro tono de verde
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-      ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/fondoFinal.jpg"),
-            fit: BoxFit.fill,
-          ),
-        ),
-        child: localfile != null
-            ? Transform.scale(
-                scale: 1.15,
-                child: PDFView(
-                  filePath: localfile!.path,
-                  autoSpacing: true,
-                  enableSwipe: true,
-                  pageSnap: true,
-                  swipeHorizontal: true,
-                  nightMode: false,
-                  onError: (error) {
-                    print(error.toString());
-                  },
-                  onRender: (_pages) {
-                    setState(() {});
-                  },
-                  onViewCreated: (PDFViewController pdfViewController) {},
-                  onPageChanged: (int? page, int? total) {},
-                  onPageError: (page, error) {},
-                ),
-              )
-            : const Center(child: CircularProgressIndicator()),
+      appBar: PersonalizadorWidget.buildGradientAppBar(
+          title: 'Lector PDF', context: context),
+      body: Consumer<ThemeNotifier>(
+        builder: (context, value, child) {
+          return Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            decoration: themeNotifier.isUsingFirstTheme
+                ? const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/fondoFinal.jpg"),
+                      fit: BoxFit.fill,
+                    ),
+                  )
+                : BoxDecoration(
+                    color: Colors.grey[600],
+                  ),
+            child: localfile != null
+                ? Transform.scale(
+                    scale: 1.15,
+                    child: PDFView(
+                      filePath: localfile!.path,
+                      autoSpacing: true,
+                      enableSwipe: true,
+                      pageSnap: true,
+                      swipeHorizontal: true,
+                      nightMode: false,
+                      onError: (error) {
+                        print(error.toString());
+                      },
+                      onRender: (_pages) {
+                        setState(() {});
+                      },
+                      onViewCreated: (PDFViewController pdfViewController) {},
+                      onPageChanged: (int? page, int? total) {},
+                      onPageError: (page, error) {},
+                    ),
+                  )
+                : const Center(child: CircularProgressIndicator()),
+          );
+        },
       ),
     );
   }

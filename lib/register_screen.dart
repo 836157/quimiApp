@@ -59,30 +59,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 children: <Widget>[
                   const SizedBox(height: 120.0),
                   PersonalizadorWidget.buildCustomTextFormField(
+                    context: context,
                     controller: nameController,
                     labelText: 'Nombre',
                     icon: Icons.person,
                   ),
                   const SizedBox(height: 20.0),
                   PersonalizadorWidget.buildCustomTextFormField(
+                    context: context,
                     controller: surnameController,
                     labelText: 'Apellidos',
                     icon: Icons.label_important,
                   ),
                   const SizedBox(height: 20.0),
                   PersonalizadorWidget.buildCustomTextFormField(
+                    context: context,
                     controller: emailController,
                     labelText: 'Correo electronico',
                     icon: Icons.email,
                   ),
                   const SizedBox(height: 20.0),
                   PersonalizadorWidget.buildCustomTextFormField(
+                    context: context,
                     controller: passwordController,
                     labelText: 'Contraseña',
                     icon: Icons.lock,
                   ),
                   const SizedBox(height: 20.0),
                   PersonalizadorWidget.buildCustomElevatedButton(
+                    context,
                     'Registrarse',
                     () async {
                       String pattern =

@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'package:quimicapp/elemento.dart';
+import 'package:quimicapp/personalizadorwidget.dart';
+import 'package:quimicapp/themeAppDark/themenotifier.dart';
 
 final familias = {
   'Metal Alcalino': [
@@ -100,114 +103,104 @@ class _TablaPeriodicaState extends State<TablaPeriodica> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeNotifier themeNotifier = Provider.of<ThemeNotifier>(context);
     return Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'Tabla Periódica',
-            style: TextStyle(
-              fontSize: 16,
-            ),
-          ),
-          backgroundColor: Colors.green,
-          shadowColor: Colors.grey,
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFF4CAF50), // Un tono de verde
-                  Color(0xFF8BC34A), // Otro tono de verde
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-          ),
-          actions: <Widget>[
-            PopupMenuButton<String>(
-              onSelected: (String result) {
-                setState(() {
-                  familiaSeleccionada = result == 'TODOS' ? null : result;
-                });
-              },
-              itemBuilder: (BuildContext context) {
-                return familias.keys.map((String familia) {
-                  return PopupMenuItem<String>(
-                    value: familia,
-                    child: ListTile(
-                      leading: Icon(iconosFamilias[familia]),
-                      title: Text(familia),
-                    ),
-                  );
-                }).toList()
-                  ..add(const PopupMenuItem<String>(
-                    value: 'TODOS',
-                    child: ListTile(
-                      leading: Icon(Icons.select_all),
-                      title: Text('TODOS'),
-                    ),
-                  ));
-              },
-            ),
-          ],
-        ),
-        body: Container(
-          // backgroundColor: Colors.white,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/fondoFinal.jpg"),
-              fit: BoxFit.fill,
-            ),
-          ),
-          child: FutureBuilder<List<Elemento>>(
-            future: fetchElement(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator(); // Muestra un indicador de carga mientras se espera
-              } else if (snapshot.hasError) {
-                return Text(
-                    'Error: ${snapshot.error}'); // Muestra un mensaje de error si algo sale mal
-              } else {
-                final elementosResueltos = snapshot.data ?? [];
-                final tiles = List.generate(10,
-                    (_) => List<Widget>.filled(18, const SizedBox.square()));
-
-                for (int i = 0; i < 10; i++) {
-                  for (int j = 0; j < 18; j++) {
-                    final elemento = elementosResueltos.firstWhere(
-                      (e) => e.posicionX == i && e.posicionY == j,
-                      orElse: () => Elemento(
-                          id: 0,
-                          simbolo: '',
-                          posicionX: i,
-                          posicionY: j,
-                          valencias: []), // Devuelve un nuevo Elemento con id 0
-                    );
-
-                    if (elemento.id != 0) {
-                      tiles[i][j] = _crearCard(elemento, context);
-                    } else {
-                      tiles[i][j] = _vaciaCard(elemento);
-                    }
-                  }
-                }
-
-                return SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        children:
-                            tiles.map((row) => Row(children: row)).toList(),
-                      ),
-                    ),
+      appBar: PersonalizadorWidget.buildGradientAppBar(
+        title: 'Tabla Periódica',
+        context: context,
+        actions: <Widget>[
+          PopupMenuButton<String>(
+            onSelected: (String result) {
+              setState(() {
+                familiaSeleccionada = result == 'TODOS' ? null : result;
+              });
+            },
+            itemBuilder: (BuildContext context) {
+              return familias.keys.map((String familia) {
+                return PopupMenuItem<String>(
+                  value: familia,
+                  child: ListTile(
+                    leading: Icon(iconosFamilias[familia]),
+                    title: Text(familia),
                   ),
                 );
-              }
+              }).toList()
+                ..add(const PopupMenuItem<String>(
+                  value: 'TODOS',
+                  child: ListTile(
+                    leading: Icon(Icons.select_all),
+                    title: Text('TODOS'),
+                  ),
+                ));
             },
           ),
-        ));
+        ],
+      ),
+      body: Consumer<ThemeNotifier>(
+        builder: (context, themeNotifier, child) {
+          return Container(
+            decoration: themeNotifier.isUsingFirstTheme
+                ? const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/fondoFinal.jpg"),
+                      fit: BoxFit.fill,
+                    ),
+                  )
+                : BoxDecoration(
+                    color: Colors.grey[600],
+                  ),
+            child: FutureBuilder<List<Elemento>>(
+              future: fetchElement(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  final elementosResueltos = snapshot.data ?? [];
+                  final tiles = List.generate(10,
+                      (_) => List<Widget>.filled(18, const SizedBox.square()));
+
+                  for (int i = 0; i < 10; i++) {
+                    for (int j = 0; j < 18; j++) {
+                      final elemento = elementosResueltos.firstWhere(
+                        (e) => e.posicionX == i && e.posicionY == j,
+                        orElse: () => Elemento(
+                            id: 0,
+                            simbolo: '',
+                            posicionX: i,
+                            posicionY: j,
+                            valencias: []),
+                      );
+
+                      if (elemento.id != 0) {
+                        tiles[i][j] = _crearCard(elemento, context);
+                      } else {
+                        tiles[i][j] = _vaciaCard(elemento);
+                      }
+                    }
+                  }
+
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          children:
+                              tiles.map((row) => Row(children: row)).toList(),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
+          );
+        },
+      ),
+    );
   }
 
   Widget _crearCard(Elemento elemento, BuildContext context) {
@@ -328,18 +321,20 @@ class DetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final listItems = <Widget>[
       ListTile(
-        leading: Icon(Icons.text_increase),
-        title: Text('Nombre'),
-        subtitle: Text(element.nombre!),
+        leading:
+            Icon(Icons.text_increase, color: Theme.of(context).iconTheme.color),
+        title: Text('Nombre', style: TextStyle(color: Colors.white)),
+        subtitle: Text(element.nombre!, style: TextStyle(color: Colors.white)),
       ),
       ListTile(
-        leading: Icon(iconosFamilias[element.familia!] ??
-            Icons
-                .error), // Usa el icono correspondiente a la familia del elemento, si no existe, usa el icono de error
-        title: Text(element.familia!),
+        leading: Icon(iconosFamilias[element.familia!] ?? Icons.error,
+            color: Theme.of(context)
+                .iconTheme
+                .color), // Usa el icono correspondiente a la familia del elemento, si no existe, usa el icono de error
+        title: Text(element.familia!, style: TextStyle(color: Colors.white)),
       ),
       ListTile(
-        leading: Icon(Icons.circle),
+        leading: Icon(Icons.circle, color: Theme.of(context).iconTheme.color),
         title: Text('Valencias'),
         subtitle: Column(
           children: [
@@ -384,9 +379,11 @@ class DetailPage extends StatelessWidget {
         ),
       ),
       ListTile(
-        leading: Icon(Icons.line_weight),
-        title: Text('Peso Atómico'),
-        subtitle: Text(element.pesoAtomico.toString()),
+        leading:
+            Icon(Icons.line_weight, color: Theme.of(context).iconTheme.color),
+        title: Text('Peso Atómico', style: TextStyle(color: Colors.white)),
+        subtitle: Text(element.pesoAtomico.toString(),
+            style: TextStyle(color: Colors.white)),
       ),
       ListTile(
         leading: Lottie.asset('assets/iconoAtomo.json'),
@@ -398,7 +395,8 @@ class DetailPage extends StatelessWidget {
             child: Image.asset('assets/${element.simbolo}.gif'),
           ),
         ),
-        subtitle: Text('Orbital Electrónico'),
+        subtitle:
+            Text('Orbital Electrónico', style: TextStyle(color: Colors.white)),
       ),
       ListTile(
         leading: Lottie.asset('assets/iconoAtomo.json'),
@@ -413,54 +411,74 @@ class DetailPage extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Geometría más común:'),
-            Text(element.geometriaMasComun.toString()),
+            Text('Geometría más común:', style: TextStyle(color: Colors.white)),
+            Text(element.geometriaMasComun.toString(),
+                style: TextStyle(color: Colors.white)),
           ],
         ),
       ),
       ListTile(
-        leading: Icon(Icons.view_array),
-        title: Text('Densidad'),
-        subtitle: Text('${element.densidad} g/cm³'),
+        leading:
+            Icon(Icons.view_array, color: Theme.of(context).iconTheme.color),
+        title: Text('Densidad', style: TextStyle(color: Colors.white)),
+        subtitle: Text('${element.densidad} g/cm³',
+            style: TextStyle(color: Colors.white)),
       ),
       ListTile(
-        leading: Icon(Icons.thermostat),
-        title: Text('Punto de Fusión'),
-        subtitle: Text('${element.puntoFusion} K'),
+        leading:
+            Icon(Icons.thermostat, color: Theme.of(context).iconTheme.color),
+        title: Text('Punto de Fusión', style: TextStyle(color: Colors.white)),
+        subtitle: Text('${element.puntoFusion} K',
+            style: TextStyle(color: Colors.white)),
       ),
       ListTile(
-        leading: Icon(Icons.thermostat_outlined),
-        title: Text('Punto de Ebullición'),
-        subtitle: Text('${element.puntoEbullicion} K'),
+        leading: Icon(Icons.thermostat_outlined,
+            color: Theme.of(context).iconTheme.color),
+        title:
+            Text('Punto de Ebullición', style: TextStyle(color: Colors.white)),
+        subtitle: Text('${element.puntoEbullicion} K',
+            style: TextStyle(color: Colors.white)),
       ),
       ListTile(
-        leading: Icon(Icons.fire_extinguisher),
-        title: Text('Calor Específico'),
-        subtitle: Text('${element.calorEspecifico} J/(g·K)'),
+        leading: Icon(Icons.fire_extinguisher,
+            color: Theme.of(context).iconTheme.color),
+        title: Text('Calor Específico', style: TextStyle(color: Colors.white)),
+        subtitle: Text('${element.calorEspecifico} J/(g·K)',
+            style: TextStyle(color: Colors.white)),
       ),
       ListTile(
-        leading: Icon(Icons.electrical_services),
-        title: Text('Electronegatividad'),
-        subtitle: Text(element.electronegatividad.toString()),
+        leading: Icon(Icons.electrical_services,
+            color: Theme.of(context).iconTheme.color),
+        title:
+            Text('Electronegatividad', style: TextStyle(color: Colors.white)),
+        subtitle: Text(element.electronegatividad.toString(),
+            style: TextStyle(color: Colors.white)),
       ),
       ListTile(
-        leading: Icon(Icons.radio),
-        title: Text('Radio Atómico'),
-        subtitle: Text('${element.radioAtomico} pm'),
+        leading: Icon(Icons.radio, color: Theme.of(context).iconTheme.color),
+        title: Text('Radio Atómico', style: TextStyle(color: Colors.white)),
+        subtitle: Text('${element.radioAtomico} pm',
+            style: TextStyle(color: Colors.white)),
       ),
       ListTile(
-        leading: Icon(Icons.radio_button_checked),
-        title: Text('Radio Covalente'),
-        subtitle: Text('${element.radioCovalente} pm'),
+        leading: Icon(Icons.radio_button_checked,
+            color: Theme.of(context).iconTheme.color),
+        title: Text('Radio Covalente', style: TextStyle(color: Colors.white)),
+        subtitle: Text('${element.radioCovalente} pm',
+            style: TextStyle(color: Colors.white)),
       ),
       ListTile(
-        leading: Icon(Icons.radio_button_unchecked),
-        title: Text('Radio Iónico'),
-        subtitle: Text('${element.radioIonico} pm'),
+        leading: Icon(Icons.radio_button_unchecked,
+            color: Theme.of(context).iconTheme.color),
+        title: Text('Radio Iónico', style: TextStyle(color: Colors.white)),
+        subtitle: Text('${element.radioIonico} pm',
+            style: TextStyle(color: Colors.white)),
       ),
       ListTile(
-        leading: Icon(Icons.color_lens),
-        title: Text('Espectro de Emisión'),
+        leading:
+            Icon(Icons.color_lens, color: Theme.of(context).iconTheme.color),
+        title:
+            Text('Espectro de Emisión', style: TextStyle(color: Colors.white)),
         subtitle: (element.id == 85 ||
                 element.id == 100 ||
                 element.id == 101 ||

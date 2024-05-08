@@ -2,11 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quimicapp/authentication_service.dart';
 import 'package:quimicapp/splash_screen.dart';
+import 'package:quimicapp/themeAppDark/themenotifier.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => AuthenticationService(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => AuthenticationService(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ThemeNotifier(),
+        ),
+      ],
       child: const MyApp(),
     ),
   );
@@ -17,37 +25,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    const primaryColor = Colors.black;
-    const secondaryColor = Colors.green;
-    final appBarColor = Colors.green[600];
-
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'QuimicApp',
-      theme: ThemeData(
-        fontFamily: 'Roboto',
-        primaryColor: primaryColor, // Color primario negro
-        colorScheme: const ColorScheme.dark(
-          secondary: secondaryColor, // Color secundario verde
-        ),
-        /*appBarTheme: AppBarTheme(
-          color: appBarColor,
-          elevation: 10.0, // Ajusta la elevación aquí
-          shadowColor: Colors.white,
-          toolbarTextStyle: const TextStyle(
-            color: Colors.white,
-            fontFamily: 'Roboto',
-            fontSize: 12,
-            letterSpacing: 6.0,
-          ), // Título de AppBar blanco
-          titleTextStyle: const TextStyle(
-            color: Colors.white,
-            fontFamily: 'Roboto',
-            fontSize: 22,
-            letterSpacing: 7.0,
-          ), // Título de AppBar blanco
-        ),*/
-      ),
+      theme: themeNotifier.getTheme(),
       home: const SplashScreen(),
     );
   }

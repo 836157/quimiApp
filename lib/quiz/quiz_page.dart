@@ -166,8 +166,8 @@ class _QuizPageState extends State<QuizPage> {
                           ],
                         ))),
               ),
-              PersonalizadorWidget.buildCustomElevatedButton("Siguiente",
-                  () async {
+              PersonalizadorWidget.buildCustomElevatedButton(
+                  context, "Siguiente", () async {
                 if (_hasAnswered) {
                   // Verificar si el usuario ha seleccionado una opción
                   if (_currentQuestionIndex < widget.preguntas.length - 1) {
