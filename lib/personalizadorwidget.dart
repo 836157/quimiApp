@@ -29,9 +29,10 @@ class PersonalizadorWidget {
         letterSpacing: 2,
       ),
       decoration: InputDecoration(
-        labelText: labelText,
-        labelStyle: const TextStyle(
-          fontSize: 20.0,
+        hintText: labelText, // Cambia labelText a hintText
+        hintStyle: const TextStyle(
+          // Cambia labelStyle a hintStyle
+          fontSize: 16.0,
           fontWeight: FontWeight.bold,
           color: Colors.grey,
         ),
@@ -61,13 +62,13 @@ class PersonalizadorWidget {
       height: 50,
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(27),
+          borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: themeNotifier.currentThemeGet() ==
-                      themeNotifier.getSecondTheme()
-                  ? Colors.red
-                  : Colors.white,
+              color: themeNotifier
+                      .isUsingFirstTheme // Utiliza el método isSecondTheme()
+                  ? Colors.white
+                  : Colors.red,
               spreadRadius: 1,
               blurRadius: 16,
               offset: const Offset(0, 1),
@@ -78,8 +79,8 @@ class PersonalizadorWidget {
               theme.primaryColor, // Un tono de verde
               theme.colorScheme.secondary, // Otro tono de verde
             ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+            begin: Alignment.bottomRight,
+            end: Alignment.topLeft,
           ),
         ),
         child: Material(
@@ -91,11 +92,12 @@ class PersonalizadorWidget {
               padding:
                   const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
               child: Center(
-                // Aquí es donde cambió el código
                 child: Text(
                   buttonText,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: themeNotifier.isUsingFirstTheme
+                        ? Colors.black
+                        : Colors.white, // Color del texto según el tema
                     fontSize: 20,
                   ),
                 ),
@@ -143,13 +145,17 @@ class PersonalizadorWidget {
               theme.primaryColor, // Color primario del tema
               theme.colorScheme.secondary, // Color secundario del tema
             ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+            begin: Alignment.bottomRight,
+            end: Alignment.topLeft,
           ),
         ),
         child: AppBar(
           backgroundColor: Colors.transparent,
-          title: Text(title),
+          title: Text(
+            title,
+            style: const TextStyle(
+                fontSize: 20), // Aumenta el tamaño del texto aquí
+          ),
           actions: actions,
         ),
       ),
@@ -166,16 +172,19 @@ class PersonalizadorWidget {
             theme.primaryColor, // Color primario del tema
             theme.colorScheme.secondary, // Color secundario del tema
           ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+          begin: Alignment.bottomRight,
+          end: Alignment.topLeft,
         ),
       ),
       child: Material(
         color: Colors.transparent,
         child: BottomNavigationBar(
           backgroundColor: Colors.transparent,
-          elevation: 5,
-          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+          elevation: 0,
+          selectedLabelStyle:
+              TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+          unselectedLabelStyle:
+              TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.people),

@@ -7,26 +7,26 @@ class ThemeNotifier extends ChangeNotifier {
   ThemeNotifier() {
     themeData = ThemeData(
       //propiedades del tema primario
-      primaryColor: const Color(0xFF4CAF50), // Un tono de verde
+      primaryColor: const Color(0xFF8BC34A), // Un tono de verde
       //hintColor: Colors.lightGreen[200],
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         unselectedItemColor:
-            Colors.white, // Color de los ítems no seleccionados
-        selectedItemColor: Colors.white, // Color de los ítems seleccionados
+            Colors.black, // Color de los ítems no seleccionados
+        selectedItemColor: Colors.black, // Color de los ítems seleccionados
       ),
       appBarTheme: const AppBarTheme(
         titleTextStyle: TextStyle(
-          color: Colors.white,
+          color: Colors.black,
           fontWeight: FontWeight.bold,
           fontFamily: 'Roboto',
         ),
       ),
       scaffoldBackgroundColor: Colors.transparent,
       textTheme: const TextTheme(
-        bodyText1: TextStyle(
+        bodyLarge: TextStyle(
           fontFamily: 'Roboto',
         ),
-        bodyText2: TextStyle(
+        bodyMedium: TextStyle(
           fontFamily: 'Roboto',
         ),
       ),
@@ -37,13 +37,13 @@ class ThemeNotifier extends ChangeNotifier {
         primarySwatch: Colors.green,
         brightness: Brightness.light,
       ).copyWith(
-        secondary: const Color(0xFF8BC34A), // Otro tono de verde
+        secondary: Color.fromARGB(255, 173, 223, 126), // Otro tono de verde
       ),
     );
 
     secondTheme = ThemeData.dark().copyWith(
       primaryColor: Colors.black,
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         unselectedItemColor:
             Colors.white, // Color de los ítems no seleccionados
         selectedItemColor: Colors.white, // Color de los ítems seleccionados
@@ -57,7 +57,6 @@ class ThemeNotifier extends ChangeNotifier {
       appBarTheme: const AppBarTheme(
         titleTextStyle: TextStyle(
           color: Colors.white,
-          fontWeight: FontWeight.bold,
           fontFamily: 'Roboto',
         ),
       ),
@@ -69,8 +68,6 @@ class ThemeNotifier extends ChangeNotifier {
       iconTheme: const IconThemeData(
         color: Colors.red, // Iconos en rojo
       ),
-      scaffoldBackgroundColor: Colors.grey[600],
-      // Fondo negro
     );
 
     currentTheme = themeData;
@@ -99,13 +96,12 @@ class ThemeNotifier extends ChangeNotifier {
         primaryColor: const Color(0xFF4CAF50),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
           unselectedItemColor:
-              Colors.white, // Color de los ítems no seleccionados
-          selectedItemColor: Colors.white, // Color de los ítems seleccionados
+              Colors.black, // Color de los ítems no seleccionados
+          selectedItemColor: Colors.black, // Color de los ítems seleccionados
         ), // Un tono de verde
-        hintColor: Colors.lightGreen[200],
         appBarTheme: const AppBarTheme(
           titleTextStyle: TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontWeight: FontWeight.bold,
             fontFamily: 'Roboto',
           ),

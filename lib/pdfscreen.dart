@@ -68,12 +68,15 @@ class _FormulacionCarruselState extends State<FormulacionCarrusel> {
             decoration: themeNotifier.isUsingFirstTheme
                 ? const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("assets/fondoFinal.jpg"),
+                      image: AssetImage("assets/humo.gif"),
                       fit: BoxFit.fill,
                     ),
                   )
-                : BoxDecoration(
-                    color: Colors.grey[600],
+                : const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/humoRojo.gif"),
+                      fit: BoxFit.fill,
+                    ),
                   ),
             child: localfile != null
                 ? Transform.scale(

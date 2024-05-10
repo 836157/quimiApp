@@ -10,52 +10,42 @@ import 'package:quimicapp/themeAppDark/themenotifier.dart';
 final familias = {
   'Metal Alcalino': [
     const Color.fromARGB(255, 247, 170, 192),
-    const Color.fromARGB(255, 217, 140, 162),
-    const Color.fromARGB(255, 255, 190, 212)
+    const Color.fromARGB(255, 247, 170, 192)
   ],
   'Tierra alcalina': [
     const Color.fromARGB(255, 255, 220, 169),
-    const Color.fromARGB(255, 225, 190, 139),
-    const Color.fromARGB(255, 255, 240, 189)
+    const Color.fromARGB(255, 255, 220, 169)
   ],
   'No Metal': [
     const Color.fromARGB(255, 192, 215, 240),
-    const Color.fromARGB(255, 162, 185, 210),
-    const Color.fromARGB(255, 202, 225, 250)
+    const Color.fromARGB(255, 192, 215, 240)
   ],
   'Metaloides': [
-    const Color.fromARGB(255, 147, 217, 245),
     const Color.fromARGB(255, 117, 187, 215),
-    const Color.fromARGB(255, 157, 227, 255)
+    const Color.fromARGB(255, 117, 187, 215)
   ],
   'Metales de post-transición': [
     const Color.fromARGB(255, 212, 235, 216),
-    const Color.fromARGB(255, 182, 205, 186),
-    const Color.fromARGB(255, 222, 245, 226)
+    const Color.fromARGB(255, 212, 235, 216)
   ],
   'Metales de transición': [
-    const Color.fromARGB(255, 247, 246, 204),
-    const Color.fromARGB(255, 217, 216, 174),
-    const Color.fromARGB(255, 257, 256, 214)
+    const Color.fromARGB(255, 241, 240, 182),
+    const Color.fromARGB(255, 241, 240, 182)
   ],
   'Halógenos': [
-    const Color.fromARGB(255, 224, 224, 240),
-    const Color.fromARGB(255, 194, 194, 210),
-    const Color.fromARGB(255, 234, 234, 250)
+    const Color.fromARGB(255, 198, 198, 241),
+    const Color.fromARGB(255, 198, 198, 241)
   ],
   'Gases Nobles': [
-    const Color.fromARGB(255, 225, 207, 229),
-    const Color.fromARGB(255, 195, 177, 199),
-    const Color.fromARGB(255, 235, 217, 239)
+    const Color.fromARGB(255, 227, 202, 233),
+    const Color.fromARGB(255, 227, 202, 233)
   ],
   'Lantánidos': [
-    const Color.fromARGB(255, 252, 224, 237),
-    const Color.fromARGB(255, 222, 194, 207),
-    const Color.fromARGB(255, 252, 224, 237)
+    const Color.fromARGB(255, 199, 252, 192),
+    const Color.fromARGB(255, 199, 252, 192)
   ],
   'Actínidos': [
     const Color.fromARGB(255, 250, 191, 226),
-    const Color.fromARGB(255, 220, 161, 196),
     const Color.fromARGB(255, 250, 191, 226)
   ],
 };
@@ -142,12 +132,15 @@ class _TablaPeriodicaState extends State<TablaPeriodica> {
             decoration: themeNotifier.isUsingFirstTheme
                 ? const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("assets/fondoFinal.jpg"),
-                      fit: BoxFit.fill,
+                      image: AssetImage("assets/humo.gif"),
+                      fit: BoxFit.cover,
                     ),
                   )
-                : BoxDecoration(
-                    color: Colors.grey[600],
+                : const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/humoRojo.gif"),
+                      fit: BoxFit.cover,
+                    ),
                   ),
             child: FutureBuilder<List<Elemento>>(
               future: fetchElement(),
@@ -335,7 +328,7 @@ class DetailPage extends StatelessWidget {
       ),
       ListTile(
         leading: Icon(Icons.circle, color: Theme.of(context).iconTheme.color),
-        title: Text('Valencias'),
+        title: const Text('Valencias', style: TextStyle(color: Colors.white)),
         subtitle: Column(
           children: [
             Wrap(
@@ -557,7 +550,6 @@ class ElementTile extends StatelessWidget implements PreferredSizeWidget {
         gradient: LinearGradient(colors: [
           familias[element.familia]?[0] ?? Colors.white,
           familias[element.familia]?[1] ?? Colors.black,
-          familias[element.familia]?[2] ?? Colors.white
         ]),
         backgroundBlendMode: BlendMode.multiply,
       ),

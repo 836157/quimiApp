@@ -68,17 +68,21 @@ class _HomeScreenState extends State<HomeScreen>
                 decoration: themeNotifier.isUsingFirstTheme
                     ? const BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage("assets/fondoFinal.jpg"),
-                          fit: BoxFit.fill,
+                          image: AssetImage("assets/humo.gif"),
+                          fit: BoxFit.cover,
                         ),
                       )
-                    : BoxDecoration(
-                        color: Colors.grey[600],
+                    : const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/humoRojo.gif"),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                 child: ListView(
                   children: <Widget>[
                     const SizedBox(height: 30.0),
-                    buildCard('Apuntes PDF', FormulacionCarrusel(), context),
+                    buildCard(
+                        'Lector apuntes PDF', FormulacionCarrusel(), context),
                     buildCard('Ajuste Reacciones', ReaccionesScreen(), context),
                     buildCard('Tabla Periódica', TablaPeriodica(), context),
                     buildCard('Quiz', QuizScreen(), context),
@@ -236,10 +240,10 @@ class _HomeScreenState extends State<HomeScreen>
         margin: const EdgeInsets.all(10.0),
         child: ListTile(
           leading: Lottie.asset('assets/iconoAtomo.json',
-              width: 42.0, height: 42.0, fit: BoxFit.fill),
+              width: 42.0, height: 42.0, fit: BoxFit.cover),
           title: Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
                 color: Colors.black), // Cambia el color del texto a negro
           ),
           onTap: () {

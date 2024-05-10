@@ -222,12 +222,15 @@ class _ReaccionesScreenState extends State<ReaccionesScreen>
               decoration: themeNotifier.isUsingFirstTheme
                   ? const BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage("assets/fondoFinal.jpg"),
-                        fit: BoxFit.fill,
+                        image: AssetImage("assets/humo.gif"),
+                        fit: BoxFit.cover,
                       ),
                     )
-                  : BoxDecoration(
-                      color: Colors.grey[600],
+                  : const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/humoRojo.gif"),
+                        fit: BoxFit.cover,
+                      ),
                     ),
               child: Column(
                 children: <Widget>[

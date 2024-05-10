@@ -21,11 +21,12 @@ class ImageViewerScreen extends StatelessWidget {
               Positioned.fill(
                 child: themeNotifier.isUsingFirstTheme
                     ? Image.asset(
-                        'assets/fondoFinal.jpg',
+                        'assets/humo.gif',
                         fit: BoxFit.cover,
                       )
-                    : Container(
-                        color: Colors.grey[600],
+                    : Image.asset(
+                        'assets/humoRojo.gif',
+                        fit: BoxFit.cover,
                       ),
               ),
               Padding(
