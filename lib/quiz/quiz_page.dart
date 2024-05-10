@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:quimicapp/personalizadorwidget.dart';
 import 'package:quimicapp/pregunta.dart';
+import 'package:quimicapp/quiz/quiz_screen.dart';
 
 class QuizPage extends StatefulWidget {
   final List<Pregunta> preguntas;
@@ -15,6 +17,13 @@ class _QuizPageState extends State<QuizPage> {
   int _selectedOption = 0;
   int _currentQuestionIndex = 0;
   bool _hasAnswered = false;
+  int _correctAnswers = 0; // Contador para las respuestas correctas
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double progress = (_currentQuestionIndex + 1) / widget.preguntas.length;
@@ -25,7 +34,8 @@ class _QuizPageState extends State<QuizPage> {
       appBar: AppBar(
         //quiero que el titulo de la pagina sea el que se elija en el menu pop anterior,
         //title: const Text('Quiz '),pregunta.tematica.
-        title: Text('Quiz ${currentQuestion.tematica}'),
+        title: Text('Quiz ${currentQuestion.tematica}',
+            style: const TextStyle(fontSize: 14)),
         // backgroundColor: Colors.indigoAccent,
         backgroundColor: Colors.deepPurple,
       ),
@@ -111,8 +121,7 @@ class _QuizPageState extends State<QuizPage> {
                                                   _selectedOption = index;
                                                   _hasAnswered = true;
                                                   isCorrect = currentQuestion
-                                                      .respuestas[index]
-                                                      .isCorrect;
+                                                      .esCorrecta(index);
                                                 });
                                               }
                                             : null,
@@ -125,8 +134,12 @@ class _QuizPageState extends State<QuizPage> {
                                                 ? isCorrect
                                                     ? Colors.green
                                                     : Colors.red
-                                                : Colors.orange[
-                                                    300], // Cambia el color de fondo cuando se selecciona una opción
+                                                : _hasAnswered &&
+                                                        currentQuestion
+                                                            .esCorrecta(index)
+                                                    ? Colors.green
+                                                    : Colors.orange[
+                                                        300], // Cambia el color de fondo cuando se selecciona una opción
                                             borderRadius:
                                                 BorderRadius.circular(50),
                                           ),
@@ -153,15 +166,94 @@ class _QuizPageState extends State<QuizPage> {
                           ],
                         ))),
               ),
-              PersonalizadorWidget.buildCustomElevatedButton("Siguiente",
-                  () async {
-                if (_currentQuestionIndex < widget.preguntas.length - 1) {
-                  setState(() {
-                    _currentQuestionIndex++;
-                    _selectedOption = 0; // Reset selected option
-                  });
+              PersonalizadorWidget.buildCustomElevatedButton(
+                  context, "Siguiente", () async {
+                if (_hasAnswered) {
+                  // Verificar si el usuario ha seleccionado una opción
+                  if (_currentQuestionIndex < widget.preguntas.length - 1) {
+                    setState(() {
+                      _currentQuestionIndex++;
+                      _selectedOption = 0;
+                      _hasAnswered = false; // Reset selected option
+                      if (isCorrect) {
+                        _correctAnswers++; // Incrementar el contador de respuestas correctas
+                      }
+                    });
+                  } else {
+                    // Quiz is finished, navigate to another page or show a dialog
+                    // Aquí puedes usar los contadores _correctAnswers y _incorrectAnswers
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Center(
+                            child: Text('Resultados del Quiz'),
+                          ),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Image.asset('assets/atomo.png',
+                                      height: 20, width: 20),
+                                  SizedBox(width: 10),
+                                  Text('Tematica: ${currentQuestion.tematica}'),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Image.asset('assets/atomo.png',
+                                      height: 20, width: 20),
+                                  SizedBox(width: 10),
+                                  Text(
+                                      'Aciertos: $_correctAnswers de ${widget.preguntas.length}'),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Image.asset('assets/atomo.png',
+                                      height: 20, width: 20),
+                                  SizedBox(width: 10),
+                                  Text(
+                                      'Fallos: ${widget.preguntas.length - _correctAnswers}'),
+                                ],
+                              ),
+                              TextButton(
+                                child: const Text('Salir'),
+                                onPressed: () {
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const QuizScreen()),
+                                    (Route<dynamic> route) => route
+                                        .isFirst, // Esto elimina todas las rutas anteriores hasta la primera ruta
+                                  );
+                                },
+                              ),
+                              if (_correctAnswers / widget.preguntas.length >
+                                  0.6)
+                                Container(
+                                  child: Lottie.asset('assets/aprobado.json',
+                                      animate: true),
+                                ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  }
                 } else {
-                  // Quiz is finished, navigate to another page or show a dialog
+                  // indicación para que el usuario seleccione una opción
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                          'Por favor, contesta la pregunta antes de seguir.'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
                 }
               }),
               SizedBox(height: 35),

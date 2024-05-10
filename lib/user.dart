@@ -23,6 +23,13 @@ class User {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'nombre': nombre,
+      'correo': email,
+    };
+  }
+
   static User clone(User currentUser) {
     return User(
       id: currentUser.id,

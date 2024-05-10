@@ -52,4 +52,13 @@ class Pregunta {
   String toString() {
     return 'Pregunta: {texto: $pregunta, respuesta: $respuestas}';
   }
+
+  int obtenerRespuestaCorrecta() {
+    for (int i = 0; i < respuestas.length; i++) {
+      if (respuestas[i].esCorrecta) {
+        return i;
+      }
+    }
+    return -1; // Devuelve -1 si no hay respuesta correcta
+  }
 }

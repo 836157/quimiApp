@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:quimicapp/home_screen.dart';
-import 'package:quimicapp/pregunta.dart';
 import 'package:quimicapp/user.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,7 +15,7 @@ class AuthenticationService extends ChangeNotifier {
     // Aquí el código para iniciar sesión
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:8080/quimicApp/auth/login'),
+        Uri.parse('http://192.168.0.23:8080/quimicApp/auth/login'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -28,7 +27,8 @@ class AuthenticationService extends ChangeNotifier {
       if (response.statusCode == 200) {
         // Si el servidor devuelve una respuesta OK, entonces se concede el acceso
         // y se devuelve el usuario
-        currentUser = User.fromJson(jsonDecode(response.body));
+        String body = utf8.decode(response.bodyBytes);
+        currentUser = User.fromJson(jsonDecode(body));
         notifyListeners();
         if (currentUser != null) {
           Navigator.of(context).pushReplacement(
@@ -53,18 +53,18 @@ class AuthenticationService extends ChangeNotifier {
     try {
       final response = await http.post(
         Uri.parse(
-            'http://10.0.2.2:8080/quimicApp/usuarios/save'), // URL de la API
+            'http://192.168.0.23:8080/quimicApp/usuarios/save'), // URL de la API
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, String>{
+        body: jsonEncode(<String, dynamic>{
           'nombre': name,
           'apellido': surname,
           'correo': email,
           'password': password,
+          'activo': false,
         }),
       );
-
       if (response.statusCode == 200) {
         // Muestra un SnackBar con el mensaje de éxito
         ScaffoldMessenger.of(context).showSnackBar(
@@ -75,6 +75,12 @@ class AuthenticationService extends ChangeNotifier {
             MaterialPageRoute(
               builder: (context) => const LoginScreen(),
             ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text(
+                  'El correo insertado ya existe en nuestra Base de datos, por favor intente con otro correo.')),
+        );
       }
     } catch (e) {
       // Muestra un SnackBar con el mensaje de error
@@ -94,7 +100,7 @@ class AuthenticationService extends ChangeNotifier {
   Future<void> updateUser(User user, BuildContext context) async {
     try {
       final response = await http.put(
-        Uri.parse('http://10.0.2.2:8080/quimicApp/usuarios/mod'),
+        Uri.parse('http://192.168.0.23:8080/quimicApp/usuarios/mod'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

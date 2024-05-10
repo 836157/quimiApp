@@ -1,8 +1,8 @@
 class Respuesta {
-  final int id;
-  final String respuesta;
-  final bool esCorrecta;
-  final int pregunta;
+  int id;
+  String respuesta;
+  bool esCorrecta;
+  int pregunta;
 
   Respuesta({
     required this.id,
@@ -21,6 +21,10 @@ class Respuesta {
   }
 
   bool get isCorrect => esCorrecta;
+
+  set isCorrect(bool value) {
+    esCorrecta = value;
+  }
 
   @override
   String toString() {
