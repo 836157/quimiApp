@@ -69,13 +69,13 @@ class _FormulacionCarruselState extends State<FormulacionCarrusel> {
                 ? const BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage("assets/humo.gif"),
-                      fit: BoxFit.fill,
+                      fit: BoxFit.cover,
                     ),
                   )
                 : const BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage("assets/humoRojo.gif"),
-                      fit: BoxFit.fill,
+                      fit: BoxFit.cover,
                     ),
                   ),
             child: localfile != null

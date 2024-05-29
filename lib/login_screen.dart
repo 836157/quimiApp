@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quimicapp/authentication_service.dart';
 import 'package:quimicapp/personalizadorwidget.dart';
+import 'package:quimicapp/recuperacionpassword_screen.dart';
 import 'package:quimicapp/themeAppDark/themenotifier.dart';
 
 import 'register_screen.dart';
@@ -92,6 +93,24 @@ class _LoginScreenState extends State<LoginScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          RecuperacionPasswordScreen(),
+                                    ));
+                              },
+                              child: const Text(
+                                'Recuperar contraseña, haz clic aquí',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            const SizedBox(height: 7.0),
                             // código para el botón de iniciar sesión
                             PersonalizadorWidget.buildCustomElevatedButton(
                                 context, "Iniciar sesión", () async {

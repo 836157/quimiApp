@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +29,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
+  late bool wasSuccessful;
   late AnimationController _controller;
   Timer? _timer;
   @override
@@ -124,15 +126,65 @@ class _HomeScreenState extends State<HomeScreen>
                                   onTap: () {
                                     showDialog(
                                       context: context,
-                                      builder: (context) => AlertDialog(
-                                        title: const Text('Enviar correo'),
-                                        actions: [
-                                          TextButton(
-                                            child: Text('Enviar'),
-                                            onPressed: () async {},
+                                      builder: (context) {
+                                        // Variable para guardar el contenido del correo
+                                        String emailContent = '';
+                                        String emailSubject =
+                                            "Tienes un mensaje de QuimicApp del usuario ${widget.user?.nombre ?? 'desconocido'}";
+
+                                        return AlertDialog(
+                                          title: Text(
+                                              'Enviar correo a ${snapshot.data![index].nombre}'), // Usa el nombre del usuario seleccionado
+                                          content: Column(
+                                            children: [
+                                              TextField(
+                                                onChanged: (value) {
+                                                  emailContent =
+                                                      value; // Guarda el contenido del correo
+                                                },
+                                                decoration:
+                                                    const InputDecoration(
+                                                  labelText:
+                                                      "Mensaje a enviar:",
+                                                ),
+                                                maxLines:
+                                                    6, // Permite hasta 6 líneas de texto
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
+                                          actions: [
+                                            TextButton(
+                                              child: const Text('Enviar'),
+                                              onPressed: () async {
+                                                wasSuccessful =
+                                                    await enviarCorreo(
+                                                  context,
+                                                  snapshot.data![index].email,
+                                                  emailSubject,
+                                                  emailContent,
+                                                );
+                                                if (wasSuccessful) {
+                                                  Flushbar(
+                                                    title: 'Correo enviado',
+                                                    message:
+                                                        'El correo se ha enviado correctamente',
+                                                    duration: const Duration(
+                                                        seconds: 3),
+                                                  )..show(context);
+                                                } else {
+                                                  Flushbar(
+                                                    title: 'Error',
+                                                    message:
+                                                        'No se ha podido enviar el correo',
+                                                    duration: const Duration(
+                                                        seconds: 3),
+                                                  )..show(context);
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
                                     );
                                   },
                                   child: Lottie.asset(
@@ -163,8 +215,8 @@ class _HomeScreenState extends State<HomeScreen>
                         children: <Widget>[
                           buildGradientCard(
                             Theme.of(context),
-                            Icon(Icons.logout),
-                            Text('Cerrar sesión'),
+                            const Icon(Icons.logout),
+                            const Text('Cerrar sesión'),
                             () {
                               authService.logout();
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -300,6 +352,32 @@ class _HomeScreenState extends State<HomeScreen>
       }
     } catch (e) {
       throw Exception('Failed to load Element');
+    }
+  }
+
+  Future<bool> enviarCorreo(BuildContext context, String correo, String asunto,
+      String contenido) async {
+    try {
+      final response = await http.post(
+        Uri.parse(
+            'http://192.168.0.23:8080/quimicApp/send-email/sendUserEmail'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'emailRecipient': correo,
+          'emailSubject': asunto,
+          'emailBody': contenido,
+        }),
+      );
+      if (response.statusCode == 200) {
+        Navigator.pop(context);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
     }
   }
 }
