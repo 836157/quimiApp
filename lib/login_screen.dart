@@ -28,6 +28,14 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  bool _obscureText = true;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // Obtén la instancia de AuthenticationService
@@ -85,6 +93,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           controller: _passwordController,
                           labelText: 'Contraseña',
                           icon: Icons.lock,
+                          obscureText: _obscureText,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscureText
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Theme.of(context)
+                                  .iconTheme
+                                  .color, // Usa el color del icono del tema actual
+                            ),
+                            onPressed: _togglePasswordVisibility,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 60.0),
@@ -99,15 +119,31 @@ class _LoginScreenState extends State<LoginScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          RecuperacionPasswordScreen(),
+                                          const RecuperacionPasswordScreen(),
                                     ));
                               },
-                              child: const Text(
-                                'Recuperar contraseña, haz clic aquí',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
+                              child: RichText(
+                                text: const TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'Recuperar contraseña pulsa ',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: 'aquí',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             const SizedBox(height: 7.0),

@@ -13,14 +13,16 @@ class PersonalizadorWidget {
     int? maxLines,
     bool expands = false,
     Color? iconColor,
+    bool obscureText = false,
+    Widget? suffixIcon,
   }) {
     bool isObscure = labelText == 'Contraseña';
     return TextFormField(
       controller: controller,
-      maxLines: isObscure ? 1 : (expands ? null : maxLines),
-      minLines: isObscure ? 1 : (expands ? null : 1),
-      expands: !isObscure && expands,
-      obscureText: isObscure,
+      maxLines: obscureText ? 1 : (expands ? null : maxLines),
+      minLines: expands ? null : 1,
+      expands: expands && !obscureText,
+      obscureText: obscureText,
       obscuringCharacter: '*',
       style: const TextStyle(
         color: Colors.black,
@@ -43,6 +45,7 @@ class PersonalizadorWidget {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
+        suffixIcon: suffixIcon,
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {

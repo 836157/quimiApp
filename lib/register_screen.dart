@@ -13,12 +13,21 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  // Agrega un GlobalKey para acceder al Scaffold
   final _formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController surnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+
+  bool _obscureText = true;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +61,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    const SizedBox(height: 120.0),
+                    const SizedBox(height: 60.0),
                     PersonalizadorWidget.buildCustomTextFormField(
                       context: context,
                       controller: nameController,
@@ -79,6 +88,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       controller: passwordController,
                       labelText: 'Contraseña',
                       icon: Icons.lock,
+                      obscureText: _obscureText,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureText
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Theme.of(context)
+                              .iconTheme
+                              .color, // Usa el color del icono del tema actual
+                        ),
+                        onPressed: _togglePasswordVisibility,
+                      ),
+                    ),
+                    const SizedBox(height: 20.0),
+                    PersonalizadorWidget.buildCustomTextFormField(
+                      context: context,
+                      controller: confirmPasswordController,
+                      labelText: 'Confirmar contraseña',
+                      icon: Icons.lock,
+                      obscureText: _obscureText,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureText
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Theme.of(context)
+                              .iconTheme
+                              .color, // Usa el color del icono del tema actual
+                        ),
+                        onPressed: _togglePasswordVisibility,
+                      ),
                     ),
                     const SizedBox(height: 20.0),
                     PersonalizadorWidget.buildCustomElevatedButton(
@@ -90,12 +130,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         RegExp regex = RegExp(pattern);
                         if (regex.hasMatch(emailController.text)) {
                           if (_formKey.currentState!.validate()) {
-                            authService.registerUser(
-                                nameController.text,
-                                surnameController.text,
-                                emailController.text,
-                                passwordController.text,
-                                context);
+                            if (passwordController.text ==
+                                confirmPasswordController.text) {
+                              authService.registerUser(
+                                  nameController.text,
+                                  surnameController.text,
+                                  emailController.text,
+                                  passwordController.text,
+                                  context);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                      'Las contraseñas no coinciden. Por favor, inténtelo de nuevo.'),
+                                ),
+                              );
+                            }
                           }
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
