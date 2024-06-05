@@ -138,7 +138,7 @@ class PersonalizadorWidget {
       {required String title,
       required BuildContext context,
       List<Widget>? actions}) {
-    ThemeData theme = Theme.of(context);
+    ThemeData theme = Provider.of<ThemeNotifier>(context).currentThemeGet()!;
     return PreferredSize(
       preferredSize: const Size.fromHeight(kToolbarHeight),
       child: Container(
@@ -167,7 +167,7 @@ class PersonalizadorWidget {
 
   static buildGradientBottomNavigationBar(
       {required BuildContext context, required Function(int) onTap}) {
-    ThemeData theme = Theme.of(context);
+    ThemeData theme = Provider.of<ThemeNotifier>(context).currentThemeGet()!;
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(

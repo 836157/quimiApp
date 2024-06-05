@@ -77,7 +77,7 @@ class ThemeNotifier extends ChangeNotifier {
     return currentTheme;
   }
 
-  getTheme() => themeData;
+  getTheme() => currentTheme;
   getSecondTheme() => secondTheme;
 
   bool _isUsingFirstTheme = true;
@@ -89,9 +89,9 @@ class ThemeNotifier extends ChangeNotifier {
 
   setTheme() {
     if (_isUsingFirstTheme) {
-      themeData = secondTheme;
+      currentTheme = secondTheme;
     } else {
-      themeData = ThemeData(
+      currentTheme = ThemeData(
         //propiedades del tema primario
         primaryColor: const Color(0xFF4CAF50),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(

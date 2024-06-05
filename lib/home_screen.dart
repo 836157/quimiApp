@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 import 'package:quimicapp/audioscreen.dart';
 import 'package:quimicapp/authentication_service.dart';
@@ -135,53 +135,201 @@ class _HomeScreenState extends State<HomeScreen>
                                         return AlertDialog(
                                           title: Text(
                                               'Enviar correo a ${snapshot.data![index].nombre}'), // Usa el nombre del usuario seleccionado
-                                          content: Column(
-                                            children: [
-                                              TextField(
-                                                onChanged: (value) {
-                                                  emailContent =
-                                                      value; // Guarda el contenido del correo
-                                                },
-                                                decoration:
-                                                    const InputDecoration(
-                                                  labelText:
-                                                      "Mensaje a enviar:",
+                                          content: SingleChildScrollView(
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                TextField(
+                                                  onChanged: (value) {
+                                                    emailContent =
+                                                        value; // Guarda el contenido del correo
+                                                  },
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    labelText:
+                                                        "Mensaje a enviar:",
+                                                  ),
+                                                  maxLines:
+                                                      6, // Permite hasta 6 líneas de texto
                                                 ),
-                                                maxLines:
-                                                    6, // Permite hasta 6 líneas de texto
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                           actions: [
                                             TextButton(
                                               child: const Text('Enviar'),
                                               onPressed: () async {
-                                                wasSuccessful =
+                                                // Hacer la función async
+                                                showDialog(
+                                                  context: context,
+                                                  barrierDismissible:
+                                                      false, // Evita que el usuario cierre el diálogo
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                      content: SizedBox(
+                                                        height: 100,
+                                                        width: 100,
+                                                        child: Stack(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          children: [
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      left:
+                                                                          120),
+                                                              child: Consumer<
+                                                                  ThemeNotifier>(
+                                                                builder: (context,
+                                                                    themeNotifier,
+                                                                    child) {
+                                                                  return CircularProgressIndicator(
+                                                                    valueColor: AlwaysStoppedAnimation<
+                                                                        Color>(themeNotifier
+                                                                            .isSecondTheme()
+                                                                        ? Colors
+                                                                            .white
+                                                                        : Colors
+                                                                            .black),
+                                                                  );
+                                                                },
+                                                              ),
+                                                            ),
+                                                            TweenAnimationBuilder(
+                                                              tween:
+                                                                  Tween<double>(
+                                                                      begin: 1,
+                                                                      end: 50),
+                                                              duration:
+                                                                  const Duration(
+                                                                      seconds:
+                                                                          2),
+                                                              builder: (BuildContext
+                                                                      context,
+                                                                  double value,
+                                                                  Widget?
+                                                                      child) {
+                                                                return Transform
+                                                                    .translate(
+                                                                  offset:
+                                                                      Offset(
+                                                                          value,
+                                                                          0),
+                                                                  child: Row(
+                                                                    children: [
+                                                                      SizedBox(
+                                                                        width:
+                                                                            75,
+                                                                        height:
+                                                                            50,
+                                                                        child: Consumer<
+                                                                            ThemeNotifier>(
+                                                                          builder: (context,
+                                                                              themeNotifier,
+                                                                              child) {
+                                                                            return Marquee(
+                                                                              text: 'Enviando...',
+                                                                              style: TextStyle(color: themeNotifier.isSecondTheme() ? Colors.white : Colors.black),
+                                                                              velocity: 50.0,
+                                                                              blankSpace: 100.0,
+                                                                              startPadding: 1.0,
+                                                                              scrollAxis: Axis.horizontal,
+                                                                            );
+                                                                          },
+                                                                        ),
+                                                                      ),
+                                                                      Consumer<
+                                                                          ThemeNotifier>(
+                                                                        builder: (context,
+                                                                            themeNotifier,
+                                                                            child) {
+                                                                          return Icon(
+                                                                            Icons.mail_outline,
+                                                                            color: themeNotifier.isSecondTheme()
+                                                                                ? Colors.white
+                                                                                : Colors.black,
+                                                                          );
+                                                                        },
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                );
+                                                              },
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+
+                                                // Llamar a la función enviarCorreo
+                                                bool result =
                                                     await enviarCorreo(
                                                   context,
                                                   snapshot.data![index].email,
                                                   emailSubject,
                                                   emailContent,
                                                 );
-                                                if (wasSuccessful) {
-                                                  Flushbar(
-                                                    title: 'Correo enviado',
-                                                    message:
-                                                        'El correo se ha enviado correctamente',
-                                                    duration: const Duration(
-                                                        seconds: 3),
-                                                  )..show(context);
+
+                                                Navigator.pop(
+                                                    context); // Cerrar el diálogo de 'Enviando...'
+
+                                                if (result) {
+                                                  // Si el correo se envió con éxito, mostrar un diálogo de éxito y luego volver a la pantalla de inicio
+                                                  showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                            'Correo enviado'),
+                                                        content: const Text(
+                                                            'El correo se ha enviado correctamente'),
+                                                        actions: [
+                                                          TextButton(
+                                                            child: const Text(
+                                                                'Cerrar'),
+                                                            onPressed: () {
+                                                              Navigator.popUntil(
+                                                                  context,
+                                                                  (route) => route
+                                                                      .isFirst); // Volver a la pantalla de inicio
+                                                            },
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
                                                 } else {
-                                                  Flushbar(
-                                                    title: 'Error',
-                                                    message:
-                                                        'No se ha podido enviar el correo',
-                                                    duration: const Duration(
-                                                        seconds: 3),
-                                                  )..show(context);
+                                                  // Si el correo no se envió, mostrar un diálogo de error
+                                                  showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        title:
+                                                            const Text('Error'),
+                                                        content: const Text(
+                                                            'No se ha podido enviar el correo'),
+                                                        actions: [
+                                                          TextButton(
+                                                            child: const Text(
+                                                                'Cerrar'),
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context); // Cerrar el diálogo de error
+                                                            },
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
                                                 }
                                               },
-                                            ),
+                                            )
                                           ],
                                         );
                                       },
