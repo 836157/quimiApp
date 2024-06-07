@@ -100,6 +100,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         onPressed: _togglePasswordVisibility,
                       ),
+                      validator: (value) {
+                        String patternPassword =
+                            r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\W_]{8,}$';
+                        RegExp regex = RegExp(patternPassword);
+                        if (!regex.hasMatch(value!)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                  '1 La contraseña debe tener al menos 8 caracteres, una letra y un número. Por favor, inténtelo de nuevo.'),
+                            ),
+                          );
+                          return 'Invalid password';
+                        } else {
+                          return null;
+                        }
+                      },
                     ),
                     const SizedBox(height: 20.0),
                     PersonalizadorWidget.buildCustomTextFormField(
@@ -119,6 +135,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         onPressed: _togglePasswordVisibility,
                       ),
+                      validator: (value) {
+                        String patternPassword =
+                            r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\W_]{8,}$';
+                        RegExp regex = RegExp(patternPassword);
+                        if (confirmPasswordController.text !=
+                            passwordController.text) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                  '2 Las contraseñas no coinciden. Por favor, inténtelo de nuevo.'),
+                            ),
+                          );
+                          return 'Invalid password';
+                        }
+                        if (!regex.hasMatch(value!)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                  '1 La contraseña debe tener al menos 8 caracteres, una letra y un número. Por favor, inténtelo de nuevo.'),
+                            ),
+                          );
+                          return 'Invalid password';
+                        } else {
+                          return null;
+                        }
+                      },
                     ),
                     const SizedBox(height: 20.0),
                     PersonalizadorWidget.buildCustomElevatedButton(

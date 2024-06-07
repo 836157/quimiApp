@@ -132,7 +132,6 @@ class _HomeScreenState extends State<HomeScreen>
                                         String emailContent = '';
                                         String emailSubject =
                                             "Tienes un mensaje de QuimicApp del usuario ${widget.user?.nombre ?? 'desconocido'}";
-
                                         return AlertDialog(
                                           title: Consumer<ThemeNotifier>(
                                             builder: (context, themeNotifier,

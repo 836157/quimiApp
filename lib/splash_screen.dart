@@ -74,6 +74,16 @@ class _SplashScreenState extends State<SplashScreen>
                       fontSize: 72,
                     ),
                   ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    "La mejor app para aprender\nquimica según los princios DUA",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'roboto',
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
                 ],
               ),
             ),

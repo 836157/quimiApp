@@ -22,6 +22,7 @@ class ThemeNotifier extends ChangeNotifier {
           fontFamily: 'Roboto',
         ),
       ),
+      dialogBackgroundColor: const Color.fromARGB(255, 201, 233, 203),
       checkboxTheme: CheckboxThemeData(
         fillColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.selected)) {
@@ -32,6 +33,7 @@ class ThemeNotifier extends ChangeNotifier {
               .white; // Color de fondo cuando el Checkbox no está seleccionado
         }),
       ),
+
       scaffoldBackgroundColor: Colors.transparent,
       textTheme: const TextTheme(
         bodyLarge: TextStyle(
@@ -146,6 +148,7 @@ class ThemeNotifier extends ChangeNotifier {
                   .white; // Color de fondo cuando el Checkbox no está seleccionado
             }),
           ),
+          dialogBackgroundColor: const Color.fromARGB(255, 201, 233, 203),
           scaffoldBackgroundColor: Colors.transparent,
           textTheme: const TextTheme(
             bodyLarge: TextStyle(

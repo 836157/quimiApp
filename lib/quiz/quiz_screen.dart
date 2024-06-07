@@ -69,7 +69,13 @@ class QuizScreen extends StatelessWidget {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: const Text('Elige una temática'),
+                              title: Text(
+                                'Elige una temática',
+                                style: TextStyle(
+                                    color: themeNotifier.isSecondTheme()
+                                        ? Colors.red
+                                        : Colors.black),
+                              ),
                               content: SingleChildScrollView(
                                 child: ListBody(
                                   children: <Widget>[
@@ -148,7 +154,13 @@ class QuizScreen extends StatelessWidget {
                               ),
                               actions: <Widget>[
                                 TextButton(
-                                  child: Text('Cancelar'),
+                                  child: Text(
+                                    'Cancelar',
+                                    style: TextStyle(
+                                        color: themeNotifier.isSecondTheme()
+                                            ? Colors.red
+                                            : Colors.black),
+                                  ),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },

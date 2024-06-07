@@ -5,17 +5,17 @@ import 'package:quimicapp/themeAppDark/themenotifier.dart';
 import 'package:text_neon_widget/text_neon_widget.dart';
 
 class PersonalizadorWidget {
-  static TextFormField buildCustomTextFormField({
-    required BuildContext context,
-    required TextEditingController controller,
-    required String labelText,
-    required IconData icon,
-    int? maxLines,
-    bool expands = false,
-    Color? iconColor,
-    bool obscureText = false,
-    Widget? suffixIcon,
-  }) {
+  static TextFormField buildCustomTextFormField(
+      {required BuildContext context,
+      required TextEditingController controller,
+      required String labelText,
+      required IconData icon,
+      int? maxLines,
+      bool expands = false,
+      Color? iconColor,
+      bool obscureText = false,
+      Widget? suffixIcon,
+      String? Function(String?)? validator}) {
     bool isObscure = labelText == 'Contraseña';
     return TextFormField(
       controller: controller,
@@ -47,12 +47,14 @@ class PersonalizadorWidget {
         ),
         suffixIcon: suffixIcon,
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Por favor ingresa tu $labelText';
-        }
-        return null;
-      },
+      validator: validator ??
+          (value) {
+            // Usa el validador proporcionado o el por defecto
+            if (value == null || value.isEmpty) {
+              return 'Por favor ingresa tu $labelText';
+            }
+            return null;
+          },
     );
   }
 
@@ -102,6 +104,7 @@ class PersonalizadorWidget {
                         ? Colors.black
                         : Colors.white, // Color del texto según el tema
                     fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -157,7 +160,9 @@ class PersonalizadorWidget {
           title: Text(
             title,
             style: const TextStyle(
-                fontSize: 20), // Aumenta el tamaño del texto aquí
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ), // Aumenta el tamaño del texto aquí
           ),
           actions: actions,
         ),

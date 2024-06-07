@@ -12,6 +12,22 @@ class User {
     required this.email,
     required this.password,
   });
+  // Setters
+  set setNombre(String nombre) {
+    this.nombre = nombre;
+  }
+
+  set setApellidos(String apellidos) {
+    this.apellidos = apellidos;
+  }
+
+  set setEmail(String email) {
+    this.email = email;
+  }
+
+  set setPassword(String password) {
+    this.password = password;
+  }
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(

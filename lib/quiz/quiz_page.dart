@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'package:quimicapp/personalizadorwidget.dart';
 import 'package:quimicapp/pregunta.dart';
 import 'package:quimicapp/quiz/quiz_screen.dart';
+import 'package:quimicapp/themeAppDark/themenotifier.dart';
 
 class QuizPage extends StatefulWidget {
   final List<Pregunta> preguntas;
@@ -185,9 +187,17 @@ class _QuizPageState extends State<QuizPage> {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
+                        ThemeNotifier themeNotifier =
+                            Provider.of<ThemeNotifier>(context);
                         return AlertDialog(
-                          title: const Center(
-                            child: Text('Resultados del Quiz'),
+                          title: Center(
+                            child: Text(
+                              'Resultados del Quiz',
+                              style: TextStyle(
+                                  color: themeNotifier.isSecondTheme()
+                                      ? Colors.red
+                                      : Colors.black),
+                            ),
                           ),
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -222,7 +232,13 @@ class _QuizPageState extends State<QuizPage> {
                                 ],
                               ),
                               TextButton(
-                                child: const Text('Salir'),
+                                child: Text(
+                                  'Salir',
+                                  style: TextStyle(
+                                      color: themeNotifier.isSecondTheme()
+                                          ? Colors.red
+                                          : Colors.black),
+                                ),
                                 onPressed: () {
                                   Navigator.of(context).pushAndRemoveUntil(
                                     MaterialPageRoute(

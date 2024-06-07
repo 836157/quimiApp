@@ -17,6 +17,7 @@ class _ModificationScreenState extends State<ModificationScreen> {
   var _lastNameController = TextEditingController();
   var _emailController = TextEditingController();
   var _passwordController = TextEditingController();
+  var _confirmPasswordController = TextEditingController();
 
   bool _obscureText = true;
 
@@ -26,30 +27,32 @@ class _ModificationScreenState extends State<ModificationScreen> {
     });
   }
 
+  User? currentUser;
+  late AuthenticationService authService;
+
   @override
-  Widget build(BuildContext context) {
-    // Obtén la instancia de AuthenticationService
-    AuthenticationService authService =
-        Provider.of<AuthenticationService>(context, listen: false);
-
-    // Obtén el usuario actual (esto depende de cómo estés manejando la autenticación)
-    User? currentUser = authService.currentUser;
-
-    // Inicializa los controladores con la información del usuario actual
-    if (currentUser == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('No hay un usuario autenticado'),
-      ));
-      return const Scaffold(
-        body: Center(
-          child: Text('No hay un usuario autenticado'),
+  void initState() {
+    super.initState();
+    authService = Provider.of<AuthenticationService>(context, listen: false);
+    currentUser = authService.currentUser;
+    if (currentUser != null) {
+      _nameController = TextEditingController(text: currentUser?.nombre);
+      _lastNameController = TextEditingController(text: currentUser?.apellidos);
+      _emailController = TextEditingController(text: currentUser?.email);
+      _passwordController = TextEditingController();
+      _confirmPasswordController = TextEditingController();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No hay un usuario autenticado'),
         ),
       );
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     ThemeNotifier themeNotifier = Provider.of<ThemeNotifier>(context);
-    _nameController.text = currentUser.nombre;
-    _lastNameController.text = currentUser.apellidos;
-    _emailController.text = currentUser.email;
 
     return Scaffold(
       appBar: PersonalizadorWidget.buildGradientAppBar(
@@ -81,7 +84,7 @@ class _ModificationScreenState extends State<ModificationScreen> {
                   key: _formKey,
                   child: Column(
                     children: <Widget>[
-                      const SizedBox(height: 120.0),
+                      const SizedBox(height: 40.0),
                       PersonalizadorWidget.buildCustomTextFormField(
                         context: context,
                         controller: _nameController,
@@ -120,6 +123,67 @@ class _ModificationScreenState extends State<ModificationScreen> {
                           ),
                           onPressed: _togglePasswordVisibility,
                         ),
+                        validator: (value) {
+                          String patternPassword =
+                              r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\W_]{8,}$';
+                          RegExp regex = RegExp(patternPassword);
+                          if (!regex.hasMatch(value!)) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    '1 La contraseña debe tener al menos 8 caracteres, una letra y un número. Por favor, inténtelo de nuevo.'),
+                              ),
+                            );
+                            return 'Invalid password';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 20.0),
+                      PersonalizadorWidget.buildCustomTextFormField(
+                        context: context,
+                        controller: _confirmPasswordController,
+                        labelText: 'Confirmar contraseña',
+                        icon: Icons.lock,
+                        obscureText: _obscureText,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureText
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Theme.of(context)
+                                .iconTheme
+                                .color, // Usa el color del icono del tema actual
+                          ),
+                          onPressed: _togglePasswordVisibility,
+                        ),
+                        validator: (value) {
+                          String patternPassword =
+                              r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\W_]{8,}$';
+                          RegExp regex = RegExp(patternPassword);
+                          if (_confirmPasswordController.text !=
+                              _passwordController.text) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    '2 Las contraseñas no coinciden. Por favor, inténtelo de nuevo.'),
+                              ),
+                            );
+                            return 'Invalid password';
+                          }
+                          if (!regex.hasMatch(value!)) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    'La contraseña debe tener al menos 8 caracteres, una letra y un número. Por favor, inténtelo de nuevo.'),
+                              ),
+                            );
+                            return 'Invalid password';
+                          } else {
+                            return null;
+                          }
+                        },
                       ),
                       const SizedBox(height: 35.0),
                       PersonalizadorWidget.buildCustomElevatedButton(
@@ -128,13 +192,13 @@ class _ModificationScreenState extends State<ModificationScreen> {
                         () async {
                           if (_formKey.currentState!.validate()) {
                             // Crea una copia del usuario actual
-                            User updatedUser = User.clone(currentUser);
+                            User updatedUser = User.clone(currentUser!);
                             // Si el formulario es válido, actualiza la información del usuario
                             // Actualiza la información del usuario en la copia
-                            updatedUser.nombre = _nameController.text;
-                            updatedUser.apellidos = _lastNameController.text;
-                            updatedUser.email = _emailController.text;
-                            updatedUser.password = _passwordController.text;
+                            updatedUser.setNombre = _nameController.text;
+                            updatedUser.setApellidos = _lastNameController.text;
+                            updatedUser.setEmail = _emailController.text;
+                            updatedUser.setPassword = _passwordController.text;
 
                             // Actualiza el usuario en la base de datos
                             await authService.updateUser(updatedUser, context);
