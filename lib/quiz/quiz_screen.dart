@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quimicapp/constantes/constantes.dart';
 import 'package:quimicapp/personalizadorwidget.dart';
 import 'package:quimicapp/pregunta.dart';
 import 'package:http/http.dart' as http;
@@ -10,8 +11,8 @@ import 'package:quimicapp/quiz/quiz_makequestion.dart';
 import 'package:quimicapp/themeAppDark/themenotifier.dart';
 
 Future<List<Pregunta>> cuestionarioQuizTematica(String tematica) async {
-  final response = await http.get(Uri.parse(
-      'http://192.168.0.23:8080/quimicApp/preguntas/tematica/$tematica'));
+  final response =
+      await http.get(Uri.parse('$BASE_URL/preguntas/tematica/$tematica'));
 
   if (response.statusCode == 200) {
     String body = utf8.decode(response.bodyBytes);

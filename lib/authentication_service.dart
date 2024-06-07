@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:quimicapp/constantes/constantes.dart';
 import 'package:quimicapp/home_screen.dart';
 import 'package:quimicapp/user.dart';
 import 'package:http/http.dart' as http;
@@ -15,7 +16,7 @@ class AuthenticationService extends ChangeNotifier {
     // Aquí el código para iniciar sesión
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.0.23:8080/quimicApp/auth/login'),
+        Uri.parse('$BASE_URL/auth/login'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -52,8 +53,7 @@ class AuthenticationService extends ChangeNotifier {
       String password, BuildContext context) async {
     try {
       final response = await http.post(
-        Uri.parse(
-            'http://192.168.0.23:8080/quimicApp/usuarios/save'), // URL de la API
+        Uri.parse('$BASE_URL/usuarios/save'), // URL de la API
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -100,7 +100,7 @@ class AuthenticationService extends ChangeNotifier {
   Future<void> updateUser(User user, BuildContext context) async {
     try {
       final response = await http.put(
-        Uri.parse('http://192.168.0.23:8080/quimicApp/usuarios/mod'),
+        Uri.parse('$BASE_URL/usuarios/mod'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

@@ -82,8 +82,8 @@ class PersonalizadorWidget {
               theme.primaryColor, // Un tono de verde
               theme.colorScheme.secondary, // Otro tono de verde
             ],
-            begin: Alignment.bottomRight,
-            end: Alignment.topLeft,
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
           ),
         ),
         child: Material(
@@ -148,8 +148,8 @@ class PersonalizadorWidget {
               theme.primaryColor, // Color primario del tema
               theme.colorScheme.secondary, // Color secundario del tema
             ],
-            begin: Alignment.bottomRight,
-            end: Alignment.topLeft,
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
           ),
         ),
         child: AppBar(
@@ -175,8 +175,8 @@ class PersonalizadorWidget {
             theme.primaryColor, // Color primario del tema
             theme.colorScheme.secondary, // Color secundario del tema
           ],
-          begin: Alignment.bottomRight,
-          end: Alignment.topLeft,
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
         ),
       ),
       child: Material(

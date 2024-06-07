@@ -18,6 +18,14 @@ class _ModificationScreenState extends State<ModificationScreen> {
   var _emailController = TextEditingController();
   var _passwordController = TextEditingController();
 
+  bool _obscureText = true;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // Obtén la instancia de AuthenticationService
@@ -42,7 +50,6 @@ class _ModificationScreenState extends State<ModificationScreen> {
     _nameController.text = currentUser.nombre;
     _lastNameController.text = currentUser.apellidos;
     _emailController.text = currentUser.email;
-    _passwordController.text = "";
 
     return Scaffold(
       appBar: PersonalizadorWidget.buildGradientAppBar(
@@ -101,6 +108,18 @@ class _ModificationScreenState extends State<ModificationScreen> {
                         controller: _passwordController,
                         labelText: 'Contraseña',
                         icon: Icons.vpn_key,
+                        obscureText: _obscureText,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureText
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Theme.of(context)
+                                .iconTheme
+                                .color, // Usa el color del icono del tema actual
+                          ),
+                          onPressed: _togglePasswordVisibility,
+                        ),
                       ),
                       const SizedBox(height: 35.0),
                       PersonalizadorWidget.buildCustomElevatedButton(

@@ -7,7 +7,8 @@ class ThemeNotifier extends ChangeNotifier {
   ThemeNotifier() {
     themeData = ThemeData(
       //propiedades del tema primario
-      primaryColor: const Color(0xFF8BC34A), // Un tono de verde
+      primaryColor:
+          const Color.fromARGB(255, 182, 233, 134), // Un tono de verde
       //hintColor: Colors.lightGreen[200],
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         unselectedItemColor:
@@ -20,6 +21,16 @@ class ThemeNotifier extends ChangeNotifier {
           fontWeight: FontWeight.bold,
           fontFamily: 'Roboto',
         ),
+      ),
+      checkboxTheme: CheckboxThemeData(
+        fillColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
+            return Colors
+                .black; // Color de fondo cuando el Checkbox está seleccionado
+          }
+          return Colors
+              .white; // Color de fondo cuando el Checkbox no está seleccionado
+        }),
       ),
       scaffoldBackgroundColor: Colors.transparent,
       textTheme: const TextTheme(
@@ -37,7 +48,7 @@ class ThemeNotifier extends ChangeNotifier {
         primarySwatch: Colors.green,
         brightness: Brightness.light,
       ).copyWith(
-        secondary: Color.fromARGB(255, 173, 223, 126), // Otro tono de verde
+        secondary: Color.fromARGB(255, 117, 170, 56), // Otro tono de verde
       ),
     );
 
@@ -59,6 +70,23 @@ class ThemeNotifier extends ChangeNotifier {
           color: Colors.white,
           fontFamily: 'Roboto',
         ),
+      ),
+      checkboxTheme: CheckboxThemeData(
+        fillColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
+            return Colors
+                .black; // Color de fondo cuando el Checkbox está seleccionado
+          }
+          return Colors
+              .white; // Color de fondo cuando el Checkbox no está seleccionado
+        }),
+        checkColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
+            return Colors
+                .white; // Color del check cuando el Checkbox está seleccionado
+          }
+          return null; // Dejar el color predeterminado cuando el Checkbox no está seleccionado
+        }),
       ),
       textTheme: ThemeData.dark().textTheme.apply(
             fontFamily: 'Roboto',
@@ -92,39 +120,50 @@ class ThemeNotifier extends ChangeNotifier {
       currentTheme = secondTheme;
     } else {
       currentTheme = ThemeData(
-        //propiedades del tema primario
-        primaryColor: const Color(0xFF4CAF50),
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          unselectedItemColor:
-              Colors.black, // Color de los ítems no seleccionados
-          selectedItemColor: Colors.black, // Color de los ítems seleccionados
-        ), // Un tono de verde
-        appBarTheme: const AppBarTheme(
-          titleTextStyle: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Roboto',
+          //propiedades del tema primario
+          primaryColor:
+              const Color.fromARGB(255, 182, 233, 134), // Un tono de verde
+          //hintColor: Colors.lightGreen[200],
+          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+            unselectedItemColor:
+                Colors.black, // Color de los ítems no seleccionados
+            selectedItemColor: Colors.black, // Color de los ítems seleccionados
           ),
-        ),
-        iconTheme: const IconThemeData(
-          color: Colors.green, // Iconos en rojo
-        ),
-        scaffoldBackgroundColor: Colors.transparent,
-        textTheme: const TextTheme(
-          bodyText1: TextStyle(
-            fontFamily: 'Roboto',
+          appBarTheme: const AppBarTheme(
+            titleTextStyle: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Roboto',
+            ),
           ),
-          bodyText2: TextStyle(
-            fontFamily: 'Roboto',
+          checkboxTheme: CheckboxThemeData(
+            fillColor: MaterialStateProperty.resolveWith((states) {
+              if (states.contains(MaterialState.selected)) {
+                return Colors
+                    .black; // Color de fondo cuando el Checkbox está seleccionado
+              }
+              return Colors
+                  .white; // Color de fondo cuando el Checkbox no está seleccionado
+            }),
           ),
-        ),
-        colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.green,
-          brightness: Brightness.light,
-        ).copyWith(
-          secondary: const Color(0xFF8BC34A), // Otro tono de verde
-        ),
-      );
+          scaffoldBackgroundColor: Colors.transparent,
+          textTheme: const TextTheme(
+            bodyLarge: TextStyle(
+              fontFamily: 'Roboto',
+            ),
+            bodyMedium: TextStyle(
+              fontFamily: 'Roboto',
+            ),
+          ),
+          iconTheme: const IconThemeData(
+            color: Colors.green, // Iconos en rojo
+          ),
+          colorScheme: ColorScheme.fromSwatch(
+            primarySwatch: Colors.green,
+            brightness: Brightness.light,
+          ).copyWith(
+            secondary: Color.fromARGB(255, 117, 170, 56), // Otro tono de verde
+          ));
     }
 
     _isUsingFirstTheme = !_isUsingFirstTheme;

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:quimicapp/constantes/constantes.dart';
 import 'package:quimicapp/elemento.dart';
 import 'package:quimicapp/personalizadorwidget.dart';
 import 'package:quimicapp/themeAppDark/themenotifier.dart';
@@ -64,8 +65,7 @@ Map<String, IconData> iconosFamilias = {
 };
 Future<List<Elemento>> fetchElement() async {
   try {
-    final response = await http
-        .get(Uri.parse('http://192.168.0.23:8080/quimicApp/elemento/listar'));
+    final response = await http.get(Uri.parse('$BASE_URL/elemento/listar'));
 
     if (response.statusCode == 200) {
       String body = utf8.decode(response.bodyBytes);

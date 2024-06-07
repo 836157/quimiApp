@@ -6,6 +6,7 @@ import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 import 'package:quimicapp/audioscreen.dart';
 import 'package:quimicapp/authentication_service.dart';
+import 'package:quimicapp/constantes/constantes.dart';
 import 'package:quimicapp/formatotablascreen.dart';
 import 'package:quimicapp/pdfscreen.dart';
 import 'package:quimicapp/login_screen.dart';
@@ -133,8 +134,20 @@ class _HomeScreenState extends State<HomeScreen>
                                             "Tienes un mensaje de QuimicApp del usuario ${widget.user?.nombre ?? 'desconocido'}";
 
                                         return AlertDialog(
-                                          title: Text(
-                                              'Enviar correo a ${snapshot.data![index].nombre}'), // Usa el nombre del usuario seleccionado
+                                          title: Consumer<ThemeNotifier>(
+                                            builder: (context, themeNotifier,
+                                                child) {
+                                              return Text(
+                                                'Enviar correo a ${snapshot.data![index].nombre}',
+                                                style: TextStyle(
+                                                  color: themeNotifier
+                                                          .isSecondTheme()
+                                                      ? Colors.red
+                                                      : Colors.black,
+                                                ),
+                                              );
+                                            },
+                                          ),
                                           content: SingleChildScrollView(
                                             child: Column(
                                               mainAxisSize: MainAxisSize.min,
@@ -144,20 +157,37 @@ class _HomeScreenState extends State<HomeScreen>
                                                     emailContent =
                                                         value; // Guarda el contenido del correo
                                                   },
-                                                  decoration:
-                                                      const InputDecoration(
+                                                  decoration: InputDecoration(
                                                     labelText:
                                                         "Mensaje a enviar:",
+                                                    labelStyle: TextStyle(
+                                                      color: themeNotifier
+                                                              .isSecondTheme()
+                                                          ? Colors.red
+                                                          : Colors.black,
+                                                    ),
                                                   ),
-                                                  maxLines:
-                                                      6, // Permite hasta 6 líneas de texto
+                                                  maxLines: 6,
                                                 ),
                                               ],
                                             ),
                                           ),
                                           actions: [
                                             TextButton(
-                                              child: const Text('Enviar'),
+                                              child: Consumer<ThemeNotifier>(
+                                                builder: (context,
+                                                    themeNotifier, child) {
+                                                  return Text(
+                                                    'Enviar',
+                                                    style: TextStyle(
+                                                      color: themeNotifier
+                                                              .isSecondTheme()
+                                                          ? Colors.red
+                                                          : Colors.black,
+                                                    ),
+                                                  );
+                                                },
+                                              ),
                                               onPressed: () async {
                                                 // Hacer la función async
                                                 showDialog(
@@ -190,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen>
                                                                         Color>(themeNotifier
                                                                             .isSecondTheme()
                                                                         ? Colors
-                                                                            .white
+                                                                            .red
                                                                         : Colors
                                                                             .black),
                                                                   );
@@ -231,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen>
                                                                               child) {
                                                                             return Marquee(
                                                                               text: 'Enviando...',
-                                                                              style: TextStyle(color: themeNotifier.isSecondTheme() ? Colors.white : Colors.black),
+                                                                              style: TextStyle(color: themeNotifier.isSecondTheme() ? Colors.red : Colors.black),
                                                                               velocity: 50.0,
                                                                               blankSpace: 100.0,
                                                                               startPadding: 1.0,
@@ -248,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen>
                                                                           return Icon(
                                                                             Icons.mail_outline,
                                                                             color: themeNotifier.isSecondTheme()
-                                                                                ? Colors.white
+                                                                                ? Colors.red
                                                                                 : Colors.black,
                                                                           );
                                                                         },
@@ -284,14 +314,29 @@ class _HomeScreenState extends State<HomeScreen>
                                                     builder:
                                                         (BuildContext context) {
                                                       return AlertDialog(
-                                                        title: const Text(
-                                                            'Correo enviado'),
-                                                        content: const Text(
+                                                        title: Text(
+                                                          'Correo enviado',
+                                                          style: TextStyle(
+                                                              color: themeNotifier
+                                                                      .isSecondTheme()
+                                                                  ? Colors.red
+                                                                  : Colors
+                                                                      .black),
+                                                        ),
+                                                        content: Text(
                                                             'El correo se ha enviado correctamente'),
                                                         actions: [
                                                           TextButton(
-                                                            child: const Text(
-                                                                'Cerrar'),
+                                                            child: Text(
+                                                              'Cerrar',
+                                                              style: TextStyle(
+                                                                  color: themeNotifier
+                                                                          .isSecondTheme()
+                                                                      ? Colors
+                                                                          .red
+                                                                      : Colors
+                                                                          .black),
+                                                            ),
                                                             onPressed: () {
                                                               Navigator.popUntil(
                                                                   context,
@@ -310,14 +355,29 @@ class _HomeScreenState extends State<HomeScreen>
                                                     builder:
                                                         (BuildContext context) {
                                                       return AlertDialog(
-                                                        title:
-                                                            const Text('Error'),
-                                                        content: const Text(
+                                                        title: Text(
+                                                          'Error',
+                                                          style: TextStyle(
+                                                              color: themeNotifier
+                                                                      .isSecondTheme()
+                                                                  ? Colors.red
+                                                                  : Colors
+                                                                      .black),
+                                                        ),
+                                                        content: Text(
                                                             'No se ha podido enviar el correo'),
                                                         actions: [
                                                           TextButton(
-                                                            child: const Text(
-                                                                'Cerrar'),
+                                                            child: Text(
+                                                              'Cerrar',
+                                                              style: TextStyle(
+                                                                  color: themeNotifier
+                                                                          .isSecondTheme()
+                                                                      ? Colors
+                                                                          .red
+                                                                      : Colors
+                                                                          .black),
+                                                            ),
                                                             onPressed: () {
                                                               Navigator.pop(
                                                                   context); // Cerrar el diálogo de error
@@ -470,8 +530,8 @@ class _HomeScreenState extends State<HomeScreen>
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                theme.primaryColor, // Un tono de verde
-                theme.colorScheme.secondary, // Otro tono de verde
+                theme.primaryColor,
+                theme.colorScheme.secondary,
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -489,8 +549,8 @@ class _HomeScreenState extends State<HomeScreen>
 
   Future<List<User>> obtenerUsuariosEnLinea() async {
     try {
-      final response = await http.get(Uri.parse(
-          'http://192.168.0.23:8080/quimicApp/usuarios/listarActivos'));
+      final response =
+          await http.get(Uri.parse('$BASE_URL/usuarios/listarActivos'));
       if (response.statusCode == 200) {
         String body = utf8.decode(response.bodyBytes);
         final List<dynamic> datosActivos = json.decode(body);
@@ -507,8 +567,7 @@ class _HomeScreenState extends State<HomeScreen>
       String contenido) async {
     try {
       final response = await http.post(
-        Uri.parse(
-            'http://192.168.0.23:8080/quimicApp/send-email/sendUserEmail'),
+        Uri.parse('$BASE_URL/send-email/sendUserEmail'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

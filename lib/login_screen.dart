@@ -130,13 +130,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 16,
-                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                     TextSpan(
-                                      text: 'aquí',
+                                      text: 'AQUI',
                                       style: TextStyle(
-                                        color: Colors.blue,
+                                        color: Colors.white,
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                         decoration: TextDecoration.underline,

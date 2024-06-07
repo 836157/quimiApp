@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quimicapp/constantes/constantes.dart';
 import 'package:quimicapp/personalizadorwidget.dart';
 import 'package:quimicapp/quiz/preguntaDTO.dart';
 import 'package:quimicapp/quiz/respuestaDTO.dart';
@@ -313,7 +314,7 @@ void _showInfoDialog(BuildContext context) {
 
 Future<void> enviarPregunta(PreguntaDTO pregunta, BuildContext context) async {
   final response = await http.post(
-    Uri.parse('http://192.168.0.23:8080/quimicApp/preguntas/insertar'),
+    Uri.parse('$BASE_URL/preguntas/insertar'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },

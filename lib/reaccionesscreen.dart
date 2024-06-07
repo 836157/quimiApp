@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quimicapp/constantes/constantes.dart';
 import 'package:quimicapp/imagenZoom.dart';
 import 'package:quimicapp/personalizadorwidget.dart';
 import 'package:quimicapp/reaccion.dart';
@@ -10,8 +11,7 @@ import 'package:quimicapp/themeAppDark/themenotifier.dart';
 
 Future<List<Reaccion>> listaReacciones() async {
   try {
-    final response = await http
-        .get(Uri.parse('http://192.168.0.23:8080/quimicApp/reacciones/listar'));
+    final response = await http.get(Uri.parse('$BASE_URL/reacciones/listar'));
 
     if (response.statusCode == 200) {
       String body = utf8.decode(response.bodyBytes);

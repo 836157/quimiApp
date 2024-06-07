@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quimicapp/constantes/constantes.dart';
 import 'package:quimicapp/personalizadorwidget.dart';
 import 'package:quimicapp/themeAppDark/themenotifier.dart';
 import 'package:http/http.dart' as http;
@@ -19,8 +20,7 @@ class _RecuperacionPasswordScreenState
   Future<bool> recuperarContrasena(String correo, BuildContext context) async {
     try {
       final response = await http.post(
-        Uri.parse(
-            'http://192.168.0.23:8080/quimicApp/send-email/recuperarCorreo'),
+        Uri.parse('$BASE_URL/send-email/recuperarCorreo'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
