@@ -104,6 +104,22 @@ class _ModificationScreenState extends State<ModificationScreen> {
                         controller: _emailController,
                         labelText: 'Correo Electrónico',
                         icon: Icons.mail,
+                        validator: (value) {
+                          String pattern =
+                              r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+                          RegExp regex = RegExp(pattern);
+                          if (!regex.hasMatch(value!)) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    'Correo no valido, por favor ingrese un correo válido.'),
+                              ),
+                            );
+                            return 'Invalid password';
+                          } else {
+                            return null;
+                          }
+                        },
                       ),
                       const SizedBox(height: 20.0),
                       PersonalizadorWidget.buildCustomTextFormField(
@@ -125,13 +141,13 @@ class _ModificationScreenState extends State<ModificationScreen> {
                         ),
                         validator: (value) {
                           String patternPassword =
-                              r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\W_]{8,}$';
+                              r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$';
                           RegExp regex = RegExp(patternPassword);
                           if (!regex.hasMatch(value!)) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text(
-                                    '1 La contraseña debe tener al menos 8 caracteres, una letra y un número. Por favor, inténtelo de nuevo.'),
+                                    'La contraseña debe tener al menos 8 caracteres, una letra,un número y un caracter especial. Por favor, inténtelo de nuevo.'),
                               ),
                             );
                             return 'Invalid password';
@@ -160,7 +176,7 @@ class _ModificationScreenState extends State<ModificationScreen> {
                         ),
                         validator: (value) {
                           String patternPassword =
-                              r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\W_]{8,}$';
+                              r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$';
                           RegExp regex = RegExp(patternPassword);
                           if (_confirmPasswordController.text !=
                               _passwordController.text) {
@@ -176,7 +192,7 @@ class _ModificationScreenState extends State<ModificationScreen> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text(
-                                    'La contraseña debe tener al menos 8 caracteres, una letra y un número. Por favor, inténtelo de nuevo.'),
+                                    'La contraseña debe tener al menos 8 caracteres, una letra,un número y un caracter especial. Por favor, inténtelo de nuevo.'),
                               ),
                             );
                             return 'Invalid password';

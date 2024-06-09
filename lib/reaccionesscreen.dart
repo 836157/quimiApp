@@ -295,34 +295,68 @@ class _ReaccionesScreenState extends State<ReaccionesScreen>
                           onPressed: () {
                             showDialog(
                               context: context,
-                              builder: (BuildContext context) {
+                              builder: (context) {
                                 return AlertDialog(
-                                  title:
-                                      Text('Cómo ajustar reacciones químicas'),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      const Text(
-                                          'El método de tanteo para  balancear una ecuación química consiste en igualar el número y clase de átomos, iones o moléculas reactantes con los productos a fin  de cumplir la Ley de la conservación de la materia.'),
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const ImageViewerScreen()),
-                                          );
-                                        },
-                                        child: Container(
-                                          child: Image.asset(
-                                              'assets/ajusteReacciones.jpg'),
+                                  title: Consumer<ThemeNotifier>(
+                                    builder: (context, themeNotifier, child) {
+                                      return Text(
+                                        'Cómo ajustar reacciones químicas',
+                                        style: TextStyle(
+                                          color: themeNotifier.isSecondTheme()
+                                              ? Colors.red
+                                              : Colors.black,
                                         ),
-                                      ),
-                                    ],
+                                      );
+                                    },
+                                  ),
+                                  content: Consumer<ThemeNotifier>(
+                                    builder: (context, themeNotifier, child) {
+                                      return Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          Text(
+                                            'El método de tanteo para balancear una ecuación química consiste en igualar el número y clase de átomos, iones o moléculas reactantes con los productos a fin de cumplir la Ley de la conservación de la materia.',
+                                            style: TextStyle(
+                                              color:
+                                                  themeNotifier.isSecondTheme()
+                                                      ? Colors.red
+                                                      : Colors.black,
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const ImageViewerScreen()),
+                                              );
+                                            },
+                                            child: Container(
+                                              child: Image.asset(
+                                                  'assets/ajusteReacciones.jpg'),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
                                   ),
                                   actions: <Widget>[
                                     TextButton(
-                                      child: Text('Cerrar'),
+                                      child: Consumer<ThemeNotifier>(
+                                        builder:
+                                            (context, themeNotifier, child) {
+                                          return Text(
+                                            'Cerrar',
+                                            style: TextStyle(
+                                              color:
+                                                  themeNotifier.isSecondTheme()
+                                                      ? Colors.red
+                                                      : Colors.black,
+                                            ),
+                                          );
+                                        },
+                                      ),
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },

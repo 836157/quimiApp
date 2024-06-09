@@ -159,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         content: Text(
                                             'Introduce un correo electrónico válido')));
                               } else if (formKey.currentState!.validate()) {
-                                // Si el formulario es válido, muestra un mensaje de éxito
+                                // si el formulario es correcto manda al servicio la peticion de autentificacion.
                                 await authService.login(_emailController.text,
                                     _passwordController.text, context);
                               }

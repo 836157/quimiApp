@@ -81,6 +81,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       controller: emailController,
                       labelText: 'Correo electronico',
                       icon: Icons.email,
+                      validator: (value) {
+                        String pattern =
+                            r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+                        RegExp regex = RegExp(pattern);
+                        if (!regex.hasMatch(value!)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                  'Correo no valido, por favor ingrese un correo válido.'),
+                            ),
+                          );
+                          return 'Invalid password';
+                        } else {
+                          return null;
+                        }
+                      },
                     ),
                     const SizedBox(height: 20.0),
                     PersonalizadorWidget.buildCustomTextFormField(
@@ -108,7 +124,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text(
-                                  '1 La contraseña debe tener al menos 8 caracteres, una letra y un número. Por favor, inténtelo de nuevo.'),
+                                  'La contraseña debe tener al menos 8 caracteres, una letra,un número y un caracter especial. Por favor, inténtelo de nuevo.'),
                             ),
                           );
                           return 'Invalid password';
@@ -137,14 +153,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       validator: (value) {
                         String patternPassword =
-                            r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\W_]{8,}$';
+                            r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$';
                         RegExp regex = RegExp(patternPassword);
                         if (confirmPasswordController.text !=
                             passwordController.text) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text(
-                                  '2 Las contraseñas no coinciden. Por favor, inténtelo de nuevo.'),
+                                  'Las contraseñas no coinciden. Por favor, inténtelo de nuevo.'),
                             ),
                           );
                           return 'Invalid password';
@@ -153,7 +169,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text(
-                                  '1 La contraseña debe tener al menos 8 caracteres, una letra y un número. Por favor, inténtelo de nuevo.'),
+                                  'La contraseña debe tener al menos 8 caracteres, una letra,un número y un caracter especial. Por favor, inténtelo de nuevo.'),
                             ),
                           );
                           return 'Invalid password';
@@ -168,7 +184,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       'Registrarse',
                       () async {
                         String pattern =
-                            r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
+                            r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$';
                         RegExp regex = RegExp(pattern);
                         if (regex.hasMatch(emailController.text)) {
                           if (_formKey.currentState!.validate()) {

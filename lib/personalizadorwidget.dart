@@ -16,7 +16,6 @@ class PersonalizadorWidget {
       bool obscureText = false,
       Widget? suffixIcon,
       String? Function(String?)? validator}) {
-    bool isObscure = labelText == 'Contraseña';
     return TextFormField(
       controller: controller,
       maxLines: obscureText ? 1 : (expands ? null : maxLines),

@@ -5,7 +5,6 @@ import 'package:quimicapp/constantes/constantes.dart';
 import 'package:quimicapp/home_screen.dart';
 import 'package:quimicapp/user.dart';
 import 'package:http/http.dart' as http;
-
 import 'login_screen.dart';
 
 class AuthenticationService extends ChangeNotifier {

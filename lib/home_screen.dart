@@ -337,10 +337,8 @@ class _HomeScreenState extends State<HomeScreen>
                                                                           .black),
                                                             ),
                                                             onPressed: () {
-                                                              Navigator.popUntil(
-                                                                  context,
-                                                                  (route) => route
-                                                                      .isFirst); // Volver a la pantalla de inicio
+                                                              Navigator.pop(
+                                                                  context); // Cerrar el diálogo de error
                                                             },
                                                           ),
                                                         ],
